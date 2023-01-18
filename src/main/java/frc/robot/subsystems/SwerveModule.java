@@ -1,9 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
-
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -14,6 +9,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.MathUtil;
@@ -63,7 +59,9 @@ public class SwerveModule {
      360.);
   }
 
-
+  public SwerveModulePosition getModulePosition(){
+    return new SwerveModulePosition(getPosition(),getAngle());
+  }
 
   public double getPosition(){
     return driveMotor.getSelectedSensorPosition() / 2048.0 * Constants.Swerve.wheelCircumference;
@@ -78,13 +76,6 @@ public class SwerveModule {
 
   public double getDriveEncoderVelocity(){
     return (driveEncoderInverted ? -1 : 1) * driveMotor.getSelectedSensorVelocity();
-  }
-
-  public SwerveModuleState getState() {
-    return new SwerveModuleState(
-      getDriveMotorRate(), 
-      getAngle()
-      );
   }
 
   public Rotation2d getAngle() {

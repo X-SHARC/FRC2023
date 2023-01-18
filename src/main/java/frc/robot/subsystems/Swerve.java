@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -77,6 +78,13 @@ public class Swerve extends SubsystemBase {
     new SwerveModule("RR", new TalonFX(10), new TalonFX(12), new DutyCycleEncoder( new DigitalInput(3) ), Rotation2d.fromDegrees(-103), true^invertAllModules, new PIDController(pidValues[3], 0, 0))  //! Back Right
   };
 
+  SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[] {
+    modules[0].getModulePosition(),
+    modules[1].getModulePosition(),
+    modules[2].getModulePosition(),
+    modules[3].getModulePosition()
+  };
+
   public Swerve(boolean isCalibrating) {
     driveMotorBL.setInverted(true);
     this.isCalibrating = isCalibrating;
@@ -104,9 +112,9 @@ public class Swerve extends SubsystemBase {
     return Math.IEEEremainder(gyroAhrs.getAngle(), 360) * (Constants.kGyroReversed ? -1.0 : 1.0);
   }
 
-  SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-   ,
-  );
+  SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.Swerve.kinematics, gyroAhrs.getRotation2d(),
+  swerveModulePositions);
+
   private Rotation2d teleopAngle = new Rotation2d(0);
 
   public void stopModules(){
@@ -140,8 +148,9 @@ public class Swerve extends SubsystemBase {
 
   public void resetOdometry(Pose2d pose) {
     odometry.resetPosition(
-      pose,
-      getGyro()
+      getGyro(),
+      swerveModulePositions,
+      pose
     );
     // resetAllEncoders();
   }
@@ -230,12 +239,6 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Posey", getPose().getY());
     SmartDashboard.putNumber("Rot", getPose().getRotation().getRadians());
 
-    SwerveModuleState[] moduleStates = {
-      modules[0].getState(),
-      modules[1].getState(),
-      modules[2].getState(),
-      modules[3].getState()
-    };
     
     modules[0].debug();
     modules[1].debug();
@@ -249,10 +252,7 @@ public class Swerve extends SubsystemBase {
 
     odometry.update(
       getGyro(),
-      moduleStates[0],
-      moduleStates[1],
-      moduleStates[2],
-      moduleStates[3]
+      swerveModulePositions
       );
       
 
