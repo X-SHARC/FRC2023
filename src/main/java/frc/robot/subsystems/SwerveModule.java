@@ -51,6 +51,8 @@ public class SwerveModule {
     this.driveEncoderInverted = driveEncoderInverted;
     this.drivePID = drivePID;
 
+    driveMotor.setInverted(this.driveEncoderInverted);
+
     rotPID.disableContinuousInput();
   }
 

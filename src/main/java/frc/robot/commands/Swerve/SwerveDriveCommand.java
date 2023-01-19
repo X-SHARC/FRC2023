@@ -86,7 +86,7 @@ public class SwerveDriveCommand extends CommandBase {
     swerveSubsystem.drive(xSpeed, ySpeed, rot, true);
   }
 
-  public InstantCommand swerveDrive(){
+  /*public InstantCommand swerveDrive(){
     //Axis: Left Y: 1, Left X: 0, Right Y: 4, Right X: 2 ????
     scale = Math.abs(driver.getRawAxis(1)) < 0.4 ? 1: scale2;
 
@@ -116,5 +116,5 @@ public class SwerveDriveCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
-  }
+  }*/
 }

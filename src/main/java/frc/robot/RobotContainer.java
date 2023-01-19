@@ -24,7 +24,7 @@ public class RobotContainer {
   Swerve swerveDrivetrain = new Swerve(true);
 
   //Commands 
-  SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driverJoystick);
+  SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
 
       public RobotContainer() {
     // Configure the trigger bindings
@@ -32,7 +32,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    swerveDrivetrain.setDefaultCommand(driveCommand.swerveDrive());
+    swerveDrivetrain.setDefaultCommand(driveCommand);
   }
 
   public Command getAutonomousCommand() {
