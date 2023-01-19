@@ -5,16 +5,19 @@
 package frc.robot.commands.Swerve;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.event.EventLoop;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 
 public class SwerveDriveCommand extends CommandBase {
-  private final XboxController joystick;
-  private final Swerve swerveSubsystem;
+  XboxController joystick;
+  Swerve swerveSubsystem;
+  Joystick driver;
 
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
   // TODO not using them currently, try out and see if you want to keep them for comp
@@ -31,6 +34,14 @@ public class SwerveDriveCommand extends CommandBase {
       this.joystick = joystick;
       // Use addRequirements() here to declare subsystem dependencies.
       addRequirements(sw);
+    }
+
+
+    public SwerveDriveCommand(Swerve sw, Joystick driver){
+      this.swerveSubsystem = sw;
+      this.driver = driver;
+
+      addRequirements(swerveSubsystem);
     }
 
   // Called when the command is initially scheduled.
@@ -71,7 +82,28 @@ public class SwerveDriveCommand extends CommandBase {
     //double[] speeds ={xSpeed, ySpeed, rot}; 
     //SmartDashboard.putNumberArray("controller speeds", speeds);
     swerveSubsystem.drive(xSpeed, ySpeed, rot, true);
+  }
 
+  public void swerveDrive(){
+    //Axis: Left Y: 1, Left X: 0, Right Y: 4, Right X: 2 ????
+    scale = Math.abs(driver.getRawAxis(1)) < 0.4 ? 1: scale2;
+
+    final var xSpeed = xSpeedLimiter.calculate(
+      (Math.abs(driver.getRawAxis(1)) < 0.1) ? 0 : driver.getRawAxis(1))
+      * Constants.Swerve.kMaxSpeed * scale;
+
+    
+    final var ySpeed = ySpeedLimiter.calculate(
+      (Math.abs(driver.getRawAxis(0)) <  0.1) ? 0 : driver.getRawAxis(0))
+      * Constants.Swerve.kMaxSpeed * scale;
+     
+    final var rot = rotLimiter.calculate(
+      (Math.abs(driver.getRawAxis(2)) < 0.1) ? 0 : driver.getRawAxis(2))
+      * Constants.Swerve.kMaxAngularSpeed * scale;
+
+    double[] speeds ={xSpeed, ySpeed, rot}; 
+    SmartDashboard.putNumberArray("controller speeds", speeds);
+    swerveSubsystem.drive(xSpeed, ySpeed, rot, true);
   }
   // Called once the command ends or is interrupted.
   @Override
