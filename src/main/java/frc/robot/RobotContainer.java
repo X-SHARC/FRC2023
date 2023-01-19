@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.subsystems.Swerve;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -17,12 +18,13 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final XboxController driver = new XboxController(0);
+  private final Joystick driverJoystick = new Joystick(0);
 
   //Subsystems
   Swerve swerveDrivetrain = new Swerve(true);
 
   //Commands 
-  SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
+  SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driverJoystick);
 
       public RobotContainer() {
     // Configure the trigger bindings
@@ -30,7 +32,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    swerveDrivetrain.setDefaultCommand(driveCommand);
+    swerveDrivetrain.setDefaultCommand(driveCommand.swerveDrive());
   }
 
   public Command getAutonomousCommand() {
