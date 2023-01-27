@@ -22,18 +22,19 @@ public class Slider extends SubsystemBase {
   }
 
   public void sliderForward(){
-    if(minLimitSwitch.get() == true){
+    if(maxLimitSwitch.get() == false){
     sliderMotor.set(ControlMode.PercentOutput, 0.5);
   }}
 
   public void sliderBackwards(){
-    if(maxLimitSwitch.get() == true){
+    if(minLimitSwitch.get() == false){
     sliderMotor.set(ControlMode.PercentOutput, -0.5);
   }}
 
   public void stop(){
+  if(minLimitSwitch.get() == false || maxLimitSwitch.get() == false){
     sliderMotor.set(ControlMode.PercentOutput, 0.0);
-  }
+  }}
 
   @Override
   public void periodic() {
