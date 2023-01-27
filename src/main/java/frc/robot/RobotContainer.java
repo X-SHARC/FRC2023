@@ -4,11 +4,18 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.Slider;
 import frc.robot.subsystems.Swerve;
 import frc.robot.commands.Autos;
+import frc.robot.commands.SliderBackwardCommand;
+import frc.robot.commands.SliderForwardCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
 
@@ -17,12 +24,17 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final XboxController driver = new XboxController(0);
+  private final XboxController operator = new XboxController(1);
 
   //Subsystems
   Swerve swerveDrivetrain = new Swerve(true);
+  Slider slider = new Slider();
 
   //Commands 
   SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
+  SliderBackwardCommand sliderBackwardCommand = new SliderBackwardCommand(slider);
+  SliderForwardCommand sliderForwardCommand = new SliderForwardCommand(slider);
+
 
       public RobotContainer() {
     // Configure the trigger bindings
@@ -31,6 +43,14 @@ public class RobotContainer {
 
   private void configureBindings() {
     swerveDrivetrain.setDefaultCommand(driveCommand);
+
+    Button[] sliderButtons = {
+      new JoystickButton(operator, 1),
+      new JoystickButton(operator, 0)
+    };
+
+    sliderButtons[0]
+
   }
 
   public Command getAutonomousCommand() {
