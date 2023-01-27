@@ -49,7 +49,7 @@ public class RobotContainer {
 
     JoystickButton[] sliderButtons = {
       new JoystickButton(operator, 1),
-      new JoystickButton(operator, 0)
+      new JoystickButton(operator, 2)
     };
 
     sliderButtons[0]
