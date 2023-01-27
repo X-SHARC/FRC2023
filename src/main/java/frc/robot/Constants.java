@@ -18,6 +18,12 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+	public static final int INTAKE_ID = 1;
+	public static final int SLIDER_ID = 2;
+	public static final int ELEVATOR_MASTER_ID = 3;
+	public static final int ELEVATOR_SLAVE_ID = 2;
+
   public static final class Swerve{
 		public static final double kDriveP = 2.432;
 		public static final double kDriveI = 0.0;
@@ -55,7 +61,6 @@ public final class Constants {
 	}
 
     public static final boolean kGyroReversed = true;
-
 
 
   public static class OperatorConstants {
