@@ -7,11 +7,14 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Slider extends SubsystemBase {
   WPI_TalonFX sliderMotor = new WPI_TalonFX(Constants.SLIDER_ID);
+  DigitalInput minLimitSwitch = new DigitalInput(0);
+  DigitalInput maxLimitSwitch = new DigitalInput(1);
   
   /** Creates a new Slider. */
   public Slider() {
@@ -19,12 +22,14 @@ public class Slider extends SubsystemBase {
   }
 
   public void sliderForward(){
+    if(minLimitSwitch.get() == true){
     sliderMotor.set(ControlMode.PercentOutput, 0.5);
-  }
+  }}
 
   public void sliderBackwards(){
+    if(maxLimitSwitch.get() == true){
     sliderMotor.set(ControlMode.PercentOutput, -0.5);
-  }
+  }}
 
   public void stop(){
     sliderMotor.set(ControlMode.PercentOutput, 0.0);
