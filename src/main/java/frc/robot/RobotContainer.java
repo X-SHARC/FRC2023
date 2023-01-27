@@ -10,11 +10,14 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.SliderBackwardCommand;
 import frc.robot.commands.SliderForwardCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
+
+import javax.swing.plaf.basic.BasicButtonUI;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
@@ -44,15 +47,21 @@ public class RobotContainer {
   private void configureBindings() {
     swerveDrivetrain.setDefaultCommand(driveCommand);
 
-    Button[] sliderButtons = {
+    JoystickButton[] sliderButtons = {
       new JoystickButton(operator, 1),
       new JoystickButton(operator, 0)
     };
 
     sliderButtons[0]
+    .whileTrue(new RunCommand(()-> slider.sliderForward(), slider))
+    .whileFalse(new RunCommand(()-> slider.stop(), slider));
+  
+
+    sliderButtons[1]
+   .whileTrue(new RunCommand(()-> slider.sliderBackwards(), slider))
+   .whileFalse(new RunCommand(()-> slider.stop(), slider));
 
   }
-
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.exampleAuto();
