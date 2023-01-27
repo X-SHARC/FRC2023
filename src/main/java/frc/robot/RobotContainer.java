@@ -10,12 +10,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.SliderBackwardCommand;
 import frc.robot.commands.SliderForwardCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
-
-import javax.swing.plaf.basic.BasicButtonUI;
-
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
