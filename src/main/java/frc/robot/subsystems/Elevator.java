@@ -30,6 +30,7 @@ public class Elevator extends SubsystemBase {
   private double kS = 1;
   private double kV = 2;
   private double kA = 3;
+  //trial burakla viyana kahvecisi
 
   private double distance;
   private double feedForwardOutput;
