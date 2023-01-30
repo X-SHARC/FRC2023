@@ -30,7 +30,6 @@ public class Elevator extends SubsystemBase {
   private double kS = 1;
   private double kV = 2;
   private double kA = 3;
-  //trial burakla viyana kahvecisi
 
   private double distance;
   private double feedForwardOutput;
@@ -75,8 +74,8 @@ public class Elevator extends SubsystemBase {
       double distance = elevatorMasterMotor.getSelectedSensorPosition();
       distance = (distance/2048.0) * gearCircumference;
 
-      elevatorPID.setTolerance(100);
-      PIDOutput = elevatorPID.calculate(60., setpoint);
+      elevatorPID.setTolerance(3);
+      PIDOutput = elevatorPID.calculate(distance, setpoint);
       feedForwardOutput = feedForward.calculate(60.0);
       output = (PIDOutput + feedForwardOutput) / RobotController.getBatteryVoltage();
       elevatorMasterMotor.set(ControlMode.PercentOutput, output);
