@@ -20,7 +20,6 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
 	public static final int INTAKE_ID = 1;
-	public static final int SLIDER_ID = 7;
 	public static final int ELEVATOR_MASTER_ID = 19;
 	public static final int ELEVATOR_SLAVE_ID = 18;
 

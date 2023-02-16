@@ -82,12 +82,12 @@ public class Elevator extends SubsystemBase {
 
     public void elevatorUp(){
      if (topLimitSwitch.get() == false){
-     elevatorMasterMotor.set(ControlMode.PercentOutput, 0.1);
+     elevatorMasterMotor.set(ControlMode.PercentOutput, 0.3);
       } }
 
     public void elevatorDown(){
     if (bottomLimitSwitch.get() == false){
-      elevatorMasterMotor.set(ControlMode.PercentOutput, -0.1);
+      elevatorMasterMotor.set(ControlMode.PercentOutput, -0.3);
     } }
 
     public void stop(){
