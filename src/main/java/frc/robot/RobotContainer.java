@@ -32,7 +32,8 @@ public class RobotContainer {
 
   //Commands 
   SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
-  ElevatorCommand elevatorCommand = new ElevatorCommand(elevator, 0);
+  ElevatorCommand elevatorCommand = new ElevatorCommand(elevator, 0
+  );
 
       public RobotContainer() {
     // Configure the trigger bindings

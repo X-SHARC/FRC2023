@@ -18,11 +18,11 @@ public class Intake extends SubsystemBase {
   }
 
   public void grabObject(){
-    intakeMotor.set(ControlMode.PercentOutput, 0.5);
+    intakeMotor.set(ControlMode.PercentOutput, 0.8);
   }
 
   public void dropObject(){
-    intakeMotor.set(ControlMode.PercentOutput, -0.5);
+    intakeMotor.set(ControlMode.PercentOutput, -0.8);
   }
 
   public void stop(){

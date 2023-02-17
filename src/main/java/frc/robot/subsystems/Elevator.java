@@ -19,7 +19,7 @@ public class Elevator extends SubsystemBase {
   private DigitalInput topLimitSwitch = new DigitalInput(1);
   private DigitalInput bottomLimitSwitch = new DigitalInput(0);
 
-  private double kP = 0.031;
+  private double kP = 0.001;
   private double kI = 0;
   private double kD = 0;
 
@@ -34,15 +34,13 @@ public class Elevator extends SubsystemBase {
   private double feedForwardOutput = 0;
   private double PIDOutput = 0;
   
-  private double gearCircumference = 4.8514 * Math.PI;
+  private final double gearCircumference = Units.inchesToMeters(1.91) * 100 * Math.PI;
 
   private double error = 0;
   private double output = 0;
 
   private PIDController elevatorPID = new PIDController(kP, kI, kD);
   private ElevatorFeedforward feedForward = new ElevatorFeedforward(kS, kG, kV, kA);
-  
-
   public Elevator() {
     elevatorSlaveMotor.setInverted(false);
     elevatorMasterMotor.setInverted(false);
@@ -57,8 +55,8 @@ public class Elevator extends SubsystemBase {
     }
 
     public double getDistance(){
-      distance = elevatorMasterMotor.getSelectedSensorPosition();
-      distance = (distance/2048.0) * gearCircumference;
+      distance = elevatorMasterMotor.getSelectedSensorPosition() / 17.42;
+      distance = (distance/2048.0) * gearCircumference * 2;
       return distance;
     }
 
@@ -69,7 +67,7 @@ public class Elevator extends SubsystemBase {
     public void setDistance(double setpoint){
       double distance = getDistance();
 
-      elevatorPID.setTolerance(3);
+      elevatorPID.setTolerance(0.3);
       PIDOutput = elevatorPID.calculate(distance, setpoint);
       feedForwardOutput = feedForward.calculate(60.0);
       output = (PIDOutput + feedForwardOutput) / RobotController.getBatteryVoltage();
@@ -96,7 +94,7 @@ public class Elevator extends SubsystemBase {
     perpendicularDistance = getPerpendicularDistance();
     distance = getDistance();
     SmartDashboard.putNumber("Elevator Distance:", distance);
-    SmartDashboard.putNumber("Elevator Perpendicular Distance:", distance);
+    SmartDashboard.putNumber("Elevator Perpendicular Distance:", perpendicularDistance);
     SmartDashboard.putData(topLimitSwitch);
     SmartDashboard.putData(bottomLimitSwitch);
 
