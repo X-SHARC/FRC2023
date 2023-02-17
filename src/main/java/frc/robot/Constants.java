@@ -21,7 +21,8 @@ public final class Constants {
 
 	public static final int INTAKE_ID = 1;
 	public static final int ELEVATOR_MASTER_ID = 19;
-	public static final int ELEVATOR_SLAVE_ID = 18;
+	public static final int ELEVATOR_SLAVE_ID = 32;
+	public static final int CARRIAGE_ID = 3;
 
   public static final class Swerve{
 		public static final double kDriveP = 2.432;

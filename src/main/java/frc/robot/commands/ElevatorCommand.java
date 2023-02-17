@@ -15,6 +15,7 @@ public class ElevatorCommand extends CommandBase {
     this.elevator = elevator;
     this.distance = distance;
     addRequirements(elevator);
+
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
