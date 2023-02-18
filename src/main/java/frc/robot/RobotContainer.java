@@ -4,12 +4,12 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.Carriage;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
-import frc.robot.commands.Autos;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -27,6 +27,8 @@ public class RobotContainer {
   //Subsystems
   Swerve swerveDrivetrain = new Swerve(true);
   Elevator elevator = new Elevator();
+  Intake intake = new Intake();
+  Carriage carriage = new Carriage();
 
   //Commands 
   SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
@@ -58,11 +60,26 @@ public class RobotContainer {
 
      JoystickButton elevator3 = new JoystickButton(driver,3);
    elevator3.whileTrue(elevatorCommand);
-   
 
    JoystickButton elevator4 = new JoystickButton(driver,4);
    elevator4.whileTrue(new RunCommand(()-> elevator.setDistance(15), elevator));
    elevator4.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
+
+   JoystickButton carriage1 = new JoystickButton(driver, 7);
+   carriage1.whileTrue(new RunCommand(()-> carriage.intakeUp(), carriage));
+   carriage1.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
+
+   JoystickButton carriage2 = new JoystickButton(driver,8);
+   carriage2.whileTrue(new RunCommand(()-> carriage.intakeDown(), carriage));
+   carriage2.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
+
+   JoystickButton intake1 = new JoystickButton(driver, 6);
+   intake1.whileTrue(new RunCommand(()-> intake.grabCone(), intake));
+   intake1.whileFalse(new RunCommand(()-> intake.stop(), intake));
+
+   JoystickButton intake2 = new JoystickButton(driver,5);
+   intake2.whileTrue(new RunCommand(()-> intake.grabCube(), intake));
+   intake2.whileFalse(new RunCommand(()-> intake.stop(), intake));
   }
   
 

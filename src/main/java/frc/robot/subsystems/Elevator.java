@@ -13,30 +13,30 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
-  private WPI_TalonFX elevatorMasterMotor = new WPI_TalonFX(19);
-  private WPI_TalonFX elevatorSlaveMotor = new WPI_TalonFX(32);
+  private WPI_TalonFX elevatorMasterMotor = new WPI_TalonFX(32, "canavar");
+  private WPI_TalonFX elevatorSlaveMotor = new WPI_TalonFX(19, "canavar");
 
-  private DigitalInput topLimitSwitch = new DigitalInput(0);
-  private DigitalInput bottomLimitSwitch = new DigitalInput(1);
+  private DigitalInput topLimitSwitch = new DigitalInput(1);
+  private DigitalInput bottomLimitSwitch = new DigitalInput(0);
 
-  private double kP = 0.031;
-  private double kI = 0;
-  private double kD = 0;
+  private double kP = 0.000;
+  private double kI = 0.0;
+  private double kD = 0.0;
 
-  private double kG = 0;
-  private double kS = 0;
-  private double kV = 0;
-  private double kA = 0;
+  private double kG = 0.0;
+  private double kS = 0.0;
+  private double kV = 0.0;
+  private double kA = 0.0; 
 
   private double distance = 0;
   private double perpendicularDistance = 0;
 
-  private double feedForwardOutput = 0;
+  // private double feedForwardOutput = 0;
   private double PIDOutput = 0;
   
-  private double gearCircumference = 4.8514 * Math.PI;
+  private double gearCircumference = Units.inchesToMeters(1.91) * Math.PI * 100;
 
-  private double error = 0;
+  // private double error = 0;
   private double output = 0;
 
   private PIDController elevatorPID = new PIDController(kP, kI, kD);
@@ -44,27 +44,17 @@ public class Elevator extends SubsystemBase {
   
 
   public Elevator() {
+    elevatorMasterMotor.feed();
+    elevatorMasterMotor.clearStickyFaults();
+    elevatorMasterMotor.configFactoryDefault();
+    System.out.println("Falcon master safety is enabled: " + elevatorMasterMotor.isSafetyEnabled());
+
     elevatorSlaveMotor.setInverted(false);
     elevatorMasterMotor.setInverted(false);
     elevatorMasterMotor.setNeutralMode(NeutralMode.Brake);
     elevatorSlaveMotor.setNeutralMode(NeutralMode.Brake);
-    elevatorSlaveMotor.follow(elevatorMasterMotor);
+    //elevatorSlaveMotor.follow(elevatorMasterMotor);
   }
-
-  /*   if (SensorValue(topLimitSwitch) == true) {
-      elevatorMasterMotor.set();
-    } else {
-      elevatorMasterMotor.set();
-    }
-    if (SensorValue(bottomLimitSwitch) == true) {
-      elevatorMasterMotor.set();
-    } else{
-      elevatorMasterMotor.set();
-    }
-  }  
-   public void SetMotorSpeed(double speed){
-      if ()
-    }   */ 
 
     
     public void resetEncoder(){
@@ -72,8 +62,8 @@ public class Elevator extends SubsystemBase {
     }
 
     public double getDistance(){
-      distance = elevatorMasterMotor.getSelectedSensorPosition();
-      distance = (distance/2048.0) * gearCircumference;
+      distance = elevatorMasterMotor.getSelectedSensorPosition() / 17.42;
+      distance = (distance/2048.0) * gearCircumference * 2;
       return distance;
     }
 
@@ -86,20 +76,20 @@ public class Elevator extends SubsystemBase {
 
       elevatorPID.setTolerance(3);
       PIDOutput = elevatorPID.calculate(distance, setpoint);
-      feedForwardOutput = feedForward.calculate(60.0);
-      output = (PIDOutput + feedForwardOutput) / RobotController.getBatteryVoltage();
+      //feedForwardOutput = feedForward.calculate(60.0);
+      output = (PIDOutput /*+ feedForwardOutput*/) / RobotController.getBatteryVoltage();
       elevatorMasterMotor.set(ControlMode.PercentOutput, output);
     }
 
 
     public void elevatorUp(){
-     if (topLimitSwitch.get() == false){
-     elevatorMasterMotor.set(ControlMode.PercentOutput, 0.3);
-      } }
+    // if (topLimitSwitch.get() == true){  // elektronik yanlış
+     elevatorMasterMotor.set(ControlMode.PercentOutput, 0.1);
+      } // }
 
     public void elevatorDown(){
     if (bottomLimitSwitch.get() == false){
-      elevatorMasterMotor.set(ControlMode.PercentOutput, -0.3);
+      elevatorMasterMotor.set(ControlMode.PercentOutput, -0.1);
     } }
 
     public void stop(){
@@ -111,7 +101,7 @@ public class Elevator extends SubsystemBase {
     perpendicularDistance = getPerpendicularDistance();
     distance = getDistance();
     SmartDashboard.putNumber("Elevator Distance:", distance);
-    SmartDashboard.putNumber("Elevator Perpendicular Distance:", distance);
+    SmartDashboard.putNumber("Elevator Perpendicular Distance:", perpendicularDistance);
     SmartDashboard.putData(topLimitSwitch);
     SmartDashboard.putData(bottomLimitSwitch);
 

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Carriage extends SubsystemBase {
-  WPI_TalonFX carriageMotor = new WPI_TalonFX(Constants.CARRIAGE_ID);
+  WPI_TalonFX carriageMotor = new WPI_TalonFX(Constants.CARRIAGE_ID, "canavar");
   /** Creates a new Carriage. */
   public Carriage() {
     carriageMotor.setInverted(false);
@@ -27,7 +27,7 @@ public class Carriage extends SubsystemBase {
     carriageMotor.set(ControlMode.PercentOutput, -0.4);
   }
 
-  public void atop(){
+  public void stop(){
     carriageMotor.set(ControlMode.PercentOutput, 0.0);
   }
 

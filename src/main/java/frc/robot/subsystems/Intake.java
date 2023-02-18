@@ -18,13 +18,13 @@ public class Intake extends SubsystemBase {
     intakeMotor.setInverted(false);
   }
 
-  public void grabObject(){
+  public void grabCube(){
     intakeMotor.set(ControlMode.PercentOutput, 0.5);
     RobotState.getInstance().setIntaking();
 
   }
 
-  public void dropObject(){
+  public void grabCone(){
     intakeMotor.set(ControlMode.PercentOutput, -0.5);
     RobotState.getInstance().setEjecting();
   }
