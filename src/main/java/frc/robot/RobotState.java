@@ -6,26 +6,30 @@ package frc.robot;
 
 /** Add your docs here. */
 public class RobotState {
+
     public static  RobotState robotState;
     public enum GamePiece{
         CONE,
-        CARGO
+        CUBE
     }
     public enum ElevatorLevel{
         LEVEL_1,
         LEVEL_2,
         LEVEL_3
     }
-
+    public enum IntakeState{
+        INTAKING,
+        EJECTING,
+        IDLE
+    }
+    public static IntakeState currentIntakeState;
     public static GamePiece currentGamePiece;
     public static ElevatorLevel currentElevatorLevel;
-
-    public static boolean isIntaking;
     public static boolean isElevating;
     public static boolean isTripping;
     
-    public RobotState(){
-
+    private RobotState(){
+        reset(); 
     }
 
     public static void setGamePiece(GamePiece gamePiece){
@@ -36,20 +40,28 @@ public class RobotState {
         currentGamePiece = GamePiece.CONE;
     }
 
-    public static void setCargo(){
-        currentGamePiece = GamePiece.CARGO;
+    public static void setCube(){
+        currentGamePiece = GamePiece.CUBE;
     }
 
-    public static void setIntaking(boolean isIntaking){
-        RobotState.isIntaking = isIntaking;
+    public static void setIntaking(){
+        currentIntakeState = IntakeState.INTAKING;
     }
 
     public static void setElevating(boolean isElevating){
-        RobotState.isElevating = isElevating;
+        isElevating = isElevating;
     }
 
-    public static void setTripping(boolean isTripping){
-        RobotState.isTripping = isTripping;
+    public static void setEjecting(){
+        currentIntakeState = IntakeState.EJECTING;
+    }
+
+    public static void setIntakeIdle(){
+        currentIntakeState = IntakeState.IDLE;
+    }
+
+    public static void setTripping(boolean m_isTripping){
+        isTripping = m_isTripping;
     }
 
     public static void setElevatorLevel(ElevatorLevel elevatorLevel){
@@ -60,8 +72,8 @@ public class RobotState {
         return currentGamePiece;
     }
 
-    public static boolean getIntaking(){
-        return isIntaking;
+    public static IntakeState getIntaking(){
+        return currentIntakeState;
     }
 
     public static boolean getElevating(){
@@ -92,7 +104,7 @@ public class RobotState {
     public static void reset(){
         currentGamePiece = null;
         currentElevatorLevel = null;
-        isIntaking = false;
+        currentIntakeState = IntakeState.IDLE;
         isElevating = false;
         isTripping = false;
     }

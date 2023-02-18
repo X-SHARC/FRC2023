@@ -27,7 +27,7 @@ public class SwerveModule {
   private TalonFX angleMotor;
   //private Encoder rotEncoder;
   private CANCoder rotEncoder;
-  // DutyCycleEncoder is used for absolute values. Switch to normal Encoder class for relative.
+//CANCoder being used as absoulute encoder
   // Using absolute has the advantage of zeroing the modules autonomously.
   // If using relative, find a way to mechanically zero out wheel headings before starting the robot.
   Gearbox driveRatio = new Gearbox(6.86, 2);

@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotState;
 
 public class Intake extends SubsystemBase {
   WPI_TalonFX intakeMotor = new WPI_TalonFX(Constants.INTAKE_ID);
@@ -19,14 +20,18 @@ public class Intake extends SubsystemBase {
 
   public void grabObject(){
     intakeMotor.set(ControlMode.PercentOutput, 0.5);
+    RobotState.getInstance().setIntaking();
+
   }
 
   public void dropObject(){
     intakeMotor.set(ControlMode.PercentOutput, -0.5);
+    RobotState.getInstance().setEjecting();
   }
 
   public void stop(){
     intakeMotor.set(ControlMode.PercentOutput, 0.0);
+    RobotState.getInstance().setIntakeIdle();
   }
 
   @Override
