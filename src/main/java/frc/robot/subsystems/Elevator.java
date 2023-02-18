@@ -76,7 +76,7 @@ public class Elevator extends SubsystemBase {
 
 
     public void elevatorUp(){
-     if (topLimitSwitch.get() == false){
+     if (topLimitSwitch.get() == true){ // elektronik yanlış takılı
      elevatorMasterMotor.set(ControlMode.PercentOutput, 0.3);
       } }
 

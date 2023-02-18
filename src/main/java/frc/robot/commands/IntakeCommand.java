@@ -5,10 +5,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Intake;
 
-public class CarriagePIDCommand extends CommandBase {
-  /** Creates a new CarriagePIDCommand. */
-  public CarriagePIDCommand() {
+public class IntakeCommand extends CommandBase {
+  Intake intake;
+  /** Creates a new IntakeCommand. */
+  public IntakeCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
