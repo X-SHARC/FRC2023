@@ -5,10 +5,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Carriage;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
 
-public class CarriagePIDCommand extends CommandBase {
-  /** Creates a new CarriagePIDCommand. */
-  public CarriagePIDCommand() {
+public class ScoreTo2Command extends CommandBase {
+  /** Creates a new ScoreTo2Command. */
+  public ScoreTo2Command() {
+    Intake intake;
+    Elevator elevator;
+    Carriage carriage;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

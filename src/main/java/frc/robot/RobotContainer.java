@@ -30,7 +30,7 @@ public class RobotContainer {
 
   //Commands 
   SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
-  ElevatorCommand elevatorCommand = new ElevatorCommand(elevator, elevator.getDistance());
+  ElevatorCommand elevatorCommand = new ElevatorCommand(elevator, 15);
 
       public RobotContainer() {
     // Configure the trigger bindings
@@ -61,7 +61,7 @@ public class RobotContainer {
    
 
    JoystickButton elevator4 = new JoystickButton(driver,4);
-   elevator4.whileTrue(new RunCommand(()-> elevator.setDistance(50), elevator));
+   elevator4.whileTrue(new RunCommand(()-> elevator.setDistance(15), elevator));
    elevator4.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
   }
   
