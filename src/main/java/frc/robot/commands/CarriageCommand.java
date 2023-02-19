@@ -2,9 +2,13 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+// not complete 
+
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
+import frc.robot.RobotState;
 import frc.robot.subsystems.Carriage;
 
 public class CarriageCommand extends CommandBase {
@@ -12,12 +16,14 @@ public class CarriageCommand extends CommandBase {
   /** Creates a new CarriageCommand. */
   public CarriageCommand(Carriage carriage) {
     this.carriage = carriage;
+    addRequirements(carriage);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

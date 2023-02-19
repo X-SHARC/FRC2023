@@ -5,15 +5,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.Carriage;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TakeFromStationCommand extends SequentialCommandGroup {
+  Elevator elevator;
+  Intake intake;
+  Carriage carriage;
+  double distance;
   /** Creates a new TakeFromStationCommand. */
   public TakeFromStationCommand() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands();
+    addCommands(new IntakeCommand(intake), new CarriageCommand(carriage), new ElevatorCommand(elevator, distance));
   }
 }
