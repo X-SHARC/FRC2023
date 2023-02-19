@@ -5,38 +5,24 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotState;
-import frc.robot.subsystems.Elevator;
 
-public class ElevatorCommand extends CommandBase {
-  Elevator elevator;
-  double distance;
-  /** Creates a new ElevatorCommand. */
-  public ElevatorCommand(Elevator elevator, double distance) {
-    this.elevator = elevator;
-    this.distance = distance;
-    addRequirements(elevator);
+public class DriveDistance extends CommandBase {
+  /** Creates a new DriveDistance. */
+  public DriveDistance() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    RobotState.setElevating(isFinished());
-    elevator.resetEncoder();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    elevator.setDistance(distance);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    elevator.stop();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
