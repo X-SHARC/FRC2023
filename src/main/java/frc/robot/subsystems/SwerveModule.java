@@ -17,9 +17,6 @@ import frc.robot.Constants;
 import frc.robot.lib.util.Gearbox;
 
 public class SwerveModule {
-  // CANCoder & SRXMagEncoder has 4096 ticks/rotation
-  private static double kEncoderTicksPerRotation = 4096;
-
   private String name;
   private Rotation2d offset;
   private TalonFX driveMotor;
@@ -37,7 +34,6 @@ public class SwerveModule {
 
   public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.1543, 1.1543, 0.23523);
 
-  private int resetOffset = 0;
   private boolean driveEncoderInverted;
 
   public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, DutyCycleEncoder rotEncoder, Rotation2d offset, boolean driveEncoderInverted, PIDController drivePID) {
