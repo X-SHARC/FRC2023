@@ -9,6 +9,8 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.ElevatorDownCommand;
+import frc.robot.commands.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,6 +35,8 @@ public class RobotContainer {
   //Commands 
   SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
   ElevatorCommand elevatorCommand = new ElevatorCommand(elevator, 15);
+  ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevator);
+  ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
 
       public RobotContainer() {
     // Configure the trigger bindings
@@ -49,19 +53,21 @@ public class RobotContainer {
       new JoystickButton(driver, 4),
     };
 
-    JoystickButton elevator1 = new JoystickButton(driver, 1);
-    elevator1.whileTrue(new RunCommand(()-> elevator.elevatorUp(), elevator));
-    elevator1.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
+    JoystickButton elevator1 = new JoystickButton(driver, 3);
+    elevator1.whileTrue(elevatorUpCommand);
+  //  elevator1.whileTrue(new RunCommand(()-> elevator.elevatorUp(), elevator));
+   // elevator1.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
   
 
-    JoystickButton elevator2 = new JoystickButton(driver,2);
-    elevator2.whileTrue(new RunCommand(()-> elevator.elevatorDown(), elevator));
-   elevator2.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
+    JoystickButton elevator2 = new JoystickButton(driver,4);
+    elevator2.whileTrue(elevatorDownCommand);
+//   elevator2.whileTrue(new RunCommand(()-> elevator.elevatorDown(), elevator));
+  // elevator2.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
 
-     JoystickButton elevator3 = new JoystickButton(driver,3);
+     JoystickButton elevator3 = new JoystickButton(driver,1);
    elevator3.whileTrue(elevatorCommand);
 
-   JoystickButton elevator4 = new JoystickButton(driver,4);
+   JoystickButton elevator4 = new JoystickButton(driver,2);
    elevator4.whileTrue(new RunCommand(()-> elevator.setDistance(15), elevator));
    elevator4.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
 

@@ -2,22 +2,26 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
-  private WPI_TalonFX elevatorMasterMotor = new WPI_TalonFX(32, "canavar");
-  private WPI_TalonFX elevatorSlaveMotor = new WPI_TalonFX(19, "canavar");
+  private TalonFX elevatorMasterMotor = new TalonFX(32, "canavar");
+  private TalonFX elevatorSlaveMotor = new TalonFX(19, "canavar");
+  private PowerDistribution pdh = new PowerDistribution();
 
-  private DigitalInput topLimitSwitch = new DigitalInput(1);
-  private DigitalInput bottomLimitSwitch = new DigitalInput(0);
+  public DigitalInput topLimitSwitch = new DigitalInput(1);
+  public DigitalInput bottomLimitSwitch = new DigitalInput(0);
 
   private double kP = 0.000;
   private double kI = 0.0;
@@ -44,16 +48,16 @@ public class Elevator extends SubsystemBase {
   
 
   public Elevator() {
-    elevatorMasterMotor.feed();
+    //elevatorMasterMotor.feed();
     elevatorMasterMotor.clearStickyFaults();
     elevatorMasterMotor.configFactoryDefault();
-    System.out.println("Falcon master safety is enabled: " + elevatorMasterMotor.isSafetyEnabled());
+    //System.out.println("Falcon master safety is enabled: " + elevatorMasterMotor.isSafetyEnabled());
 
     elevatorSlaveMotor.setInverted(false);
     elevatorMasterMotor.setInverted(false);
     elevatorMasterMotor.setNeutralMode(NeutralMode.Brake);
     elevatorSlaveMotor.setNeutralMode(NeutralMode.Brake);
-    //elevatorSlaveMotor.follow(elevatorMasterMotor);
+    elevatorSlaveMotor.follow(elevatorMasterMotor);
   }
 
     
@@ -83,9 +87,10 @@ public class Elevator extends SubsystemBase {
 
 
     public void elevatorUp(){
-    // if (topLimitSwitch.get() == true){  // elektronik yanlış
-     elevatorMasterMotor.set(ControlMode.PercentOutput, 0.1);
-      } // }
+     if (topLimitSwitch.get() == true){  // elektronik yanlış
+        elevatorMasterMotor.set(ControlMode.PercentOutput, 0.1);
+      }
+     }
 
     public void elevatorDown(){
     if (bottomLimitSwitch.get() == false){
@@ -98,6 +103,7 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Voltage", pdh.getCurrent(19));
     perpendicularDistance = getPerpendicularDistance();
     distance = getDistance();
     SmartDashboard.putNumber("Elevator Distance:", distance);
@@ -105,14 +111,8 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putData(topLimitSwitch);
     SmartDashboard.putData(bottomLimitSwitch);
 
+  // if (topLimitSwitch.get() == false || bottomLimitSwitch.get() == true) stop();
 
-    if (topLimitSwitch.get() == true) stop();
-    else if(bottomLimitSwitch.get() == true){
-      stop();
-      resetEncoder();
     } 
 
   }
-
-
-}
