@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,17 +17,17 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   public Intake() {
     intakeMotor.setInverted(false);
+    intakeMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public void grabCube(){
-    intakeMotor.set(ControlMode.PercentOutput, 0.5);
-    RobotState.getInstance();
-    RobotState.setIntaking();
+    intakeMotor.set(ControlMode.PercentOutput, 0.9);
+    RobotState.getInstance().setIntaking();
 
   }
 
   public void grabCone(){
-    intakeMotor.set(ControlMode.PercentOutput, -0.5);
+    intakeMotor.set(ControlMode.PercentOutput, -0.9);
     RobotState.getInstance();
     RobotState.setEjecting();
   }

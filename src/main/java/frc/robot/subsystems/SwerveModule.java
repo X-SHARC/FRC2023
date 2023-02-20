@@ -22,7 +22,7 @@ public class SwerveModule {
   private static double kEncoderTicksPerRotation = 4096;
 
   private String name;
-  private Rotation2d offset;
+  private double offset;
   private TalonFX driveMotor;
   private TalonFX angleMotor;
   //private Encoder rotEncoder;
@@ -41,7 +41,7 @@ public class SwerveModule {
   private int resetOffset = 0;
   private boolean driveEncoderInverted;
 
-  public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, CANCoder rotEncoder, boolean driveEncoderInverted, PIDController drivePID) {
+  public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, CANCoder rotEncoder, boolean driveEncoderInverted, PIDController drivePID, double offset) {
     this.name = name;
     this.driveMotor = driveMotor;
     this.angleMotor = angleMotor;
@@ -54,6 +54,7 @@ public class SwerveModule {
 
     driveMotor.setInverted(this.driveEncoderInverted);
     rotPID.disableContinuousInput();
+    rotEncoder.configMagnetOffset(offset);
   }
 
   public double getDegrees(){

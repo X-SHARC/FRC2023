@@ -88,13 +88,13 @@ public class Elevator extends SubsystemBase {
 
     public void elevatorUp(){
      if (topLimitSwitch.get() == true){  // elektronik yanlış
-        elevatorMasterMotor.set(ControlMode.PercentOutput, 0.1);
+        elevatorMasterMotor.set(ControlMode.PercentOutput, 0.5);
       }
      }
 
     public void elevatorDown(){
     if (bottomLimitSwitch.get() == false){
-      elevatorMasterMotor.set(ControlMode.PercentOutput, -0.1);
+      elevatorMasterMotor.set(ControlMode.PercentOutput, -0.5);
     } }
 
     public void stop(){
@@ -112,6 +112,10 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putData(bottomLimitSwitch);
 
   // if (topLimitSwitch.get() == false || bottomLimitSwitch.get() == true) stop();
+
+    if (bottomLimitSwitch.get() == true){
+      resetEncoder();
+    }
 
     } 
 

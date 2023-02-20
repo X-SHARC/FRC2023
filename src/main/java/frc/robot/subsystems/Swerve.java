@@ -58,6 +58,7 @@ public class Swerve extends SubsystemBase {
   private AHRS gyroAhrs = new AHRS();
 
   TalonFX driveMotorBL = new TalonFX(11);
+  TalonFX angleMotorBL = new TalonFX(16);
 
   // TODO: Update these CAN device IDs to match your TalonFX + CANCoder device IDs | Done
   // TODO: Update module offsets to match your CANCoder offsets | Done
@@ -72,11 +73,11 @@ public class Swerve extends SubsystemBase {
 
   final boolean invertAllModules = true;
   private SwerveModule[] modules = new SwerveModule[] {
-    new SwerveModule("FL", new TalonFX(17), new TalonFX(13), new CANCoder(4),false, new PIDController(pidValues[0], 0, 0)), //! Front Left
-    new SwerveModule("FR", new TalonFX(14), new TalonFX(15), new CANCoder(3), false, new PIDController(pidValues[1], 0, 0)), //! Front Right
-    new SwerveModule("RL", driveMotorBL, new TalonFX(16), new CANCoder(2), 
-    true, new PIDController(pidValues[2], 0, 0)), //! Back Left
-    new SwerveModule("RR", new TalonFX(10), new TalonFX(12), new CANCoder(1), false, new PIDController(pidValues[3], 0, 0))  //! Back Right
+    new SwerveModule("FL", new TalonFX(17), new TalonFX(13), new CANCoder(4),false, new PIDController(pidValues[0], 0, 0),-298), //! Front Left
+    new SwerveModule("FR", new TalonFX(14), new TalonFX(15), new CANCoder(3), false, new PIDController(pidValues[1], 0, 0),-40), //! Front Right
+    new SwerveModule("RL", driveMotorBL, angleMotorBL, new CANCoder(2), 
+    true, new PIDController(pidValues[2], 0, 0),-35), //! Back Left
+    new SwerveModule("RR", new TalonFX(10), new TalonFX(12), new CANCoder(1), false, new PIDController(pidValues[3], 0, 0),-11)  //! Back Right
   };
 
 
@@ -88,7 +89,7 @@ public class Swerve extends SubsystemBase {
   };
 
   public Swerve(boolean isCalibrating) {
-    driveMotorBL.setInverted(true);
+    driveMotorBL.setInverted(false);
     this.isCalibrating = isCalibrating;
     resetAllEncoders();
     
@@ -249,10 +250,10 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Posey", getPose().getY());
     SmartDashboard.putNumber("Rot", getPose().getRotation().getRadians());
 
-    SmartDashboard.putNumber("FL",modules[0].getDegrees());
-    SmartDashboard.putNumber("FR",modules[1].getDegrees());
-    SmartDashboard.putNumber("BL",modules[2].getDegrees());
-    SmartDashboard.putNumber("BR",modules[3].getDegrees());
+    SmartDashboard.putNumber("1 FL",modules[0].getDegrees());
+    SmartDashboard.putNumber("2 FR",modules[1].getDegrees());
+    SmartDashboard.putNumber("3 BL",modules[2].getDegrees());
+    SmartDashboard.putNumber("4 BR",modules[3].getDegrees());
 
 
     
