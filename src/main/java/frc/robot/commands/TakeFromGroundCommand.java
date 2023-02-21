@@ -35,10 +35,12 @@ public class TakeFromGroundCommand extends CommandBase {
   }
 
   // Called every time the scheduler runs while the command is scheduled.
+
+  //! CONE GRABBING FROM GROUND
   @Override
   public void execute() {
     elevator.setDistance(12);
-    intake.grabObject();
+    intake.grabCone();
     slider.sliderForward();
     elevator.elevatorDown();
   }

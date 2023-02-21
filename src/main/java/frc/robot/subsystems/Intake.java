@@ -5,28 +5,37 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotState;
 
 public class Intake extends SubsystemBase {
   WPI_TalonFX intakeMotor = new WPI_TalonFX(Constants.INTAKE_ID);
   /** Creates a new Intake. */
   public Intake() {
     intakeMotor.setInverted(false);
+    intakeMotor.setNeutralMode(NeutralMode.Brake);
   }
 
-  public void grabObject(){
-    intakeMotor.set(ControlMode.PercentOutput, 0.5);
+  public void grabCube(){
+    intakeMotor.set(ControlMode.PercentOutput, 0.9);
+    RobotState.getInstance().setIntaking();
+
   }
 
-  public void dropObject(){
-    intakeMotor.set(ControlMode.PercentOutput, -0.5);
+  public void grabCone(){
+    intakeMotor.set(ControlMode.PercentOutput, -0.9);
+    RobotState.getInstance();
+    RobotState.setEjecting();
   }
 
   public void stop(){
     intakeMotor.set(ControlMode.PercentOutput, 0.0);
+    RobotState.getInstance();
+    RobotState.setIntakeIdle();
   }
 
   @Override

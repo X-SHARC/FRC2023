@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 
@@ -46,7 +48,9 @@ public class SwerveDriveCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    swerveSubsystem.resetRotEncoders();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

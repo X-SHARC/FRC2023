@@ -1,96 +1,100 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
-  WPI_TalonFX elevatorMasterMotor = new WPI_TalonFX(Constants.ELEVATOR_SLAVE_ID);
-  WPI_TalonFX elevatorSlaveMotor = new WPI_TalonFX(Constants.ELEVATOR_MASTER_ID);
+  private WPI_TalonFX elevatorMasterMotor = new WPI_TalonFX(32, "canavar");
+  private WPI_TalonFX elevatorSlaveMotor = new WPI_TalonFX(19, "canavar");
+  private PowerDistribution pdh = new PowerDistribution();
 
-  DigitalInput topLimitSwitch = new DigitalInput(0);
-  DigitalInput bottomLimitSwitch = new DigitalInput(1);
+  public DigitalInput topLimitSwitch = new DigitalInput(1);
+  public DigitalInput bottomLimitSwitch = new DigitalInput(0);
 
-  private double kP = 1;
-  private double kI = 2;
-  private double kD = 3;
-  private double kG = 4;
+  private double kP = 0.000;
+  private double kI = 0.0;
+  private double kD = 0.0;
 
-  private double kS = 1;
-  private double kV = 2;
-  private double kA = 3;
+  private double kG = 0.0;
+  private double kS = 0.0;
+  private double kV = 0.0;
+  private double kA = 0.0; 
 
-  private double distance;
-  private double feedForwardOutput;
-  private double PIDOutput;
+  private double distance = 0;
+  private double perpendicularDistance = 0;
+
+  // private double feedForwardOutput = 0;
+  private double PIDOutput = 0;
   
-  double gearCircumference = 4.8514 * Math.PI;
+  private double gearCircumference = Units.inchesToMeters(1.91) * Math.PI * 100;
 
-  double error;
-  double output;
+  // private double error = 0;
+  private double output = 0;
 
-  public PIDController elevatorPID = new PIDController(kP, kI, kD);
-  ElevatorFeedforward feedForward = new ElevatorFeedforward(kS, kG, kV, kA);
-  /** Creates a new Elevator. */
+  private PIDController elevatorPID = new PIDController(kP, kI, kD);
+  private ElevatorFeedforward feedForward = new ElevatorFeedforward(kS, kG, kV, kA);
+  
 
   public Elevator() {
+    //elevatorMasterMotor.feed();
+    elevatorMasterMotor.clearStickyFaults();
+    elevatorMasterMotor.configFactoryDefault();
+    //System.out.println("Falcon master safety is enabled: " + elevatorMasterMotor.isSafetyEnabled());
+
     elevatorSlaveMotor.setInverted(false);
-    elevatorMasterMotor.setInverted(true);
+    elevatorMasterMotor.setInverted(false);
+    elevatorMasterMotor.setNeutralMode(NeutralMode.Brake);
+    elevatorSlaveMotor.setNeutralMode(NeutralMode.Brake);
     elevatorSlaveMotor.follow(elevatorMasterMotor);
   }
-
-  /*   if (SensorValue(topLimitSwitch) == true) {
-      elevatorMasterMotor.set();
-    } else {
-      elevatorMasterMotor.set();
-    }
-    if (SensorValue(bottomLimitSwitch) == true) {
-      elevatorMasterMotor.set();
-    } else{
-      elevatorMasterMotor.set();
-    }
-  }  
-   public void SetMotorSpeed(double speed){
-      if ()
-    }   */ 
 
     
     public void resetEncoder(){
       elevatorMasterMotor.setSelectedSensorPosition(0);
     }
 
+    public double getDistance(){
+      distance = elevatorMasterMotor.getSelectedSensorPosition() / 17.42;
+      distance = (distance/2048.0) * gearCircumference * 2;
+      return distance;
+    }
+
+    public double getPerpendicularDistance(){
+      return getDistance()*Math.sin(Units.degreesToRadians(55));
+    }
+
     public void setDistance(double setpoint){
-      double distance = elevatorMasterMotor.getSelectedSensorPosition();
-      distance = (distance/2048.0) * gearCircumference;
+      double distance = getDistance();
 
       elevatorPID.setTolerance(3);
       PIDOutput = elevatorPID.calculate(distance, setpoint);
-      feedForwardOutput = feedForward.calculate(60.0);
-      output = (PIDOutput + feedForwardOutput) / RobotController.getBatteryVoltage();
+      //feedForwardOutput = feedForward.calculate(60.0);
+      output = (PIDOutput /*+ feedForwardOutput*/) / RobotController.getBatteryVoltage();
       elevatorMasterMotor.set(ControlMode.PercentOutput, output);
     }
 
 
     public void elevatorUp(){
-   //   if (topLimitSwitch.get() == false){
-     elevatorMasterMotor.set(ControlMode.PercentOutput, 0.3);
-      } //}
+     if (topLimitSwitch.get() == true){  // elektronik yanlış
+        elevatorMasterMotor.set(ControlMode.PercentOutput, 0.5);
+      }
+     }
 
     public void elevatorDown(){
-  //    if (bottomLimitSwitch.get() == false){
-      elevatorMasterMotor.set(ControlMode.PercentOutput, -0.3);
-    } //}
+    if (bottomLimitSwitch.get() == false){
+      elevatorMasterMotor.set(ControlMode.PercentOutput, -0.5);
+    } }
 
     public void stop(){
       elevatorMasterMotor.set(ControlMode.PercentOutput, 0.0);
@@ -98,9 +102,20 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Elevator Encoder Value:", distance);
-    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Voltage", pdh.getCurrent(19));
+    perpendicularDistance = getPerpendicularDistance();
+    distance = getDistance();
+    SmartDashboard.putNumber("Elevator Distance:", distance);
+    SmartDashboard.putNumber("Elevator Perpendicular Distance:", perpendicularDistance);
+    SmartDashboard.putData(topLimitSwitch);
+    SmartDashboard.putData(bottomLimitSwitch);
+
+  // if (topLimitSwitch.get() == false || bottomLimitSwitch.get() == true) stop();
+
+    if (bottomLimitSwitch.get() == true){
+      resetEncoder();
+    }
+
+    } 
+
   }
-
-
-}

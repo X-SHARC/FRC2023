@@ -5,49 +5,41 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Slider;
-
-public class ScoreTo3Command extends CommandBase {
+import frc.robot.RobotState;
+import frc.robot.RobotState.GamePiece;
+public class IntakeCommand extends CommandBase {
   Intake intake;
-  Slider slider;
-  Elevator elevator;
-  double distance;
+  static RobotState currentRobotState = RobotState.getInstance();
 
-  /** Creates a new ScoreTo3Command. */
-  public ScoreTo3Command(Intake intake, Slider slider, Elevator elevator) {
+  /** Creates a new IntakeCommand. */
+  public IntakeCommand(Intake intake) {
     this.intake = intake;
-    this.slider = slider;
-    this.elevator = elevator;
-    addRequirements(intake, slider, elevator);
+    addRequirements(intake);
     // Use addRequirements() here to declare subsystem dependencies.
-    this.distance = 117;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevator.resetEncoder();
-    this.distance = 117;
+    RobotState.setIntaking();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
-  //! CODE IS WROTE AS GRABBING CONE, SO GRABBING CUBE MEANS DROPPING CONE BELOW
   @Override
   public void execute() {
-    elevator.setDistance(117);
-    elevator.elevatorUp();
-    slider.sliderForward();
-    intake.grabCube();
+    if (RobotState.getInstance().currentGamePiece == GamePiece.CONE){
+      intake.grabCone();
+    }
+    else if (RobotState.getInstance().currentGamePiece == GamePiece.CUBE){
+      intake.grabCube();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     intake.stop();
-    elevator.stop();
-    slider.stop();
   }
 
   // Returns true when the command should end.

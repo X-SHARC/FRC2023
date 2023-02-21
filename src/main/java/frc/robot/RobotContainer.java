@@ -4,11 +4,13 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.Slider;
+import frc.robot.subsystems.Carriage;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
-import frc.robot.commands.Autos;
-import frc.robot.commands.SliderBackwardCommand;
-import frc.robot.commands.SliderForwardCommand;
+import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.ElevatorDownCommand;
+import frc.robot.commands.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -23,17 +25,20 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final XboxController driver = new XboxController(0);
-  private final XboxController operator = new XboxController(1);
+  private final Joystick operator = new Joystick(1);
+ // private final Joystick driverJoystick = new Joystick(0);
 
   //Subsystems
   Swerve swerveDrivetrain = new Swerve(true);
-  Slider slider = new Slider();
+  Elevator elevator = new Elevator();
+  Intake intake = new Intake();
+  Carriage carriage = new Carriage();
 
   //Commands 
   SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
-  SliderBackwardCommand sliderBackwardCommand = new SliderBackwardCommand(slider);
-  SliderForwardCommand sliderForwardCommand = new SliderForwardCommand(slider);
-
+  ElevatorCommand elevatorCommand = new ElevatorCommand(elevator, 15);
+  ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevator);
+  ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
 
       public RobotContainer() {
     // Configure the trigger bindings
@@ -41,25 +46,54 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    swerveDrivetrain.setDefaultCommand(driveCommand);
-
-    JoystickButton[] sliderButtons = {
-      new JoystickButton(operator, 1),
-      new JoystickButton(operator, 2)
+    boolean a = RobotState.getTripping();
+    //swerveDrivetrain.setDefaultCommand(driveCommand);
+    JoystickButton[] elevatorButtons = {
+      new JoystickButton(driver, 1),
+      new JoystickButton(driver, 2),
+      new JoystickButton(driver, 3),
+      new JoystickButton(driver, 4),
     };
 
-    sliderButtons[0]
-    .whileTrue(new RunCommand(()-> slider.sliderForward(), slider))
-    .whileFalse(new RunCommand(()-> slider.stop(), slider));
+    /*JoystickButton elevator1 = new JoystickButton(driver, 1);
+    elevator1.whileTrue(elevatorUpCommand);
+  //  elevator1.whileTrue(new RunCommand(()-> elevator.elevatorUp(), elevator));
+   // elevator1.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
   
 
-    sliderButtons[1]
-   .whileTrue(new RunCommand(()-> slider.sliderBackwards(), slider))
-   .whileFalse(new RunCommand(()-> slider.stop(), slider));
+    JoystickButton elevator2 = new JoystickButton(driver,2);
+    elevator2.whileTrue(elevatorDownCommand);
+//   elevator2.whileTrue(new RunCommand(()-> elevator.elevatorDown(), elevator));
+  // elevator2.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
 
+     JoystickButton elevator3 = new JoystickButton(driver,3);
+   elevator3.whileTrue(elevatorCommand);
+
+   JoystickButton elevator4 = new JoystickButton(driver,4);
+   elevator4.whileTrue(new RunCommand(()-> elevator.setDistance(15), elevator));
+   elevator4.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
+
+   */JoystickButton carriage1 = new JoystickButton(operator, 7);
+   carriage1.whileTrue(new RunCommand(()-> carriage.intakeUp(), carriage));
+   carriage1.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
+
+   JoystickButton carriage2 = new JoystickButton(operator,8);
+   carriage2.whileTrue(new RunCommand(()-> carriage.intakeDown(), carriage));
+   carriage2.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
+
+   JoystickButton intake1 = new JoystickButton(operator, 9);
+   intake1.whileTrue(new RunCommand(()-> intake.grabCone(), intake));
+   intake1.whileFalse(new RunCommand(()-> intake.stop(), intake));
+
+   JoystickButton intake2 = new JoystickButton(operator,10);
+   intake2.whileTrue(new RunCommand(()-> intake.grabCube(), intake));
+   intake2.whileFalse(new RunCommand(()-> intake.stop(), intake));
+   swerveDrivetrain.setDefaultCommand(driveCommand);
   }
+  
+
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto();
+    return null;
   }
 }

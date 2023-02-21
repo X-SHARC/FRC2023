@@ -33,10 +33,11 @@ public class TakeFromStationCommand extends CommandBase {
   }
 
   // Called every time the scheduler runs while the command is scheduled.
+  //! CONE GRABBING FROM THE STATION
   @Override
   public void execute() {
     elevator.setDistance(97);
-    intake.grabObject();
+    intake.grabCone();
     slider.sliderForward();
     elevator.elevatorUp();
   }

@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotController;
@@ -17,13 +18,16 @@ import frc.robot.Constants;
 import frc.robot.lib.util.Gearbox;
 
 public class SwerveModule {
+  // CANCoder & SRXMagEncoder has 4096 ticks/rotation
+  private static double kEncoderTicksPerRotation = 4096;
+
   private String name;
-  private Rotation2d offset;
+  private double offset;
   private TalonFX driveMotor;
   private TalonFX angleMotor;
   //private Encoder rotEncoder;
-  private DutyCycleEncoder rotEncoder;
-  // DutyCycleEncoder is used for absolute values. Switch to normal Encoder class for relative.
+  private CANCoder rotEncoder;
+//CANCoder being used as absoulute encoder
   // Using absolute has the advantage of zeroing the modules autonomously.
   // If using relative, find a way to mechanically zero out wheel headings before starting the robot.
   Gearbox driveRatio = new Gearbox(6.86, 2);
@@ -34,9 +38,10 @@ public class SwerveModule {
 
   public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.1543, 1.1543, 0.23523);
 
+  private int resetOffset = 0;
   private boolean driveEncoderInverted;
 
-  public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, DutyCycleEncoder rotEncoder, Rotation2d offset, boolean driveEncoderInverted, PIDController drivePID) {
+  public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, CANCoder rotEncoder, boolean driveEncoderInverted, PIDController drivePID, double offset) {
     this.name = name;
     this.driveMotor = driveMotor;
     this.angleMotor = angleMotor;
@@ -48,13 +53,14 @@ public class SwerveModule {
     this.drivePID = drivePID;
 
     driveMotor.setInverted(this.driveEncoderInverted);
-
     rotPID.disableContinuousInput();
+    rotEncoder.configMagnetOffset(offset);
   }
 
   public double getDegrees(){
-    return Math.IEEEremainder((rotEncoder.get() * 360. + offset.getDegrees()),
-     360.);
+    return rotEncoder.getAbsolutePosition();
+    /*return Math.IEEEremainder((rotEncoder.getPosition() * 360. + offset.getDegrees()),
+     360.);*/
   }
 
   public SwerveModulePosition getModulePosition(){
@@ -97,7 +103,7 @@ public class SwerveModule {
   }
 
   public void resetRotationEncoder(){
-    rotEncoder.reset();
+    rotEncoder.setPosition(0);
   }
   
   public void resetDriveEncoder(){
