@@ -13,9 +13,11 @@ import frc.robot.subsystems.Carriage;
 
 public class CarriageCommand extends CommandBase {
   Carriage carriage;
+  double setpoint;
   /** Creates a new CarriageCommand. */
-  public CarriageCommand(Carriage carriage) {
+  public CarriageCommand(Carriage carriage, double setpoint) {
     this.carriage = carriage;
+    this.setpoint = setpoint;
     addRequirements(carriage);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -23,15 +25,20 @@ public class CarriageCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    carriage.resetEncoder();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    carriage.setDegrees(setpoint);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    carriage.stop();
+  }
 
   // Returns true when the command should end.
   @Override

@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticHub;
@@ -20,10 +21,12 @@ public class Elevator extends SubsystemBase {
   private TalonFX elevatorSlaveMotor = new TalonFX(19, "canavar");
   private PowerDistribution pdh = new PowerDistribution();
 
+  SlewRateLimiter limiter = new SlewRateLimiter(0.05);
+
   public DigitalInput topLimitSwitch = new DigitalInput(1);
   public DigitalInput bottomLimitSwitch = new DigitalInput(0);
 
-  private double kP = 0.000;
+  private double kP = 0.025;
   private double kI = 0.0;
   private double kD = 0.0;
 
@@ -58,11 +61,16 @@ public class Elevator extends SubsystemBase {
     elevatorMasterMotor.setNeutralMode(NeutralMode.Brake);
     elevatorSlaveMotor.setNeutralMode(NeutralMode.Brake);
     elevatorSlaveMotor.follow(elevatorMasterMotor);
+    elevatorPID.setTolerance(1);
   }
 
     
     public void resetEncoder(){
       elevatorMasterMotor.setSelectedSensorPosition(0);
+    }
+
+    public double getError(){
+      return elevatorPID.getPositionError();
     }
 
     public double getDistance(){
@@ -75,26 +83,32 @@ public class Elevator extends SubsystemBase {
       return getDistance()*Math.sin(Units.degreesToRadians(55));
     }
 
+    public boolean isAtSetpoint(){
+      return elevatorPID.atSetpoint();
+    }
+
     public void setDistance(double setpoint){
       double distance = getDistance();
 
-      elevatorPID.setTolerance(3);
+      
       PIDOutput = elevatorPID.calculate(distance, setpoint);
       //feedForwardOutput = feedForward.calculate(60.0);
-      output = (PIDOutput /*+ feedForwardOutput*/) / RobotController.getBatteryVoltage();
-      elevatorMasterMotor.set(ControlMode.PercentOutput, output);
+      //output = (PIDOutput /*+ feedForwardOutput*/) / RobotController.getBatteryVoltage();
+      if(topLimitSwitch.get() == true){
+        elevatorMasterMotor.set(ControlMode.PercentOutput, PIDOutput);
+      }
     }
 
 
     public void elevatorUp(){
      if (topLimitSwitch.get() == true){  // elektronik yanlış
-        elevatorMasterMotor.set(ControlMode.PercentOutput, 0.5);
+        elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(0.3));
       }
      }
 
     public void elevatorDown(){
     if (bottomLimitSwitch.get() == false){
-      elevatorMasterMotor.set(ControlMode.PercentOutput, -0.5);
+      elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(0.3));
     } }
 
     public void stop(){
@@ -106,6 +120,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Voltage", pdh.getCurrent(19));
     perpendicularDistance = getPerpendicularDistance();
     distance = getDistance();
+    SmartDashboard.putNumber("PIDOutput", PIDOutput);
     SmartDashboard.putNumber("Elevator Distance:", distance);
     SmartDashboard.putNumber("Elevator Perpendicular Distance:", perpendicularDistance);
     SmartDashboard.putData(topLimitSwitch);

@@ -17,10 +17,11 @@ public class TakeFromStationCommand extends SequentialCommandGroup {
   Intake intake;
   Carriage carriage;
   double distance;
+  double angle;
   /** Creates a new TakeFromStationCommand. */
   public TakeFromStationCommand() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new IntakeCommand(intake), new CarriageCommand(carriage), new ElevatorCommand(elevator, distance));
+    addCommands(new IntakeCommand(intake), new CarriageCommand(carriage, angle), new ElevatorCommand(elevator, distance));
   }
 }
