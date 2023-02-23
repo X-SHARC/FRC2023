@@ -99,13 +99,13 @@ public class Elevator extends SubsystemBase {
 
     public void elevatorUp(){
      if (topLimitSwitch.get() == true){  // elektronik yanlış
-        elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(0.18));
+        elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(0.3));
       }
      }
 
     public void elevatorDown(){
     if (bottomLimitSwitch.get() == true){
-      elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(0.18));
+      elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(0.3));
     } }
 
     public void stop(){
@@ -113,11 +113,11 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean getHome(){
-      return bottomLimitSwitch.get();
+      return !(bottomLimitSwitch.get());
     }
 
     public void elevatorHome(double speed){
-      if (bottomLimitSwitch.get() == false){
+      if (bottomLimitSwitch.get() == true){
         elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(speed));
       }
       else resetEncoder();

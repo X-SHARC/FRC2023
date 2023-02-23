@@ -24,7 +24,6 @@ public class ElevatorCommand extends CommandBase {
   @Override
   public void initialize() {
     RobotState.setElevating(isFinished());
-    elevator.resetEncoder();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
