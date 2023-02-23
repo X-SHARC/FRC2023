@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotState;
@@ -18,14 +18,13 @@ public class ElevatorCommand extends CommandBase {
     addRequirements(elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
+  
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //RobotState.setElevating(isFinished());
-    //elevator.resetEncoder();
-    System.out.println("Initializing auto elevator");
-    System.out.println("Error: " + elevator.getError());
+    RobotState.setElevating(isFinished());
+    elevator.resetEncoder();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,13 +36,12 @@ public class ElevatorCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Command quit!");
     elevator.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return elevator.isAtSetpoint();
+    return false;
   }
 }

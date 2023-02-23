@@ -3,16 +3,13 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -26,7 +23,7 @@ public class Elevator extends SubsystemBase {
   public DigitalInput topLimitSwitch = new DigitalInput(1);
   public DigitalInput bottomLimitSwitch = new DigitalInput(0);
 
-  private double kP = 0.025;
+  private double kP = 0.045;
   private double kI = 0.0;
   private double kD = 0.0;
 
@@ -102,22 +99,33 @@ public class Elevator extends SubsystemBase {
 
     public void elevatorUp(){
      if (topLimitSwitch.get() == true){  // elektronik yanlış
-        elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(0.3));
+        elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(0.18));
       }
      }
 
     public void elevatorDown(){
-    if (bottomLimitSwitch.get() == false){
-      elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(0.3));
+    if (bottomLimitSwitch.get() == true){
+      elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(0.18));
     } }
 
     public void stop(){
       elevatorMasterMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
+    public boolean getHome(){
+      return bottomLimitSwitch.get();
+    }
+
+    public void elevatorHome(double speed){
+      if (bottomLimitSwitch.get() == false){
+        elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(speed));
+      }
+      else resetEncoder();
+    }
+
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Voltage", pdh.getCurrent(19));
+    SmartDashboard.putNumber("Current", pdh.getCurrent(19));
     perpendicularDistance = getPerpendicularDistance();
     distance = getDistance();
     SmartDashboard.putNumber("PIDOutput", PIDOutput);
@@ -128,7 +136,7 @@ public class Elevator extends SubsystemBase {
 
   // if (topLimitSwitch.get() == false || bottomLimitSwitch.get() == true) stop();
 
-    if (bottomLimitSwitch.get() == true){
+    if (bottomLimitSwitch.get() == false){
       resetEncoder();
     }
 

@@ -9,9 +9,9 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 import frc.robot.commands.CarriageCommand;
-import frc.robot.commands.ElevatorCommand;
-import frc.robot.commands.ElevatorDownCommand;
-import frc.robot.commands.ElevatorUpCommand;
+import frc.robot.commands.Elevator.ElevatorCommand;
+import frc.robot.commands.Elevator.ElevatorDownCommand;
+import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -69,7 +69,10 @@ public class RobotContainer {
   // elevator2.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
 
      JoystickButton elevator3 = new JoystickButton(operator,5);
-   elevator3.whileTrue(new ElevatorCommand(elevator, 70));
+   elevator3.whileTrue(new ElevatorCommand(elevator, 100));
+
+   JoystickButton elevatorDown = new JoystickButton(operator,9);
+   elevatorDown.whileTrue(new ElevatorCommand(elevator, 10));
 /* 
    JoystickButton elevator4 = new JoystickButton(driver,4);
    elevator4.whileTrue(new RunCommand(()-> elevator.setDistance(15), elevator));

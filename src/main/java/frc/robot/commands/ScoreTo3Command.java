@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.Elevator.ElevatorCommand;
 import frc.robot.subsystems.Carriage;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
@@ -17,12 +18,11 @@ public class ScoreTo3Command extends SequentialCommandGroup {
   Intake intake;
   Carriage carriage;
   double distance;
-  double angle;
   
   /** Creates a new ScoreTo2Command. */
   public ScoreTo3Command() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new IntakeCommand(intake), new CarriageCommand(carriage, angle), new ElevatorCommand(elevator, distance));
+    addCommands(new IntakeCommand(intake), new CarriageCommand(carriage, carriage.getDegrees()), new ElevatorCommand(elevator, elevator.getDistance()));
   }
 }

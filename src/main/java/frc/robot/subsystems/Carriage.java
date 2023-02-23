@@ -52,8 +52,8 @@ public class Carriage extends SubsystemBase {
   }
 
   public double getDegrees(){
-    double angle = carriageMotor.getSelectedSensorPosition();
-    angle = (angle/2048.0) * 360 * GearRatio1 /* * GearRatio2 */;
+    double angle = carriageMotor.getSelectedSensorPosition() * GearRatio1;
+    angle = (angle/2048.0) * 360;
     return angle;
   }
 

@@ -2,16 +2,17 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
-public class ElevatorDownCommand extends CommandBase {
+public class ElevatorUpCommand extends CommandBase {
   Elevator elevator;
-  /** Creates a new ElevatorDown. */
-  public ElevatorDownCommand(Elevator elevator) {
+  /** Creates a new ElevatorUp. */
+  public ElevatorUpCommand(Elevator elevator) {
     this.elevator = elevator;
+    addRequirements(elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -22,10 +23,10 @@ public class ElevatorDownCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (elevator.bottomLimitSwitch.get() == false){
-      elevator.elevatorDown();}
+    if (elevator.topLimitSwitch.get() == true){
+      elevator.elevatorUp();}
 
-   else{
+      else {
         elevator.stop();
       }
     }
