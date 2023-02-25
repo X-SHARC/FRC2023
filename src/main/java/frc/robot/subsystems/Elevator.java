@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
@@ -12,10 +13,14 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotState;
+import frc.robot.RobotState.ElevatorLevel;
+import frc.robot.RobotState.SwerveState;
+import frc.robot.commands.Elevator.ElevatorHome;
 
 public class Elevator extends SubsystemBase {
-  private TalonFX elevatorMasterMotor = new TalonFX(32, "canavar");
-  private TalonFX elevatorSlaveMotor = new TalonFX(19, "canavar");
+  private WPI_TalonFX elevatorMasterMotor = new WPI_TalonFX(32, "canavar");
+  private WPI_TalonFX elevatorSlaveMotor = new WPI_TalonFX(19, "canavar");
   private PowerDistribution pdh = new PowerDistribution();
 
   SlewRateLimiter limiter = new SlewRateLimiter(0.05);
@@ -48,10 +53,10 @@ public class Elevator extends SubsystemBase {
   
 
   public Elevator() {
-    //elevatorMasterMotor.feed();
+
+    RobotState.setElevating(false);
+
     elevatorMasterMotor.clearStickyFaults();
-    elevatorMasterMotor.configFactoryDefault();
-    //System.out.println("Falcon master safety is enabled: " + elevatorMasterMotor.isSafetyEnabled());
 
     elevatorSlaveMotor.setInverted(false);
     elevatorMasterMotor.setInverted(false);
@@ -64,6 +69,7 @@ public class Elevator extends SubsystemBase {
     
     public void resetEncoder(){
       elevatorMasterMotor.setSelectedSensorPosition(0);
+      RobotState.setElevating(false);
     }
 
     public double getError(){
@@ -93,6 +99,7 @@ public class Elevator extends SubsystemBase {
       //output = (PIDOutput /*+ feedForwardOutput*/) / RobotController.getBatteryVoltage();
       if(topLimitSwitch.get() == true){
         elevatorMasterMotor.set(ControlMode.PercentOutput, PIDOutput);
+        RobotState.setElevating(true);
       }
     }
 
@@ -100,6 +107,7 @@ public class Elevator extends SubsystemBase {
     public void elevatorUp(){
      if (topLimitSwitch.get() == true){  // elektronik yanlış
         elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(0.3));
+        RobotState.setElevating(true);
       }
      }
 
@@ -110,6 +118,7 @@ public class Elevator extends SubsystemBase {
 
     public void stop(){
       elevatorMasterMotor.set(ControlMode.PercentOutput, 0.0);
+      RobotState.setElevating(false);
     }
 
     public boolean getHome(){
@@ -121,10 +130,31 @@ public class Elevator extends SubsystemBase {
         elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(speed));
       }
       else resetEncoder();
+
+      RobotState.setElevating(true);
     }
+
+    private void saveFalcons(){
+        //Check the stallin ampers and type; eğer encoder değişmiyorsa ve amper yüksek geliyorsa durdur
+    }
+
+    //The conditional distance values can be arranged according to the need.
+    private ElevatorLevel getLevel(){
+      if(getDistance()>25 && getDistance() <70){
+        return ElevatorLevel.MIDROW;
+      }
+      else if(getDistance()>70){
+        return ElevatorLevel.TOPROW;
+      }
+      else return ElevatorLevel.ZERO;
+      
+    }
+
 
   @Override
   public void periodic() {
+    RobotState.setElevatorLevel(getLevel());
+
     SmartDashboard.putNumber("Current", pdh.getCurrent(19));
     perpendicularDistance = getPerpendicularDistance();
     distance = getDistance();
@@ -133,11 +163,16 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator Perpendicular Distance:", perpendicularDistance);
     SmartDashboard.putData(topLimitSwitch);
     SmartDashboard.putData(bottomLimitSwitch);
-
-  // if (topLimitSwitch.get() == false || bottomLimitSwitch.get() == true) stop();
-
+        
     if (bottomLimitSwitch.get() == false){
+      RobotState.setElevating(false);
+      RobotState.setElevatorLevel(ElevatorLevel.ZERO);
       resetEncoder();
+    }
+
+    //WILL BE TESTED
+    if(RobotState.getSwerveState() == SwerveState.MOVING){
+      stop();
     }
 
     } 

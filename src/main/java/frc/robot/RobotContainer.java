@@ -10,7 +10,6 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 import frc.robot.commands.CarriageCommand;
 import frc.robot.commands.Elevator.ElevatorCommand;
-import frc.robot.commands.Elevator.ElevatorDefault;
 import frc.robot.commands.Elevator.ElevatorDownCommand;
 import frc.robot.commands.Elevator.ElevatorHome;
 import frc.robot.commands.Elevator.ElevatorUpCommand;
@@ -27,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  public RobotState robotState = RobotState.getInstance();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final XboxController driver = new XboxController(0);
@@ -46,7 +45,6 @@ public class RobotContainer {
   ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevator);
   ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
   CarriageCommand carriageCommand = new CarriageCommand(carriage, 15);
-  ElevatorDefault elevatorDefault = new ElevatorDefault(elevator, operator, carriage, intake);
 
       public RobotContainer() {
     // Configure the trigger bindings
@@ -55,19 +53,10 @@ public class RobotContainer {
 
   private void configureBindings() {
     boolean a = RobotState.getTripping();
-    //swerveDrivetrain.setDefaultCommand(driveCommand);
-    JoystickButton[] elevatorButtons = {
-      new JoystickButton(driver, 1),
-      new JoystickButton(driver, 2),
-      new JoystickButton(driver, 3),
-      new JoystickButton(driver, 4),
-    };
-
+    swerveDrivetrain.setDefaultCommand(driveCommand);
     JoystickButton elevator1 = new JoystickButton(driver, 5);
     elevator1.whileTrue(elevatorUpCommand);
-  //  elevator1.whileTrue(new RunCommand(()-> elevator.elevatorUp(), elevator));
-   // elevator1.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
-  
+
 
     JoystickButton elevator2 = new JoystickButton(driver,6);
     elevator2.whileTrue(elevatorDownCommand);
@@ -107,10 +96,14 @@ public class RobotContainer {
 
    JoystickButton encoderReset = new JoystickButton(operator, 8);
    encoderReset.onTrue(new RunCommand(() -> elevator.resetEncoder(), elevator));
-   swerveDrivetrain.setDefaultCommand(driveCommand);
 
 
-   swerveDrivetrain.setDefaultCommand(driveCommand);
+   //Elevator Button Bindings
+   if(operator.getPOV()==0) new ElevatorUpCommand(elevator);
+   else if(operator.getPOV()==180) new ElevatorDownCommand(elevator);
+   else if(operator.getPOV()==90) new ElevatorHome(elevator);
+   else if(operator.getPOV()==270) new ElevatorCommand(elevator, 100);
+   else new RunCommand(() -> elevator.stop(), elevator);
   
   }
   

@@ -8,12 +8,10 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.event.EventLoop;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants;
+import frc.robot.RobotState;
+import frc.robot.RobotState.ElevatorLevel;
 import frc.robot.subsystems.Swerve;
 
 public class SwerveDriveCommand extends CommandBase {
@@ -29,6 +27,8 @@ public class SwerveDriveCommand extends CommandBase {
 
   double scale = 1;
   double scale2= 0.5;
+  double slowScale = 0.2;
+
   
     /** Creates a new SwerveDriveCommand. */
     public SwerveDriveCommand(Swerve sw, XboxController joystick) {
@@ -56,6 +56,9 @@ public class SwerveDriveCommand extends CommandBase {
   @Override
   public void execute() {
     scale = Math.abs(joystick.getRightTriggerAxis()) < 0.4 ? 1: scale2;
+
+    //WILL BE TESTED, is it needed? asansör açıkken swerve kitlemek ne kadar mantıklı? 
+    scale = RobotState.getElevatorLevelInt() > 2 ? scale : slowScale;
     //scale = Math.abs(joystick.getRightTriggerAxis()) > 0.4 ? 0.8 : scale2;
     //132 ve 15
     if(scale == scale2){
@@ -88,35 +91,4 @@ public class SwerveDriveCommand extends CommandBase {
     swerveSubsystem.drive(xSpeed, ySpeed, rot, true);
   }
 
-  /*public InstantCommand swerveDrive(){
-    //Axis: Left Y: 1, Left X: 0, Right Y: 4, Right X: 2 ????
-    scale = Math.abs(driver.getRawAxis(1)) < 0.4 ? 1: scale2;
-
-    final var xSpeed = xSpeedLimiter.calculate(
-      (Math.abs(driver.getRawAxis(1)) < 0.1) ? 0 : driver.getRawAxis(1))
-      * Constants.Swerve.kMaxSpeed * scale;
-
-    
-    final var ySpeed = ySpeedLimiter.calculate(
-      (Math.abs(driver.getRawAxis(0)) <  0.1) ? 0 : driver.getRawAxis(0))
-      * Constants.Swerve.kMaxSpeed * scale;
-     
-    final var rot = rotLimiter.calculate(
-      (Math.abs(driver.getRawAxis(2)) < 0.1) ? 0 : driver.getRawAxis(2))
-      * Constants.Swerve.kMaxAngularSpeed * scale;
-
-    double[] speeds ={xSpeed, ySpeed, rot}; 
-    SmartDashboard.putNumberArray("controller speeds", speeds);
-    swerveSubsystem.drive(xSpeed, ySpeed, rot, true);
-    return new InstantCommand(()->swerveDrive());
-  }
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }*/
 }

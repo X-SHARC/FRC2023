@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+
 /** Add your docs here. */
 public class RobotState {
 
@@ -13,18 +14,25 @@ public class RobotState {
         CUBE
     }
     public enum ElevatorLevel{
-        LEVEL_1,
-        LEVEL_2,
-        LEVEL_3
+        ZERO,
+        MIDROW,
+        TOPROW
     }
     public enum IntakeState{
         INTAKING,
         EJECTING,
         IDLE
     }
+
+    public enum SwerveState{
+        MOVING,
+        REST
+    }
+
     public static IntakeState currentIntakeState;
     public static GamePiece currentGamePiece;
     public static ElevatorLevel currentElevatorLevel;
+    public static SwerveState currentSwerveState;
     public static boolean isElevating;
     public static boolean isTripping;
     
@@ -50,6 +58,10 @@ public class RobotState {
 
     public static void setElevating(boolean isElevating){
         isElevating = isElevating;
+    }
+
+    public static void setSwerve(SwerveState swerveState){
+        currentSwerveState = swerveState;
     }
 
     public static void setEjecting(){
@@ -88,13 +100,17 @@ public class RobotState {
         return currentElevatorLevel;
     }
 
+    public static SwerveState getSwerveState(){
+        return currentSwerveState;
+    }
+
     public static int getElevatorLevelInt(){
        switch(currentElevatorLevel){
-              case LEVEL_1:
+              case ZERO:
                  return 1;
-              case LEVEL_2:
+              case MIDROW:
                  return 2;
-              case LEVEL_3:
+              case TOPROW:
                  return 3;
               default:
                  return 0;
