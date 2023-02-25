@@ -22,6 +22,7 @@ public class TakeFromGroundCommand extends SequentialCommandGroup {
   public TakeFromGroundCommand() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new IntakeCommand(intake), new CarriageCommand(carriage, carriage.getDegrees()), new ElevatorCommand(elevator, distance));
+
+    //addCommands(new IntakeCommand(intake), new CarriageCommand(carriage, carriage.getDegrees()), new ElevatorCommand(elevator, distance));
   }
 }

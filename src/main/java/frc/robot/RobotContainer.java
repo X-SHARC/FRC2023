@@ -14,12 +14,11 @@ import frc.robot.commands.Elevator.ElevatorDownCommand;
 import frc.robot.commands.Elevator.ElevatorHome;
 import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
-
-import java.sql.DriverAction;
-
+import frc.robot.lib.drivers.WS2812Driver;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -39,6 +38,9 @@ public class RobotContainer {
   Intake intake = new Intake();
   Carriage carriage = new Carriage();
 
+  //TODO: Change the LED length
+  WS2812Driver rgbLED = new WS2812Driver(0, 30);
+
   //Commands 
   SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
   ElevatorCommand elevatorCommand = new ElevatorCommand(elevator, 112);
@@ -46,7 +48,7 @@ public class RobotContainer {
   ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
   CarriageCommand carriageCommand = new CarriageCommand(carriage, 15);
 
-      public RobotContainer() {
+  public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
   }
@@ -57,11 +59,8 @@ public class RobotContainer {
     JoystickButton elevator1 = new JoystickButton(driver, 5);
     elevator1.whileTrue(elevatorUpCommand);
 
-
     JoystickButton elevator2 = new JoystickButton(driver,6);
     elevator2.whileTrue(elevatorDownCommand);
-//   elevator2.whileTrue(new RunCommand(()-> elevator.elevatorDown(), elevator));
-  // elevator2.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
 
      JoystickButton elevator3 = new JoystickButton(operator,2);
    elevator3.whileTrue(new ElevatorCommand(elevator, 112));
@@ -69,10 +68,6 @@ public class RobotContainer {
    JoystickButton elevatorDown = new JoystickButton(operator,3);
    elevatorDown.whileTrue(new ElevatorCommand(elevator, 10));
    elevatorDown.whileFalse(new RunCommand(()-> elevator.stop()));
-/* 
-   JoystickButton elevator4 = new JoystickButton(driver,4);
-   elevator4.whileTrue(new RunCommand(()-> elevator.setDistance(15), elevator));
-   elevator4.whileFalse(new RunCommand(()-> elevator.stop(), elevator));*/
 
    JoystickButton carriage1 = new JoystickButton(operator, 10);
    carriage1.whileTrue(new RunCommand(()-> carriage.intakeUp(), carriage));
@@ -81,9 +76,6 @@ public class RobotContainer {
    JoystickButton carriage2 = new JoystickButton(operator,9);
    carriage2.whileTrue(new RunCommand(()-> carriage.intakeDown(), carriage));
    carriage2.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
- /* 
-   JoystickButton carriage3 = new JoystickButton(operator, 11);
-   carriage3.onTrue(carriageCommand);*/
 
    JoystickButton intake1 = new JoystickButton(operator, 6);
    intake1.whileTrue(new RunCommand(()-> intake.grabCone(), intake));
@@ -94,8 +86,16 @@ public class RobotContainer {
    intake2.whileFalse(new RunCommand(()-> intake.stop(), intake));
    swerveDrivetrain.setDefaultCommand(driveCommand);
 
+   //TODO: Change this button
    JoystickButton encoderReset = new JoystickButton(operator, 8);
    encoderReset.onTrue(new RunCommand(() -> elevator.resetEncoder(), elevator));
+
+
+   //GAME PIECE SELECTOR BUTTONS
+   JoystickButton cubeButton = new JoystickButton(operator, 8);
+   JoystickButton coneButton = new JoystickButton(operator, 7);
+   cubeButton.onTrue(new InstantCommand(()->RobotState.setCube()));
+   coneButton.onTrue(new InstantCommand(()->RobotState.setCone()));
 
 
    //Elevator Button Bindings

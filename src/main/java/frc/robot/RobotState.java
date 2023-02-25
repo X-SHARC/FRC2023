@@ -19,8 +19,10 @@ public class RobotState {
         TOPROW
     }
     public enum IntakeState{
-        INTAKING,
-        EJECTING,
+        CUBE_TAKING,
+        CUBE_EJECTING,
+        CONE_TAKING,
+        CONE_EJECTING,
         IDLE
     }
 
@@ -52,8 +54,8 @@ public class RobotState {
         currentGamePiece = GamePiece.CUBE;
     }
 
-    public static void setIntaking(){
-        currentIntakeState = IntakeState.INTAKING;
+    public static void setIntakeState(IntakeState intakeState){
+        currentIntakeState = intakeState;
     }
 
     public static void setElevating(boolean isElevating){
@@ -62,10 +64,6 @@ public class RobotState {
 
     public static void setSwerve(SwerveState swerveState){
         currentSwerveState = swerveState;
-    }
-
-    public static void setEjecting(){
-        currentIntakeState = IntakeState.EJECTING;
     }
 
     public static void setIntakeIdle(){

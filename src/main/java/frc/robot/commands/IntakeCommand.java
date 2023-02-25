@@ -4,35 +4,39 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.RobotState;
 import frc.robot.RobotState.GamePiece;
 public class IntakeCommand extends CommandBase {
   Intake intake;
+  Joystick operator;
   static RobotState currentRobotState = RobotState.getInstance();
 
-  /** Creates a new IntakeCommand. */
-  public IntakeCommand(Intake intake) {
+  public IntakeCommand(Intake intake, Joystick operator) {
     this.intake = intake;
+    this.operator = operator;
     addRequirements(intake);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    RobotState.setIntaking();
-  }
+  public void initialize() {}
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (RobotState.getInstance().currentGamePiece == GamePiece.CONE){
-      intake.grabCone();
+
+    //INTAKE IDLING WILL BE ARRANGED
+    if (RobotState.currentGamePiece == GamePiece.CONE){
+      if (operator.getRawButton(5)) intake.ejectCone();
+      else if (operator.getRawButton(6)) intake.grabCone();
+      else intake.idle();
     }
-    else if (RobotState.getInstance().currentGamePiece == GamePiece.CUBE){
-      intake.grabCube();
+
+    else if (RobotState.currentGamePiece == GamePiece.CUBE){
+      if (operator.getRawButton(5)) intake.ejectCube();
+      else if (operator.getRawButton(6)) intake.grabCube();
+      else intake.idle();
     }
   }
 

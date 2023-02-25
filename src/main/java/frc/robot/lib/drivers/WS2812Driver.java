@@ -8,7 +8,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotState;
 
 public class WS2812Driver extends SubsystemBase {
   /** Creates a new WS2812Driver. */
@@ -37,11 +39,20 @@ public class WS2812Driver extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
+    //TODO: Default may change
+    switch(RobotState.currentGamePiece){
+      case CONE: 
+        coneLED();
+        break;
+      case CUBE:
+        cubeLED();
+        break;
+      default:
+        toggleRGB();
+    }
   }
 
   public static void setColor(int r, int g, int b) {
-
     for (int i = 0; i < m_ledBuffer.getLength(); i++) {
         m_ledBuffer.setRGB(i, r, g, b);
     }
@@ -142,4 +153,12 @@ public class WS2812Driver extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
+  //TODO: not sure of the index values
+  public void coneLED(){
+    m_ledBuffer.setLED(30, Color.kYellow);
+  }
+
+  public void cubeLED(){
+    m_ledBuffer.setLED(30, Color.kPurple);
+  }
 }

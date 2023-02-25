@@ -23,6 +23,7 @@ public class ScoreTo3Command extends SequentialCommandGroup {
   public ScoreTo3Command() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new IntakeCommand(intake), new CarriageCommand(carriage, carriage.getDegrees()), new ElevatorCommand(elevator, elevator.getDistance()));
+    
+    //addCommands(new IntakeCommand(intake), new CarriageCommand(carriage, carriage.getDegrees()), new ElevatorCommand(elevator, elevator.getDistance()));
   }
 }
