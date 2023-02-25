@@ -134,7 +134,7 @@ public class Elevator extends SubsystemBase {
     }
 
     private void saveFalcons(){
-        //Check the stallin ampers and type; eğer encoder değişmiyorsa ve amper yüksek geliyorsa durdur
+        //Check the stalling ampers and type; eğer encoder değişmiyorsa ve amper yüksek geliyorsa durdur
     }
 
     //The conditional distance values can be arranged according to the need.
