@@ -8,7 +8,10 @@ import frc.robot.subsystems.Carriage;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
+import frc.robot.RobotState.ElevatorLevel;
 import frc.robot.RobotState.GamePiece;
+import frc.robot.RobotState.IntakeState;
+import frc.robot.RobotState.SwerveState;
 import frc.robot.commands.CarriageCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.Elevator.ElevatorCommand;
@@ -20,6 +23,7 @@ import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.lib.drivers.WS2812Driver;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -55,8 +59,11 @@ public class RobotContainer {
   ElevatorPOV elevatorPOV = new ElevatorPOV(operator, elevator, elevatorUpCommand, elevatorDownCommand, elevatorHome, elevatorCommand);
 
   public RobotContainer() {
-    RobotState.setGamePiece(GamePiece.EMPTY);
     // Configure the trigger bindings
+    RobotState.setGamePiece(GamePiece.EMPTY);
+    RobotState.setIntakeState(IntakeState.STOP);
+    RobotState.setSwerve(SwerveState.REST);
+    RobotState.setElevatorLevel(ElevatorLevel.ZERO);
     configureBindings();
   }
 

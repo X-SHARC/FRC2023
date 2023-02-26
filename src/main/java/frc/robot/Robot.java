@@ -35,12 +35,6 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    RobotState.setGamePiece(GamePiece.EMPTY);
-    RobotState.setIntakeState(IntakeState.STOP);
-    RobotState.setSwerve(SwerveState.REST);
-    RobotState.setElevatorLevel(ElevatorLevel.ZERO);
-    
-
     m_robotContainer = new RobotContainer();
   }
 

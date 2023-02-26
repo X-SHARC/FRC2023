@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.util.sendable.Sendable;
 
 /** Add your docs here. */
 public class RobotState {
@@ -34,7 +35,7 @@ public class RobotState {
     }
 
     public static IntakeState currentIntakeState;
-    public static GamePiece currentGamePiece;
+    public static GamePiece currentGamePiece = GamePiece.EMPTY;
     public static ElevatorLevel currentElevatorLevel;
     public static SwerveState currentSwerveState;
     public static boolean isElevating;
