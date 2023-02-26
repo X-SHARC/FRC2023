@@ -108,16 +108,16 @@ public class RobotContainer {
    //GAME PIECE SELECTOR BUTTONS
    JoystickButton cubeButton = new JoystickButton(operator, 8);
    JoystickButton coneButton = new JoystickButton(operator, 7);
-   coneButton.toggleOnTrue(new RunCommand(()->RobotState.setCone()));
-   cubeButton.toggleOnTrue(new RunCommand(()->RobotState.setCube()));
+   coneButton.whileTrue(new RunCommand(()->RobotState.setCone()));
+   cubeButton.whileTrue(new RunCommand(()->RobotState.setCube()));
 
    JoystickButton intakeButton = new JoystickButton(operator, 5);
-   intakeButton.onTrue(new RunCommand(()->RobotState.setIntaking()));
-   intakeButton.onFalse(new RunCommand(()-> RobotState.setIntakeIdle()));
+   intakeButton.whileTrue(new RunCommand(()->RobotState.setIntaking()));
+   intakeButton.whileFalse(new RunCommand(()-> RobotState.setIntakeIdle()));
 
    JoystickButton ejectButton = new JoystickButton(operator, 6);
-   ejectButton.onTrue(new RunCommand(()->RobotState.setEjecting()));
-   ejectButton.onFalse(new RunCommand(()-> RobotState.setIntakeIdle()));
+   ejectButton.whileTrue(new RunCommand(()->RobotState.setEjecting()));
+   ejectButton.whileFalse(new RunCommand(()-> RobotState.setIntakeIdle()));
 
    //Elevator Button Bindings
    intake.setDefaultCommand(intakeCommand);

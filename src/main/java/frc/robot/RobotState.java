@@ -48,27 +48,35 @@ public class RobotState {
     }
 
     public static void setCone(){
-        currentGamePiece = GamePiece.CONE;
+        if(currentGamePiece != GamePiece.CONE){
+            currentGamePiece = GamePiece.CONE;
+        }
     }
 
     public static void setIntaking(){
-        currentIntakeState = IntakeState.INTAKING;
+        if(currentIntakeState!= IntakeState.INTAKING){
+            currentIntakeState = IntakeState.INTAKING;
+        }
     }
 
     public static void setEjecting(){
-        currentIntakeState = IntakeState.EJECTING;
+        if(currentIntakeState != IntakeState.EJECTING){
+            currentIntakeState = IntakeState.EJECTING;
+        }
     }
 
     public static void setCube(){
-        currentGamePiece = GamePiece.CUBE;
+        if(currentGamePiece != GamePiece.CUBE){
+            currentGamePiece = GamePiece.CUBE;
+        }
     }
 
     public static void setIntakeState(IntakeState intakeState){
         currentIntakeState = intakeState;
     }
 
-    public static void setElevating(boolean isElevating){
-        isElevating = isElevating;
+    public static void setElevating(boolean elevating){
+        isElevating = elevating;
     }
 
     public static void setSwerve(SwerveState swerveState){
@@ -76,11 +84,15 @@ public class RobotState {
     }
 
     public static void setIntakeIdle(){
-        currentIntakeState = IntakeState.IDLE;
+        if(currentIntakeState != IntakeState.IDLE){
+            currentIntakeState = IntakeState.IDLE;
+        }
     }
 
     public static void setTripping(boolean m_isTripping){
-        isTripping = m_isTripping;
+        if(isTripping != m_isTripping){
+            isTripping = m_isTripping;
+        }
     }
 
     public static void setElevatorLevel(ElevatorLevel elevatorLevel){
