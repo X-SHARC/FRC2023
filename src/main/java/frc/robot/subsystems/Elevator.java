@@ -154,7 +154,7 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     RobotState.setElevatorLevel(getLevel());
 
-    SmartDashboard.putNumber("Current", pdh.getCurrent(19));
+    //SmartDashboard.putNumber("Current", pdh.getCurrent(19));
     perpendicularDistance = getPerpendicularDistance();
     distance = getDistance();
     SmartDashboard.putNumber("PIDOutput", PIDOutput);
@@ -164,15 +164,13 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putData(bottomLimitSwitch);
         
     if (bottomLimitSwitch.get() == false){
-      RobotState.setElevating(false);
-      RobotState.setElevatorLevel(ElevatorLevel.ZERO);
       resetEncoder();
     }
 
     //WILL BE TESTED
     if(RobotState.getSwerveState() == SwerveState.MOVING){
       //Will this command work????
-      new ElevatorHome(this);
+      //new ElevatorHome(this);
       stop();
     }
 

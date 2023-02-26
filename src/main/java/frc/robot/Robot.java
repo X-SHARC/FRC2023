@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.RobotState.ElevatorLevel;
+import frc.robot.RobotState.GamePiece;
+import frc.robot.RobotState.IntakeState;
+import frc.robot.RobotState.SwerveState;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.Elevator.ElevatorCommand;
 
@@ -20,9 +24,6 @@ import frc.robot.commands.Elevator.ElevatorCommand;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private IntakeCommand intakeCommand;
-  private ElevatorCommand elevatorCommand;
-  private SequentialCommandGroup intakeAndElevCommandGroup;
 
   private RobotContainer m_robotContainer;
 
@@ -34,6 +35,12 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    RobotState.setGamePiece(GamePiece.EMPTY);
+    RobotState.setIntakeState(IntakeState.STOP);
+    RobotState.setSwerve(SwerveState.REST);
+    RobotState.setElevatorLevel(ElevatorLevel.ZERO);
+    
+
     m_robotContainer = new RobotContainer();
   }
 

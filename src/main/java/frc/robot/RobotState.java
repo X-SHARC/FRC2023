@@ -11,7 +11,8 @@ public class RobotState {
     public static  RobotState robotState;
     public enum GamePiece{
         CONE,
-        CUBE
+        CUBE, 
+        EMPTY
     }
     public enum ElevatorLevel{
         ZERO,
@@ -23,7 +24,8 @@ public class RobotState {
         CUBE_EJECTING,
         CONE_TAKING,
         CONE_EJECTING,
-        IDLE
+        IDLE,
+        STOP
     }
 
     public enum SwerveState{

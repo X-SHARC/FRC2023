@@ -11,12 +11,13 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
+import frc.robot.RobotState.GamePiece;
 
 public class WS2812Driver extends SubsystemBase {
   /** Creates a new WS2812Driver. */
   private static AddressableLED m_led;
   private static AddressableLEDBuffer m_ledBuffer;
-  int[] rgb = new int[15];
+  int[] rgb = new int[10];
   boolean isRGB = false;
   int breathe = 255;
   boolean breatheReversed = false;
@@ -40,16 +41,22 @@ public class WS2812Driver extends SubsystemBase {
   @Override
   public void periodic() {
     //TODO: Default may change
-    switch(RobotState.currentGamePiece){
+    /*switch(RobotState.currentGamePiece){
       case CONE: 
         coneLED();
         break;
       case CUBE:
         cubeLED();
         break;
+      case EMPTY:
+        toggleRGB();
+        break;
       default:
         toggleRGB();
-    }
+    }*/
+    if(RobotState.currentGamePiece==GamePiece.CONE) coneLED();
+    else if (RobotState.currentGamePiece == GamePiece.CUBE) cubeLED();
+    else setColor(0, 225, 0);
   }
 
   public static void setColor(int r, int g, int b) {
@@ -155,10 +162,10 @@ public class WS2812Driver extends SubsystemBase {
 
   //TODO: not sure of the index values
   public void coneLED(){
-    m_ledBuffer.setLED(30, Color.kYellow);
+    setColor(255,255,0);
   }
 
   public void cubeLED(){
-    m_ledBuffer.setLED(30, Color.kPurple);
+    setColor(75,0,130);
   }
 }

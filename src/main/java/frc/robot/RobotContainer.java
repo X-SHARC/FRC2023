@@ -8,10 +8,13 @@ import frc.robot.subsystems.Carriage;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
+import frc.robot.RobotState.GamePiece;
 import frc.robot.commands.CarriageCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.Elevator.ElevatorCommand;
 import frc.robot.commands.Elevator.ElevatorDownCommand;
 import frc.robot.commands.Elevator.ElevatorHome;
+import frc.robot.commands.Elevator.ElevatorPOV;
 import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.lib.drivers.WS2812Driver;
@@ -39,16 +42,20 @@ public class RobotContainer {
   Carriage carriage = new Carriage();
 
   //TODO: Change the LED length
-  WS2812Driver rgbLED = new WS2812Driver(0, 30);
+  WS2812Driver rgbLED = new WS2812Driver(0, 10);
 
   //Commands 
   SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
   ElevatorCommand elevatorCommand = new ElevatorCommand(elevator, 112);
   ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevator);
   ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
+  ElevatorHome elevatorHome = new ElevatorHome(elevator);
   CarriageCommand carriageCommand = new CarriageCommand(carriage, 15);
+  IntakeCommand intakeCommand = new IntakeCommand(intake, operator);
+  ElevatorPOV elevatorPOV = new ElevatorPOV(operator, elevator, elevatorUpCommand, elevatorDownCommand, elevatorHome, elevatorCommand);
 
   public RobotContainer() {
+    RobotState.setGamePiece(GamePiece.EMPTY);
     // Configure the trigger bindings
     configureBindings();
   }
@@ -56,7 +63,7 @@ public class RobotContainer {
   private void configureBindings() {
     boolean a = RobotState.getTripping();
     swerveDrivetrain.setDefaultCommand(driveCommand);
-    JoystickButton elevator1 = new JoystickButton(driver, 5);
+    /*JoystickButton elevator1 = new JoystickButton(driver, 5);
     elevator1.whileTrue(elevatorUpCommand);
 
     JoystickButton elevator2 = new JoystickButton(driver,6);
@@ -67,7 +74,7 @@ public class RobotContainer {
 
    JoystickButton elevatorDown = new JoystickButton(operator,3);
    elevatorDown.whileTrue(new ElevatorCommand(elevator, 10));
-   elevatorDown.whileFalse(new RunCommand(()-> elevator.stop()));
+   elevatorDown.whileFalse(new RunCommand(()-> elevator.stop()));*/
 
    JoystickButton carriage1 = new JoystickButton(operator, 10);
    carriage1.whileTrue(new RunCommand(()-> carriage.intakeUp(), carriage));
@@ -77,33 +84,30 @@ public class RobotContainer {
    carriage2.whileTrue(new RunCommand(()-> carriage.intakeDown(), carriage));
    carriage2.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
 
-   JoystickButton intake1 = new JoystickButton(operator, 6);
+   /*JoystickButton intake1 = new JoystickButton(operator, 6);
    intake1.whileTrue(new RunCommand(()-> intake.grabCone(), intake));
    intake1.whileFalse(new RunCommand(()-> intake.stop(), intake));
 
    JoystickButton intake2 = new JoystickButton(operator,5);
    intake2.whileTrue(new RunCommand(()-> intake.grabCube(), intake));
    intake2.whileFalse(new RunCommand(()-> intake.stop(), intake));
-   swerveDrivetrain.setDefaultCommand(driveCommand);
+   swerveDrivetrain.setDefaultCommand(driveCommand);*/
 
    //TODO: Change this button
-   JoystickButton encoderReset = new JoystickButton(operator, 8);
-   encoderReset.onTrue(new RunCommand(() -> elevator.resetEncoder(), elevator));
+   /*JoystickButton encoderReset = new JoystickButton(operator, 8);
+   encoderReset.onTrue(new RunCommand(() -> elevator.resetEncoder(), elevator));*/
 
 
    //GAME PIECE SELECTOR BUTTONS
    JoystickButton cubeButton = new JoystickButton(operator, 8);
    JoystickButton coneButton = new JoystickButton(operator, 7);
-   cubeButton.onTrue(new InstantCommand(()->RobotState.setCube()));
-   coneButton.onTrue(new InstantCommand(()->RobotState.setCone()));
+   cubeButton.toggleOnTrue(new RunCommand(()->RobotState.setCube()));
+   coneButton.toggleOnTrue(new RunCommand(()->RobotState.setCone()));
 
 
    //Elevator Button Bindings
-   if(operator.getPOV()==0) new ElevatorUpCommand(elevator);
-   else if(operator.getPOV()==180) new ElevatorDownCommand(elevator);
-   else if(operator.getPOV()==90) new ElevatorHome(elevator);
-   else if(operator.getPOV()==270) new ElevatorCommand(elevator, 100);
-   else new RunCommand(() -> elevator.stop(), elevator);
+   intake.setDefaultCommand(intakeCommand);
+   elevator.setDefaultCommand(elevatorPOV);
   
   }
   
