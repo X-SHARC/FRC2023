@@ -22,10 +22,9 @@ import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.lib.drivers.WS2812Driver;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -58,7 +57,10 @@ public class RobotContainer {
   IntakeCommand intakeCommand = new IntakeCommand(intake);
   ElevatorPOV elevatorPOV = new ElevatorPOV(operator, elevator, elevatorUpCommand, elevatorDownCommand, elevatorHome, elevatorCommand);
 
+  public final static PowerDistribution pdh = new PowerDistribution();
+
   public RobotContainer() {
+  
     // Configure the trigger bindings
     RobotState.setGamePiece(GamePiece.EMPTY);
     RobotState.setIntakeState(IntakeState.STOP);
@@ -111,11 +113,11 @@ public class RobotContainer {
    coneButton.whileTrue(new RunCommand(()->RobotState.setCone()));
    cubeButton.whileTrue(new RunCommand(()->RobotState.setCube()));
 
-   JoystickButton intakeButton = new JoystickButton(operator, 5);
+   JoystickButton intakeButton = new JoystickButton(operator, 6);
    intakeButton.whileTrue(new RunCommand(()->RobotState.setIntaking()));
    intakeButton.whileFalse(new RunCommand(()-> RobotState.setIntakeIdle()));
 
-   JoystickButton ejectButton = new JoystickButton(operator, 6);
+   JoystickButton ejectButton = new JoystickButton(operator, 5);
    ejectButton.whileTrue(new RunCommand(()->RobotState.setEjecting()));
    ejectButton.whileFalse(new RunCommand(()-> RobotState.setIntakeIdle()));
 

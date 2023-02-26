@@ -11,19 +11,23 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.RobotState;
-import frc.robot.RobotState.IntakeState;
 
 public class Intake extends SubsystemBase {
   WPI_TalonSRX intakeMotor = new WPI_TalonSRX(Constants.INTAKE_ID);
   /** Creates a new Intake. */
   public Intake() {
-    intakeMotor.setInverted(false);
+    intakeMotor.setInverted(true);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
   }
 
-  public void idle(){
-    //Fill this functine with state update, and idling command
+  public void cubeidle(){
+    intakeMotor.set(ControlMode.PercentOutput,3.0/RobotContainer.pdh.getVoltage());
+  }
+
+  public void coneidle(){
+    intakeMotor.set(ControlMode.PercentOutput,-3.0/RobotContainer.pdh.getVoltage());
   }
 
   public void grabCube(){
@@ -40,6 +44,10 @@ public class Intake extends SubsystemBase {
 
   public void ejectCone(){
     intakeMotor.set(ControlMode.PercentOutput, 0.9);
+  }
+
+  public void setPercent(double percent){
+    intakeMotor.set(ControlMode.PercentOutput, 0.1);
   }
 
   public void stop(){

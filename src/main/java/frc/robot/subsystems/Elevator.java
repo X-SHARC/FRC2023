@@ -9,18 +9,16 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
 import frc.robot.RobotState.ElevatorLevel;
 import frc.robot.RobotState.SwerveState;
-import frc.robot.commands.Elevator.ElevatorHome;
 
 public class Elevator extends SubsystemBase {
   private WPI_TalonFX elevatorMasterMotor = new WPI_TalonFX(32, "canavar");
   private WPI_TalonFX elevatorSlaveMotor = new WPI_TalonFX(19, "canavar");
-  private PowerDistribution pdh = new PowerDistribution();
 
   SlewRateLimiter limiter = new SlewRateLimiter(0.05);
 

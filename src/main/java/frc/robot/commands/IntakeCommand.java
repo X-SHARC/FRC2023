@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.Intake;
+import frc.robot.Robot;
 import frc.robot.RobotState;
 import frc.robot.RobotState.GamePiece;
 public class IntakeCommand extends CommandBase {
@@ -25,7 +26,16 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void execute() {
     if(RobotState.getIntaking() == RobotState.IntakeState.IDLE){
-      intake.stop();
+      switch(RobotState.currentGamePiece){
+        case CONE:
+          intake.setPercent(-0.5);
+        case CUBE:
+          intake.cubeidle();
+        default:
+          intake.stop();
+          
+        intake.setPercent(-0.5);
+      }
     }
     //INTAKE IDLING WILL BE ARRANGED
     else{
