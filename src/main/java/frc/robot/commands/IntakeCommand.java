@@ -13,12 +13,9 @@ import frc.robot.RobotState;
 import frc.robot.RobotState.GamePiece;
 public class IntakeCommand extends CommandBase {
   Intake intake;
-  Joystick operator;
-  static RobotState currentRobotState = RobotState.getInstance();
 
-  public IntakeCommand(Intake intake, Joystick operator) {
+  public IntakeCommand(Intake intake) {
     this.intake = intake;
-    this.operator = operator;
     addRequirements(intake);
   }
 
@@ -27,16 +24,29 @@ public class IntakeCommand extends CommandBase {
 
   @Override
   public void execute() {
-
-    //INTAKE IDLING WILL BE ARRANGED
-    if (RobotState.currentGamePiece == GamePiece.CONE){
-      new JoystickButton(operator, 5).whileTrue(new RunCommand(()->intake.ejectCone())).whileFalse(new RunCommand(()->intake.stop()));
-      new JoystickButton(operator, 6).whileTrue(new RunCommand(()->intake.grabCone())).whileFalse(new RunCommand(()->intake.stop()));
+    if(RobotState.getIntaking() == RobotState.IntakeState.IDLE){
+      intake.stop();
     }
-
-    else if (RobotState.currentGamePiece == GamePiece.CUBE){
-      new JoystickButton(operator, 5).whileTrue(new RunCommand(()->intake.ejectCube())).whileFalse(new RunCommand(()->intake.stop()));
-      new JoystickButton(operator, 6).whileTrue(new RunCommand(()->intake.grabCube())).whileFalse(new RunCommand(()->intake.stop()));
+    //INTAKE IDLING WILL BE ARRANGED
+    else{
+      if(RobotState.getIntaking() == RobotState.IntakeState.INTAKING){
+        if(RobotState.getGamePiece() == RobotState.GamePiece.CONE){
+          intake.grabCone();
+        }
+        else if(RobotState.getGamePiece() == RobotState.GamePiece.CUBE){
+          intake.grabCube();
+        }
+        else intake.stop();
+      }
+      else if(RobotState.getIntaking() == RobotState.IntakeState.EJECTING){
+        if(RobotState.getGamePiece() == RobotState.GamePiece.CONE){
+          intake.ejectCone();
+        }
+        else if(RobotState.getGamePiece() == RobotState.GamePiece.CUBE){
+          intake.ejectCube();
+        }
+        else intake.stop();
+      }
     }
   }
 

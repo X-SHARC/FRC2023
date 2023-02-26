@@ -55,7 +55,7 @@ public class RobotContainer {
   ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
   ElevatorHome elevatorHome = new ElevatorHome(elevator);
   CarriageCommand carriageCommand = new CarriageCommand(carriage, 15);
-  IntakeCommand intakeCommand = new IntakeCommand(intake, operator);
+  IntakeCommand intakeCommand = new IntakeCommand(intake);
   ElevatorPOV elevatorPOV = new ElevatorPOV(operator, elevator, elevatorUpCommand, elevatorDownCommand, elevatorHome, elevatorCommand);
 
   public RobotContainer() {
@@ -108,9 +108,16 @@ public class RobotContainer {
    //GAME PIECE SELECTOR BUTTONS
    JoystickButton cubeButton = new JoystickButton(operator, 8);
    JoystickButton coneButton = new JoystickButton(operator, 7);
-   cubeButton.toggleOnTrue(new RunCommand(()->RobotState.setCube()));
    coneButton.toggleOnTrue(new RunCommand(()->RobotState.setCone()));
+   cubeButton.toggleOnTrue(new RunCommand(()->RobotState.setCube()));
 
+   JoystickButton intakeButton = new JoystickButton(operator, 5);
+   intakeButton.onTrue(new RunCommand(()->RobotState.setIntaking()));
+   intakeButton.onFalse(new RunCommand(()-> RobotState.setIntakeIdle()));
+
+   JoystickButton ejectButton = new JoystickButton(operator, 6);
+   ejectButton.onTrue(new RunCommand(()->RobotState.setEjecting()));
+   ejectButton.onFalse(new RunCommand(()-> RobotState.setIntakeIdle()));
 
    //Elevator Button Bindings
    intake.setDefaultCommand(intakeCommand);
