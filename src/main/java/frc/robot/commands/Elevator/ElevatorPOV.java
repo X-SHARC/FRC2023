@@ -6,6 +6,7 @@ package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -41,23 +42,26 @@ public class ElevatorPOV extends CommandBase {
   public void execute() {
     switch(operator.getPOV()){
       case 0:
-        up.execute();
+        CommandScheduler.getInstance().schedule(up);
         break;
       case 180:
-        down.execute();
+        CommandScheduler.getInstance().schedule(down);
         break;
 
       case 270:
-        pid.execute();
+        CommandScheduler.getInstance().schedule(pid);
         break;
+      case 90:
+        CommandScheduler.getInstance().schedule(home);
 
       default:
         up.end(true);
         down.end(true);
         home.end(true);
         pid.end(true);
+        elevator.stop();
     }
-    new JoystickButton(operator, 3).onTrue(home);
+    //new JoystickButton(operator, 3).onTrue(home);
   }
 
   // Called once the command ends or is interrupted.
