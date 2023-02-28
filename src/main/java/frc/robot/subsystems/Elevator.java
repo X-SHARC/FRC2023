@@ -10,7 +10,6 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
 import frc.robot.RobotState.ElevatorLevel;
@@ -37,12 +36,10 @@ public class Elevator extends SubsystemBase {
   private double distance = 0;
   private double perpendicularDistance = 0;
 
-  // private double feedForwardOutput = 0;
   private double PIDOutput = 0;
   
   private double gearCircumference = Units.inchesToMeters(1.91) * Math.PI * 100;
 
-  // private double error = 0;
   private double output = 0;
 
   private PIDController elevatorPID = new PIDController(kP, kI, kD);

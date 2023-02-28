@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.util.sendable.Sendable;
-
 /** Add your docs here. */
 public class RobotState {
 

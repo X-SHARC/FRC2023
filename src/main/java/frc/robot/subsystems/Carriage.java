@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Carriage extends SubsystemBase {
-  WPI_TalonFX carriageMotor = new WPI_TalonFX(Constants.CARRIAGE_ID, "canavar");
-  public DigitalInput limitSwitch = new DigitalInput(2);
+  private WPI_TalonFX carriageMotor = new WPI_TalonFX(Constants.CARRIAGE_ID, "canavar");
+  private DigitalInput limitSwitch = new DigitalInput(3);
 
   private double kP = 0.0;
   private double kI = 0.0;

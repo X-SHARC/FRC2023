@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.RobotState;
-import frc.robot.RobotState.ElevatorLevel;
 import frc.robot.subsystems.Swerve;
 
 public class SwerveDriveCommand extends CommandBase {
@@ -58,7 +56,7 @@ public class SwerveDriveCommand extends CommandBase {
     scale = Math.abs(joystick.getRightTriggerAxis()) < 0.4 ? 1: scale2;
 
     //WILL BE TESTED, is it needed? asansör açıkken swerve kitlemek ne kadar mantıklı? 
-    scale = RobotState.getElevatorLevelInt() > 2 ? scale : slowScale;
+    //scale = RobotState.getElevatorLevelInt() > 2 ? scale : slowScale;
     //scale = Math.abs(joystick.getRightTriggerAxis()) > 0.4 ? 0.8 : scale2;
     //132 ve 15
     if(scale == scale2){

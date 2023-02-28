@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -56,6 +57,8 @@ public class Swerve extends SubsystemBase {
 
   //private final CKIMU gyro;
   private AHRS gyroAhrs = new AHRS();
+  //TODO: set device number
+  private Pigeon2 pigeon = new Pigeon2(0);
 
   TalonFX driveMotorBL = new TalonFX(11);
   TalonFX angleMotorBL = new TalonFX(16);
@@ -113,6 +116,19 @@ public class Swerve extends SubsystemBase {
 
   public double getGyroDouble(){
     return Math.IEEEremainder(gyroAhrs.getAngle(), 360) * (Constants.kGyroReversed ? -1.0 : 1.0);
+  }
+
+  public double getPigeonDouble(){
+    return pigeon.getAbsoluteCompassHeading();
+  }
+
+  public void resetPigeon(){
+    pigeon.setYaw(0);
+  }
+
+  //can be used to align the charge station
+  public double getPitch(){
+    return pigeon.getPitch();
   }
 
   SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.Swerve.kinematics, gyroAhrs.getRotation2d(),
@@ -227,10 +243,13 @@ public class Swerve extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("swerve groAngle", getGyroDouble());
     SmartDashboard.putNumber("swerve field offset", fieldAngle.getDegrees());
-    SmartDashboard.putNumber("bozukModuk", modules[2].getAngle().getDegrees());
 
-    SmartDashboard.putNumber("bozukdegil", modules[3].getAngle().getDegrees());
-
+    //Pigeon Configuration:
+    SmartDashboard.putNumber("Pigeon Yaw:", getPigeonDouble());
+    SmartDashboard.putNumber("Pigeon Pitch", getPitch());
+    SmartDashboard.putNumber("Pigeon Yaw", pigeon.getYaw());
+    SmartDashboard.putNumber("Pigeon Compass Heading", pigeon.getAbsoluteCompassHeading());
+    
     // SmartDashboard.putNumber("0. SETPOINT", modules[0].drivePID.getSetpoint());
     // /SmartDashboard.putNumber("0. Velocity", modules[0].getDriveMotorRate());
 
@@ -253,10 +272,10 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Posey", getPose().getY());
     SmartDashboard.putNumber("Rot", getPose().getRotation().getRadians());
 
-    SmartDashboard.putNumber("1 FL",modules[0].getDegrees());
+    /*SmartDashboard.putNumber("1 FL",modules[0].getDegrees());
     SmartDashboard.putNumber("2 FR",modules[1].getDegrees());
     SmartDashboard.putNumber("3 BL",modules[2].getDegrees());
-    SmartDashboard.putNumber("4 BR",modules[3].getDegrees());
+    SmartDashboard.putNumber("4 BR",modules[3].getDegrees());*/
 
 
     

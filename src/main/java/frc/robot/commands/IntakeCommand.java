@@ -4,14 +4,9 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.Intake;
-import frc.robot.Robot;
 import frc.robot.RobotState;
-import frc.robot.RobotState.GamePiece;
 public class IntakeCommand extends CommandBase {
   Intake intake;
 
@@ -33,7 +28,7 @@ public class IntakeCommand extends CommandBase {
           intake.cubeidle();
         default:
           intake.stop();
-          
+
         intake.setPercent(-0.5);
       }
     }

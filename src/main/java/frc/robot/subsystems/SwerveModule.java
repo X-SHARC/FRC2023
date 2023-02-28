@@ -21,7 +21,6 @@ public class SwerveModule {
   private static double kEncoderTicksPerRotation = 4096;
 
   private String name;
-  private double offset;
   private TalonFX driveMotor;
   private TalonFX angleMotor;
   //private Encoder rotEncoder;
@@ -45,7 +44,6 @@ public class SwerveModule {
     this.driveMotor = driveMotor;
     this.angleMotor = angleMotor;
     this.rotEncoder = rotEncoder;
-    this.offset = offset;
     this.driveMotor.setNeutralMode(NeutralMode.Brake);
     this.angleMotor.setNeutralMode(NeutralMode.Brake);
     this.driveEncoderInverted = driveEncoderInverted;

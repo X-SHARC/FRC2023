@@ -13,7 +13,6 @@ public class ElevatorUpCommand extends CommandBase {
   public ElevatorUpCommand(Elevator elevator) {
     this.elevator = elevator;
     addRequirements(elevator);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
