@@ -99,16 +99,40 @@ public class Elevator extends SubsystemBase {
 
 
     public void elevatorUp(){
-     if (topLimitSwitch.get() == true){  // elektronik yanlış
+     if (topLimitSwitch.get() == true && RobotState.getInstance().canElevatorMove()){  // elektronik yanlış
         elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(0.3));
         RobotState.setElevating(true);
       }
      }
 
+    public void set(){
+      //to do: add safety 
+    }
+
+    public void percent( double speed){
+      if(speed<0){
+        if (bottomLimitSwitch.get() == true && RobotState.getInstance().canElevatorMove()){
+          elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(Math.abs(speed)));
+          RobotState.setElevating(true);
+        }
+      }
+      else if(speed>0){
+        if (topLimitSwitch.get() == true && RobotState.getInstance().canElevatorMove()){  // elektronik yanlış
+          elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(speed));
+          RobotState.setElevating(true);
+        }
+      }
+      else{
+        stop();
+      }
+    }
+
     public void elevatorDown(){
-    if (bottomLimitSwitch.get() == true){
+    if (bottomLimitSwitch.get() == true && RobotState.getInstance().canElevatorMove()){
       elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(0.3));
-    } }
+      RobotState.setElevating(true);
+    }
+   }
 
     public void stop(){
       elevatorMasterMotor.set(ControlMode.PercentOutput, 0.0);
@@ -157,10 +181,13 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator Perpendicular Distance:", perpendicularDistance);
     SmartDashboard.putData(topLimitSwitch);
     SmartDashboard.putData(bottomLimitSwitch);
-        
-    if (bottomLimitSwitch.get() == false){
+
+
+    if(bottomLimitSwitch.get() == false){
       resetEncoder();
     }
+
+
 
     //WILL BE TESTED
     if(RobotState.getSwerveState() == SwerveState.MOVING){

@@ -30,15 +30,16 @@ public class RobotState {
         REST
     }
 
-    public static IntakeState currentIntakeState;
+    public static IntakeState currentIntakeState = IntakeState.STOP;
     public static GamePiece currentGamePiece = GamePiece.EMPTY;
-    public static ElevatorLevel currentElevatorLevel;
-    public static SwerveState currentSwerveState;
-    public static boolean isElevating;
-    public static boolean isTripping;
+    public static ElevatorLevel currentElevatorLevel = ElevatorLevel.ZERO;
+    public static SwerveState currentSwerveState = SwerveState.REST;
+    public static boolean isElevating = false;
+    public static boolean isTripping = false;
+    public static boolean isCarriageHome = false;
     
     private RobotState(){
-        reset(); 
+        //reset(); 
     }
 
     public static void setGamePiece(GamePiece gamePiece){
@@ -121,6 +122,14 @@ public class RobotState {
         return currentSwerveState;
     }
 
+    public static void setCarriage(boolean home){
+        isCarriageHome = home;
+    }
+
+    public static boolean canElevatorMove(){
+        return !isCarriageHome;
+    }
+
     public static int getElevatorLevelInt(){
        switch(currentElevatorLevel){
               case ZERO:
@@ -135,6 +144,7 @@ public class RobotState {
     }
 
     public static void reset(){
+        isCarriageHome = false;
         currentGamePiece = null;
         currentElevatorLevel = null;
         currentIntakeState = IntakeState.IDLE;

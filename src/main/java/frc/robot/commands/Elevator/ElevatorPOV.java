@@ -25,7 +25,7 @@ public class ElevatorPOV extends CommandBase {
     this.home = home;
     this.pid = pid;
 
-    addRequirements(elevator);
+    //addRequirements(elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -38,24 +38,22 @@ public class ElevatorPOV extends CommandBase {
   public void execute() {
     switch(operator.getPOV()){
       case 0:
-        CommandScheduler.getInstance().schedule(up);
-        break;
-      case 180:
-        CommandScheduler.getInstance().schedule(down);
-        break;
-
-      case 270:
         CommandScheduler.getInstance().schedule(pid);
         break;
-      case 90:
-        CommandScheduler.getInstance().schedule(home);
-
+      case 180:
+        CommandScheduler.getInstance().schedule(home);        
+        break;
+    
       default:
         up.end(true);
         down.end(true);
         home.end(true);
         pid.end(true);
         elevator.stop();
+
+    if (Math.abs(operator.getY())>0.15){
+      elevator.percent(operator.getY()*0.5);
+    }
     }
     //new JoystickButton(operator, 3).onTrue(home);
   }
