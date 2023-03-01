@@ -60,6 +60,10 @@ public class ElevatorPOV extends CommandBase {
     if (Math.abs(operator.getY())>0.15){
       new RunCommand(()->elevator.percent(operator.getY()*0.5),elevator);
     }
+
+    /* if (Math.abs(operator.getX())<0.15){
+      new RunCommand(()->elevator.percent(operator.getX()*-0.5),elevator);
+    } */
     
     else new RunCommand(()->elevator.stop(), elevator);
 

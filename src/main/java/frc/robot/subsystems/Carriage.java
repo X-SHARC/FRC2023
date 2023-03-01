@@ -77,7 +77,7 @@ public class Carriage extends SubsystemBase {
     carriageMotor.set(ControlMode.PercentOutput, 0.4);
   }}
 
-  public static boolean limiter(){
+  public boolean limiter(){
     return limitSwitch.get();
   }
 

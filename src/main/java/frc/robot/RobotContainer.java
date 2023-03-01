@@ -42,7 +42,7 @@ public class RobotContainer {
 
   //Commands 
   static SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
-  static ElevatorCommand elevatorCommand = new ElevatorCommand(elevator, 112);
+  static ElevatorCommand elevatorCommand = new ElevatorCommand(elevator, 110);
   static ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevator);
   static ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
   static ElevatorHome elevatorHome = new ElevatorHome(elevator);

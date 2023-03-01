@@ -24,8 +24,12 @@ public class ElevatorDownCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      elevator.elevatorDown();
-    }
+      if (elevator.bottomLimitSwitch.get() == true){
+          elevator.elevatorDown();}
+      else{
+          elevator.stop();
+        }
+      }
   
 
   // Called once the command ends or is interrupted.

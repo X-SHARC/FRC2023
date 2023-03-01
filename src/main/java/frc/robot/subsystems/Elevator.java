@@ -117,7 +117,7 @@ public class Elevator extends SubsystemBase {
       //to do: add safety 
     }
 
-    public void percent( double speed){
+    public void percent(double speed){
       if(speed<0){
         if (bottomLimitSwitch.get() == true && RobotState.getInstance().canElevatorMove()){
           elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(Math.abs(speed)));
@@ -126,7 +126,7 @@ public class Elevator extends SubsystemBase {
       }
       else if(speed>0){
         if (topLimitSwitch.get() == true && RobotState.getInstance().canElevatorMove()){  // elektronik yanlış
-          elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(speed));
+          elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(Math.abs(speed)));
           RobotState.setElevating(true);
         }
       }
@@ -194,23 +194,11 @@ public class Elevator extends SubsystemBase {
     if(bottomLimitSwitch.get() == false){
       resetEncoder();
     }
-
-    switch(operator.getPOV()){
-      case 0:
-        new ElevatorCommand(this, 80);
-        break;
-      case 180:
-        new ElevatorHome(this);      
-        break;
     
-      default:
-        stop();
-    }
-
-    if (Math.abs(operator.getY())>0.15){
+  /*   if (Math.abs(operator.getY())>0.15){
       new RunCommand(()->percent(operator.getY()*0.5),this);
     }
-    else new RunCommand(()->stop(), this);
+    else new RunCommand(()->stop(), this); */
 
     //WILL BE TESTED
     if(RobotState.getSwerveState() == SwerveState.MOVING){
