@@ -9,11 +9,15 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
 import frc.robot.RobotState.ElevatorLevel;
 import frc.robot.RobotState.SwerveState;
+import frc.robot.commands.Elevator.ElevatorCommand;
+import frc.robot.commands.Elevator.ElevatorHome;
 
 public class Elevator extends SubsystemBase {
   private WPI_TalonFX elevatorMasterMotor = new WPI_TalonFX(32, "canavar");
@@ -44,9 +48,13 @@ public class Elevator extends SubsystemBase {
 
   private PIDController elevatorPID = new PIDController(kP, kI, kD);
   private ElevatorFeedforward feedForward = new ElevatorFeedforward(kS, kG, kV, kA);
+
+  Joystick operator;
   
 
-  public Elevator() {
+  public Elevator(Joystick operator) {
+
+    this.operator = operator;
 
     RobotState.setElevating(false);
 
@@ -187,7 +195,22 @@ public class Elevator extends SubsystemBase {
       resetEncoder();
     }
 
+    switch(operator.getPOV()){
+      case 0:
+        new ElevatorCommand(this, 80);
+        break;
+      case 180:
+        new ElevatorHome(this);      
+        break;
+    
+      default:
+        stop();
+    }
 
+    if (Math.abs(operator.getY())>0.15){
+      new RunCommand(()->percent(operator.getY()*0.5),this);
+    }
+    else new RunCommand(()->stop(), this);
 
     //WILL BE TESTED
     if(RobotState.getSwerveState() == SwerveState.MOVING){

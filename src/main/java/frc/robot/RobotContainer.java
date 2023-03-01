@@ -13,7 +13,6 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.Elevator.ElevatorCommand;
 import frc.robot.commands.Elevator.ElevatorDownCommand;
 import frc.robot.commands.Elevator.ElevatorHome;
-import frc.robot.commands.Elevator.ElevatorPOV;
 import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.lib.drivers.WS2812Driver;
@@ -34,7 +33,7 @@ public class RobotContainer {
 
   //Subsystems
   static Swerve swerveDrivetrain = new Swerve(true);
-  static Elevator elevator = new Elevator();
+  static Elevator elevator = new Elevator(operator);
   static Intake intake = new Intake();
   static Carriage carriage = new Carriage();
 
@@ -48,7 +47,7 @@ public class RobotContainer {
   static ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
   static ElevatorHome elevatorHome = new ElevatorHome(elevator);
   static CarriageCommand carriageCommand = new CarriageCommand(carriage, 45);
-  static IntakeCommand intakeCommand = new IntakeCommand(intake);
+  static IntakeCommand intakeCommand = new IntakeCommand(intake,operator);
   //static ElevatorPOV elevatorPOV = new ElevatorPOV(operator, elevator, elevatorUpCommand, elevatorDownCommand, elevatorHome, elevatorCommand);
 
   public final static PowerDistribution pdh = new PowerDistribution();
@@ -95,10 +94,10 @@ public class RobotContainer {
 
 
    //GAME PIECE SELECTOR BUTTONS
-   JoystickButton cubeButton = new JoystickButton(operator, 3);
+   /*JoystickButton cubeButton = new JoystickButton(operator, 3);
    JoystickButton coneButton = new JoystickButton(operator, 4);
    coneButton.whileTrue(new RunCommand(()->RobotState.setCone()));
-   cubeButton.whileTrue(new RunCommand(()->RobotState.setCube()));
+   cubeButton.whileTrue(new RunCommand(()->RobotState.setCube()));*/
 
    JoystickButton intakeButton = new JoystickButton(operator, 6);
    intakeButton.whileTrue(new RunCommand(()->RobotState.setIntaking()));

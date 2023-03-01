@@ -4,14 +4,18 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.RobotState;
+import frc.robot.RobotState.GamePiece;
 public class IntakeCommand extends CommandBase {
   Intake intake;
+  Joystick operator;
 
-  public IntakeCommand(Intake intake) {
+  public IntakeCommand(Intake intake, Joystick operator) {
     this.intake = intake;
+    this.operator = operator;
     addRequirements(intake);
   }
 
@@ -20,8 +24,11 @@ public class IntakeCommand extends CommandBase {
 
   @Override
   public void execute() {
+  if(operator.getThrottle() > 0.6) RobotState.setCone();
+  else if (operator.getThrottle() < -0.6) RobotState.setCube();
+  else RobotState.setGamePiece(GamePiece.EMPTY);
+  
    if(RobotState.getIntaking() == RobotState.IntakeState.IDLE){
-
       if(RobotState.getGamePiece() == RobotState.GamePiece.CONE){
         intake.coneidle();
       }
