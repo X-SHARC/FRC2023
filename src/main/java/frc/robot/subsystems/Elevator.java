@@ -105,6 +105,10 @@ public class Elevator extends SubsystemBase {
       }
      }
 
+    public void setPercent(double speed){
+      if (topLimitSwitch.get() == true && bottomLimitSwitch.get() == false) elevatorMasterMotor.set(ControlMode.PercentOutput, speed);
+    }
+
     public void elevatorDown(){
     if (bottomLimitSwitch.get() == true){
       elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(0.3));

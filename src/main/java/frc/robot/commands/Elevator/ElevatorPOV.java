@@ -4,9 +4,13 @@
 
 package frc.robot.commands.Elevator;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Elevator;
 
 public class ElevatorPOV extends CommandBase {
@@ -17,6 +21,7 @@ public class ElevatorPOV extends CommandBase {
   ElevatorDownCommand down;
   ElevatorHome home;
   ElevatorCommand pid;
+
   public ElevatorPOV(Joystick operator, Elevator elevator, ElevatorUpCommand up, ElevatorDownCommand down, ElevatorHome home, ElevatorCommand pid) {
     this.elevator = elevator;
     this.operator = operator;
@@ -36,27 +41,11 @@ public class ElevatorPOV extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    switch(operator.getPOV()){
-      case 0:
-        CommandScheduler.getInstance().schedule(up);
-        break;
-      case 180:
-        CommandScheduler.getInstance().schedule(down);
-        break;
-
-      case 270:
-        CommandScheduler.getInstance().schedule(pid);
-        break;
-      case 90:
-        CommandScheduler.getInstance().schedule(home);
-
-      default:
-        up.end(true);
-        down.end(true);
-        home.end(true);
-        pid.end(true);
-        elevator.stop();
+    if(Math.abs(operator.getY())>0.15){
+      new RunCommand(()->elevator.setPercent(operator.getY()), elevator);
     }
+    else new RunCommand(()->elevator.stop(), elevator);
+
     //new JoystickButton(operator, 3).onTrue(home);
   }
 

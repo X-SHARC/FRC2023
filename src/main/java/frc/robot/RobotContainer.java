@@ -90,17 +90,16 @@ public class RobotContainer {
    encoderReset.onTrue(new RunCommand(() -> elevator.resetEncoder(), elevator));*/
 
 
-   //GAME PIECE SELECTOR BUTTONS
-   JoystickButton cubeButton = new JoystickButton(operator, 8);
-   JoystickButton coneButton = new JoystickButton(operator, 7);
-   coneButton.whileTrue(new RunCommand(()->RobotState.setCone()));
-   cubeButton.whileTrue(new RunCommand(()->RobotState.setCube()));
+   //GAME PIECE SELECTOR BUTTONS, çalışmazsa runCOmmand olarak yaz
+   if (operator.getThrottle() > 0.5)  RobotState.setCone();
+   else if (operator.getThrottle()< -0.5) RobotState.setCube();
+   else RobotState.setGamePiece(GamePiece.EMPTY); 
 
-   JoystickButton intakeButton = new JoystickButton(operator, 6);
+   JoystickButton intakeButton = new JoystickButton(operator, 1);
    intakeButton.whileTrue(new RunCommand(()->RobotState.setIntaking()));
    intakeButton.whileFalse(new RunCommand(()-> RobotState.setIntakeIdle()));
 
-   JoystickButton ejectButton = new JoystickButton(operator, 5);
+   JoystickButton ejectButton = new JoystickButton(operator, 2);
    ejectButton.whileTrue(new RunCommand(()->RobotState.setEjecting()));
    ejectButton.whileFalse(new RunCommand(()-> RobotState.setIntakeIdle()));
 
