@@ -23,7 +23,9 @@ public class CarriageCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    carriage.resetEncoder();
+    if(carriage.limiter()){
+      carriage.resetCarriageEncoder();
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

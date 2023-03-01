@@ -5,13 +5,15 @@
 package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Carriage;
 import frc.robot.subsystems.Elevator;
 
 public class ElevatorDownCommand extends CommandBase {
   Elevator elevator;
-  /** Creates a new ElevatorDown. */
+  
   public ElevatorDownCommand(Elevator elevator) {
     this.elevator = elevator;
+    //addRequirements(elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -22,12 +24,7 @@ public class ElevatorDownCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (elevator.bottomLimitSwitch.get() == true){
-      elevator.elevatorDown();}
-
-   else{
-        elevator.stop();
-      }
+      elevator.elevatorDown();
     }
   
 

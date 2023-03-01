@@ -23,11 +23,11 @@ public class Intake extends SubsystemBase {
   }
 
   public void cubeidle(){
-    intakeMotor.set(ControlMode.PercentOutput,3.0/RobotContainer.pdh.getVoltage());
+    intakeMotor.set(ControlMode.PercentOutput,-3.0/RobotContainer.pdh.getVoltage());
   }
 
   public void coneidle(){
-    intakeMotor.set(ControlMode.PercentOutput,-3.0/RobotContainer.pdh.getVoltage());
+    intakeMotor.set(ControlMode.PercentOutput,1.2/RobotContainer.pdh.getVoltage());
   }
 
   public void grabCube(){

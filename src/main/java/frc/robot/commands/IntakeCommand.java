@@ -20,18 +20,14 @@ public class IntakeCommand extends CommandBase {
 
   @Override
   public void execute() {
-    if(RobotState.getIntaking() == RobotState.IntakeState.IDLE){
-      switch(RobotState.currentGamePiece){
-        case CONE:
-          intake.setPercent(-0.5);
-        case CUBE:
-          intake.cubeidle();
-        default:
-          intake.stop();
+   if(RobotState.getIntaking() == RobotState.IntakeState.IDLE){
 
-        intake.setPercent(-0.5);
+      if(RobotState.getGamePiece() == RobotState.GamePiece.CONE){
+        intake.coneidle();
       }
+      else intake.stop();
     }
+    
     //INTAKE IDLING WILL BE ARRANGED
     else{
       if(RobotState.getIntaking() == RobotState.IntakeState.INTAKING){

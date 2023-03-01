@@ -12,7 +12,7 @@ public class ElevatorUpCommand extends CommandBase {
   /** Creates a new ElevatorUp. */
   public ElevatorUpCommand(Elevator elevator) {
     this.elevator = elevator;
-    addRequirements(elevator);
+    //addRequirements(elevator);
   }
 
   // Called when the command is initially scheduled.
@@ -22,12 +22,7 @@ public class ElevatorUpCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (elevator.topLimitSwitch.get() == true){
-      elevator.elevatorUp();}
-
-      else {
-        elevator.stop();
-      }
+      elevator.elevatorUp();
     }
   
 
