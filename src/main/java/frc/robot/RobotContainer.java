@@ -76,7 +76,7 @@ public class RobotContainer {
    carriage1.whileTrue(new RunCommand(()-> carriage.intakeUp(), carriage));
    carriage1.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
 
-   JoystickButton carriage2 = new JoystickButton(operator,9);
+   JoystickButton carriage2 = new JoystickButton(operator, 11);
    carriage2.whileTrue(new RunCommand(()-> carriage.intakeDown(), carriage));
    carriage2.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
 

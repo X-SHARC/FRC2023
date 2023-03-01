@@ -19,7 +19,7 @@ import frc.robot.RobotState;
 
 public class Carriage extends SubsystemBase {
   private WPI_TalonFX carriageMotor = new WPI_TalonFX(Constants.CARRIAGE_ID, "canavar");
-  public static DigitalInput limitSwitch = new DigitalInput(3);
+  public static DigitalInput CarriageLimitSwitch = new DigitalInput(3);
 
   private double kP = 0.0031;
   private double kI = 0.0;
@@ -63,7 +63,7 @@ public class Carriage extends SubsystemBase {
     PIDOutput = carriagePID.calculate(getDegrees(), setpoint);
   //  feedForwardOutput = carriageFeedforward.calculate(angle, setpoint, angle);
     output = (PIDOutput  /*+ feedForwardOutput */) / RobotController.getBatteryVoltage();
-    if (limitSwitch.get() == false){
+    if (CarriageLimitSwitch.get() == false){
     carriageMotor.set(ControlMode.PercentOutput, PIDOutput * 1);
   }}
 
@@ -73,12 +73,12 @@ public class Carriage extends SubsystemBase {
     return angle;}
 
   public void intakeUp(){
-    if (limitSwitch.get() == false){
+    if (CarriageLimitSwitch.get() == false){
     carriageMotor.set(ControlMode.PercentOutput, 0.4);
   }}
 
   public boolean limiter(){
-    return limitSwitch.get();
+    return CarriageLimitSwitch.get();
   }
 
   public void intakeDown(){
@@ -92,14 +92,18 @@ public class Carriage extends SubsystemBase {
 
   @Override
   public void periodic() {
-    RobotState.setCarriage(limitSwitch.get());
+    RobotState.setCarriage(CarriageLimitSwitch.get());
     SmartDashboard.putNumber("Carriage angle:", getDegrees());
-    SmartDashboard.putData(limitSwitch);
+    SmartDashboard.putData(CarriageLimitSwitch);
     SmartDashboard.putNumber("Carriage PID ", PIDOutput);
 
-    if (limitSwitch.get() == true){
+    if (CarriageLimitSwitch.get() == true){
       resetCarriageEncoder();
     }
+
+    if (CarriageLimitSwitch.get() == true){
+      stop();}
+
     // This method will be called once per scheduler run
   }
 }
