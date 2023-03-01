@@ -13,9 +13,13 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.Elevator.ElevatorCommand;
 import frc.robot.commands.Elevator.ElevatorDownCommand;
 import frc.robot.commands.Elevator.ElevatorHome;
+import frc.robot.commands.Elevator.ElevatorPOV;
 import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.lib.drivers.WS2812Driver;
+
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
@@ -46,9 +50,9 @@ public class RobotContainer {
   static ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevator);
   static ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
   static ElevatorHome elevatorHome = new ElevatorHome(elevator);
-  static CarriageCommand carriageCommand = new CarriageCommand(carriage, 45);
+  static CarriageCommand carriageCommand = new CarriageCommand(carriage, -75);
   static IntakeCommand intakeCommand = new IntakeCommand(intake,operator);
-  //static ElevatorPOV elevatorPOV = new ElevatorPOV(operator, elevator, elevatorUpCommand, elevatorDownCommand, elevatorHome, elevatorCommand);
+  ElevatorPOV elevatorPOV = new ElevatorPOV(operator, elevator);
 
   public final static PowerDistribution pdh = new PowerDistribution();
 
@@ -76,9 +80,19 @@ public class RobotContainer {
    carriage1.whileTrue(new RunCommand(()-> carriage.intakeUp(), carriage));
    carriage1.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
 
-   JoystickButton carriage2 = new JoystickButton(operator, 11);
+   JoystickButton carriage2 = new JoystickButton(operator, 9);
    carriage2.whileTrue(new RunCommand(()-> carriage.intakeDown(), carriage));
    carriage2.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
+
+   JoystickButton carriagepid = new JoystickButton(operator, 5);
+   carriagepid.whileTrue(carriageCommand);
+
+
+   JoystickButton pid = new JoystickButton(operator, 11);
+   pid.whileTrue(elevatorCommand);
+   pid.whileFalse(new RunCommand(()->elevator.stop(), elevator));
+
+
 
     /* 
    JoystickButton carriageButton = new JoystickButton(operator, 1);
@@ -89,8 +103,8 @@ public class RobotContainer {
   */
 
    //TODO: Change this button
-   /*JoystickButton encoderReset = new JoystickButton(operator, 8);
-   encoderReset.onTrue(new RunCommand(() -> elevator.resetEncoder(), elevator));*/
+   JoystickButton encoderReset = new JoystickButton(operator, 12);
+   encoderReset.onTrue(new RunCommand(() -> elevator.resetEncoder(), elevator));
 
 
    //GAME PIECE SELECTOR BUTTONS
@@ -99,11 +113,11 @@ public class RobotContainer {
    coneButton.whileTrue(new RunCommand(()->RobotState.setCone()));
    cubeButton.whileTrue(new RunCommand(()->RobotState.setCube()));*/
 
-   JoystickButton intakeButton = new JoystickButton(operator, 6);
+   JoystickButton intakeButton = new JoystickButton(operator, 2);
    intakeButton.whileTrue(new RunCommand(()->RobotState.setIntaking()));
    intakeButton.whileFalse(new RunCommand(()-> RobotState.setIntakeIdle()));
 
-   JoystickButton ejectButton = new JoystickButton(operator, 5);
+   JoystickButton ejectButton = new JoystickButton(operator, 1);
    ejectButton.whileTrue(new RunCommand(()->RobotState.setEjecting()));
    ejectButton.whileFalse(new RunCommand(()-> RobotState.setIntakeIdle()));
   

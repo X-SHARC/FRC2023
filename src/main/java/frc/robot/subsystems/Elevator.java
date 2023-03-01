@@ -191,7 +191,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putData(bottomLimitSwitch);
 
 
-    if(bottomLimitSwitch.get() == false){
+    if(bottomLimitSwitch.get() == true){
       resetEncoder();
     }
     

@@ -21,7 +21,7 @@ public class Carriage extends SubsystemBase {
   private WPI_TalonFX carriageMotor = new WPI_TalonFX(Constants.CARRIAGE_ID, "canavar");
   public static DigitalInput CarriageLimitSwitch = new DigitalInput(3);
 
-  private double kP = 0.0031;
+  private double kP = 0.01735;
   private double kI = 0.0;
   private double kD = 0.0;
 
@@ -32,6 +32,8 @@ public class Carriage extends SubsystemBase {
 
   PIDController carriagePID = new PIDController(kP, kI, kD);
   ArmFeedforward carriageFeedforward = new ArmFeedforward(kS, kG, kV, kA);
+
+  private double angle = 0;
 
   double setpoint;
   private double PIDOutput = 0;
@@ -45,7 +47,7 @@ public class Carriage extends SubsystemBase {
   public Carriage() {
     carriageMotor.setInverted(false);
     carriageMotor.setNeutralMode(NeutralMode.Brake);
-    carriagePID.setTolerance(3);
+    carriagePID.setTolerance(1.5);
   }
 
   public void resetCarriageEncoder(){
@@ -53,22 +55,21 @@ public class Carriage extends SubsystemBase {
   }
 
   public double getDegrees(){
-    double angle;
     angle = carriageMotor.getSelectedSensorPosition() * GearRatio1;
     angle = (angle/2048.0) * 360;
     return angle;
   }
 
   public void setDegrees(double setpoint){
-    PIDOutput = carriagePID.calculate(getDegrees(), setpoint);
+    PIDOutput = carriagePID.calculate(angle, setpoint);
   //  feedForwardOutput = carriageFeedforward.calculate(angle, setpoint, angle);
-    output = (PIDOutput  /*+ feedForwardOutput */) / RobotController.getBatteryVoltage();
-    if (CarriageLimitSwitch.get() == false){
-    carriageMotor.set(ControlMode.PercentOutput, PIDOutput * 1);
-  }}
+  //  output = (PIDOutput  /*+ feedForwardOutput */) / RobotController.getBatteryVoltage();
+   // if (CarriageLimitSwitch.get() == false){
+    carriageMotor.set(ControlMode.PercentOutput, (PIDOutput * 1));
+  } //}
 
   public double getRadians(){
-    double angle = carriageMotor.getSelectedSensorPosition();
+    angle = carriageMotor.getSelectedSensorPosition();
     angle = (angle/2048.0) * 2 * Math.PI * GearRatio1  /* * GearRatio2 */;
     return angle;}
 
@@ -98,11 +99,10 @@ public class Carriage extends SubsystemBase {
     SmartDashboard.putNumber("Carriage PID ", PIDOutput);
 
     if (CarriageLimitSwitch.get() == true){
+      stop();
       resetCarriageEncoder();
     }
 
-    if (CarriageLimitSwitch.get() == true){
-      stop();}
 
     // This method will be called once per scheduler run
   }

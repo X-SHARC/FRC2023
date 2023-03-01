@@ -17,20 +17,14 @@ public class ElevatorPOV extends CommandBase {
   /** Creates a new ElevatorPOV. */
   Joystick operator;
   Elevator elevator;
-  ElevatorUpCommand up;
-  ElevatorDownCommand down;
-  ElevatorHome home;
-  ElevatorCommand pid;
 
-  public ElevatorPOV(Joystick operator, Elevator elevator, ElevatorUpCommand up, ElevatorDownCommand down, ElevatorHome home, ElevatorCommand pid) {
+
+  public ElevatorPOV(Joystick operator, Elevator elevator) {
     this.elevator = elevator;
     this.operator = operator;
-    this.up = up;
-    this.down = down;
-    this.home = home;
-    this.pid = pid;
+    
 
-    //addRequirements(elevator);
+    addRequirements(elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -41,7 +35,7 @@ public class ElevatorPOV extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    switch(operator.getPOV()){
+    /*switch(operator.getPOV()){
       case 0:
         CommandScheduler.getInstance().schedule(pid);
         break;
@@ -55,10 +49,10 @@ public class ElevatorPOV extends CommandBase {
         home.end(true);
         pid.end(true);
         elevator.stop();
-    }
+    }*/
 
     if (Math.abs(operator.getY())>0.15){
-      new RunCommand(()->elevator.percent(operator.getY()*0.5),elevator);
+      new RunCommand(()->elevator.percent(operator.getY()*-0.3),elevator);
     }
 
     /* if (Math.abs(operator.getX())<0.15){

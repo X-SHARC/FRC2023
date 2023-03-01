@@ -80,7 +80,7 @@ public class Swerve extends SubsystemBase {
     new SwerveModule("FR", new TalonFX(14), new TalonFX(15), new CANCoder(3), false, new PIDController(pidValues[1], 0, 0),-40), //! Front Right
     new SwerveModule("RL", driveMotorBL, angleMotorBL, new CANCoder(2), 
     true, new PIDController(pidValues[2], 0, 0),-35), //! Back Left
-    new SwerveModule("RR", new TalonFX(10), new TalonFX(12), new CANCoder(1), false, new PIDController(pidValues[3], 0, 0),-11)  //! Back Right
+    new SwerveModule("RR", new TalonFX(10), new TalonFX(18), new CANCoder(1), false, new PIDController(pidValues[3], 0, 0),-11)  //! Back Right
   };
 
 

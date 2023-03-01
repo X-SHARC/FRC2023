@@ -24,7 +24,7 @@ public class SwerveDriveCommand extends CommandBase {
   private final SlewRateLimiter rotLimiter = new SlewRateLimiter(4.5);
 
   double scale = 1;
-  double scale2= 0.5;
+  double scale2= 0.4;
   double slowScale = 0.2;
 
   
