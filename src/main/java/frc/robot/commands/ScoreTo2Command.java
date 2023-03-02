@@ -20,10 +20,16 @@ public class ScoreTo2Command extends SequentialCommandGroup {
   double distance;
   
   /** Creates a new ScoreTo2Command. */
-  public ScoreTo2Command() {
+  public ScoreTo2Command(Elevator elevator, Intake intake, Carriage carriage) {
+    this.elevator = elevator;
+    this.intake = intake;
+    this.carriage = carriage;
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     
-    //addCommands(new IntakeCommand(intake), new CarriageCommand(carriage, carriage.getDegrees()), new ElevatorCommand(elevator, distance));
+    addCommands(
+      new CarriageCommand(carriage, -35).withTimeout(1.3),
+      new ElevatorCommand(elevator, 75).withTimeout(1),
+      new CarriageCommand(carriage, -75).withTimeout(1));
   }
 }

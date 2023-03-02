@@ -10,6 +10,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 import frc.robot.commands.CarriageCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ScoreTo2Command;
 import frc.robot.commands.Elevator.ElevatorCommand;
 import frc.robot.commands.Elevator.ElevatorDownCommand;
 import frc.robot.commands.Elevator.ElevatorHome;
@@ -53,6 +54,7 @@ public class RobotContainer {
   static IntakeCommand intakeCommand = new IntakeCommand(intake,operator);
 
   public final static PowerDistribution pdh = new PowerDistribution();
+  ScoreTo2Command secondLevel = new ScoreTo2Command(elevator, intake, carriage);
 
   public RobotContainer() {
     // Configure the trigger bindings
@@ -88,9 +90,10 @@ public class RobotContainer {
    carriageHome.whileTrue(new CarriageCommand(carriage, 0));
 
 
-   JoystickButton pid = new JoystickButton(operator, 11);
-   pid.whileTrue(elevatorCommand);
-   pid.whileFalse(new RunCommand(()->elevator.stop(), elevator));
+   JoystickButton secondLevel = new JoystickButton(operator, 11);
+   secondLevel.whileTrue(new ScoreTo2Command(elevator, intake, carriage));
+   secondLevel.whileFalse(new RunCommand(()->elevator.stop())
+   .alongWith(new RunCommand(()->carriage.stop(),carriage)));
 
 
 
