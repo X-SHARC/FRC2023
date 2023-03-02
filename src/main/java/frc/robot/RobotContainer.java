@@ -49,7 +49,7 @@ public class RobotContainer {
   static ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevator);
   static ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
   static ElevatorHome elevatorHome = new ElevatorHome(elevator);
-  static CarriageCommand carriageCommand = new CarriageCommand(carriage, -75);
+  static CarriageCommand carriageCommand = new CarriageCommand(carriage, -45);
   static IntakeCommand intakeCommand = new IntakeCommand(intake,operator);
 
   public final static PowerDistribution pdh = new PowerDistribution();
@@ -83,7 +83,9 @@ public class RobotContainer {
    carriage2.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
 
    JoystickButton carriagepid = new JoystickButton(operator, 5);
-   carriagepid.whileTrue(carriageCommand);
+   carriagepid.whileTrue(new CarriageCommand(carriage, -75));
+   JoystickButton carriageHome = new JoystickButton(operator, 6);
+   carriageHome.whileTrue(new CarriageCommand(carriage, 0));
 
 
    JoystickButton pid = new JoystickButton(operator, 11);

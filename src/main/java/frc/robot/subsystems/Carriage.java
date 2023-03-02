@@ -8,10 +8,10 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -20,8 +20,8 @@ import frc.robot.RobotState;
 public class Carriage extends SubsystemBase {
   private WPI_TalonFX carriageMotor = new WPI_TalonFX(Constants.CARRIAGE_ID, "canavar");
   public static DigitalInput CarriageLimitSwitch = new DigitalInput(3);
-
-  private double kP = 0.01735;
+  //ilk değer: 0.01735
+  private double kP = 0.01355;
   private double kI = 0.0;
   private double kD = 0.0;
 
@@ -61,7 +61,7 @@ public class Carriage extends SubsystemBase {
   }
 
   public void setDegrees(double setpoint){
-    PIDOutput = carriagePID.calculate(angle, setpoint);
+    PIDOutput =  MathUtil.clamp(carriagePID.calculate(angle, setpoint), -0.52, 0.52);
   //  feedForwardOutput = carriageFeedforward.calculate(angle, setpoint, angle);
   //  output = (PIDOutput  /*+ feedForwardOutput */) / RobotController.getBatteryVoltage();
    // if (CarriageLimitSwitch.get() == false){
