@@ -11,13 +11,10 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
 import frc.robot.RobotState.ElevatorLevel;
 import frc.robot.RobotState.SwerveState;
-import frc.robot.commands.Elevator.ElevatorCommand;
-import frc.robot.commands.Elevator.ElevatorHome;
 
 public class Elevator extends SubsystemBase {
   private WPI_TalonFX elevatorMasterMotor = new WPI_TalonFX(32, "canavar");
@@ -49,13 +46,7 @@ public class Elevator extends SubsystemBase {
   private PIDController elevatorPID = new PIDController(kP, kI, kD);
   private ElevatorFeedforward feedForward = new ElevatorFeedforward(kS, kG, kV, kA);
 
-  Joystick operator;
-  
-
-  public Elevator(Joystick operator) {
-
-    this.operator = operator;
-
+  public Elevator() {
     RobotState.setElevating(false);
 
     elevatorMasterMotor.clearStickyFaults();
@@ -117,7 +108,7 @@ public class Elevator extends SubsystemBase {
       //to do: add safety 
     }
 
-    public void percent(double speed){
+    public void set(double speed){
       if(speed<0){
         if (bottomLimitSwitch.get() == true && RobotState.getInstance().canElevatorMove()){
           elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(Math.abs(speed)));

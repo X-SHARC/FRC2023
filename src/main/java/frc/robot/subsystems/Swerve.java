@@ -58,7 +58,7 @@ public class Swerve extends SubsystemBase {
   //private final CKIMU gyro;
   private AHRS gyroAhrs = new AHRS();
   //TODO: set device number
-  private Pigeon2 pigeon = new Pigeon2(0);
+  private Pigeon2 pigeon = new Pigeon2(23);
 
   TalonFX driveMotorBL = new TalonFX(11);
   TalonFX angleMotorBL = new TalonFX(16);
@@ -77,10 +77,10 @@ public class Swerve extends SubsystemBase {
   final boolean invertAllModules = true;
   private SwerveModule[] modules = new SwerveModule[] {
     new SwerveModule("FL", new TalonFX(17), new TalonFX(13), new CANCoder(4),false, new PIDController(pidValues[0], 0, 0),-298), //! Front Left
-    new SwerveModule("FR", new TalonFX(14), new TalonFX(15), new CANCoder(3), false, new PIDController(pidValues[1], 0, 0),-40), //! Front Right
+    new SwerveModule("FR", new TalonFX(14), new TalonFX(18), new CANCoder(3), false, new PIDController(pidValues[1], 0, 0),-40), //! Front Right
     new SwerveModule("RL", driveMotorBL, angleMotorBL, new CANCoder(2), 
     true, new PIDController(pidValues[2], 0, 0),-35), //! Back Left
-    new SwerveModule("RR", new TalonFX(10), new TalonFX(18), new CANCoder(1), false, new PIDController(pidValues[3], 0, 0),-11)  //! Back Right
+    new SwerveModule("RR", new TalonFX(10), new TalonFX(12), new CANCoder(1), false, new PIDController(pidValues[3], 0, 0),-11)  //! Back Right
   };
 
 
@@ -114,12 +114,12 @@ public class Swerve extends SubsystemBase {
         );
   }
 
-  public double getGyroDouble(){
+  public double getNavxDouble(){
     return Math.IEEEremainder(gyroAhrs.getAngle(), 360) * (Constants.kGyroReversed ? -1.0 : 1.0);
   }
 
-  public double getPigeonDouble(){
-    return pigeon.getAbsoluteCompassHeading();
+  public double getGyroDouble(){
+    return Math.IEEEremainder(pigeon.getYaw(), 360) * (Constants.kGyroReversed ? 1.0 : -1.0); 
   }
 
   public void resetPigeon(){
@@ -145,6 +145,7 @@ public class Swerve extends SubsystemBase {
   
 
   public void resetAllEncoders(){
+    resetPigeon();
     for (int i = modules.length-1; i >= 0; i--) {
       SwerveModule module = modules[i];
       //module.resetRotationEncoder();
@@ -189,7 +190,7 @@ public class Swerve extends SubsystemBase {
     SwerveModuleState[] states =
     Constants.Swerve.kinematics.toSwerveModuleStates(
         fieldRelative
-          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyro().plus(fieldAngle).minus(teleopAngle))
+          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyro())
           : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.desaturateWheelSpeeds(states, Constants.Swerve.kMaxSpeed);
     //setClosedLoopStates(states);
@@ -243,9 +244,10 @@ public class Swerve extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("swerve groAngle", getGyroDouble());
     SmartDashboard.putNumber("swerve field offset", fieldAngle.getDegrees());
+    //SmartDashboard.putNumber("Pigeon Yaw:", getGyroDouble());
 
     //Pigeon Configuration:
-    SmartDashboard.putNumber("Pigeon Yaw:", getPigeonDouble());
+    SmartDashboard.putNumber("Pigeon Yaw:", getGyroDouble());
     SmartDashboard.putNumber("Pigeon Pitch", getPitch());
     SmartDashboard.putNumber("Pigeon Yaw", pigeon.getYaw());
     SmartDashboard.putNumber("Pigeon Compass Heading", pigeon.getAbsoluteCompassHeading());

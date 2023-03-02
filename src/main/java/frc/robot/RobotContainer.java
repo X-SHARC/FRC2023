@@ -13,7 +13,6 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.Elevator.ElevatorCommand;
 import frc.robot.commands.Elevator.ElevatorDownCommand;
 import frc.robot.commands.Elevator.ElevatorHome;
-import frc.robot.commands.Elevator.ElevatorPOV;
 import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.lib.drivers.WS2812Driver;
@@ -37,7 +36,7 @@ public class RobotContainer {
 
   //Subsystems
   static Swerve swerveDrivetrain = new Swerve(true);
-  static Elevator elevator = new Elevator(operator);
+  static Elevator elevator = new Elevator();
   static Intake intake = new Intake();
   static Carriage carriage = new Carriage();
 
@@ -52,7 +51,6 @@ public class RobotContainer {
   static ElevatorHome elevatorHome = new ElevatorHome(elevator);
   static CarriageCommand carriageCommand = new CarriageCommand(carriage, -75);
   static IntakeCommand intakeCommand = new IntakeCommand(intake,operator);
-  ElevatorPOV elevatorPOV = new ElevatorPOV(operator, elevator);
 
   public final static PowerDistribution pdh = new PowerDistribution();
 
