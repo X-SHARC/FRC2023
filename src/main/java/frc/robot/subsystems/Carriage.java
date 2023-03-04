@@ -95,7 +95,7 @@ public class Carriage extends SubsystemBase {
   public void periodic() {
     RobotState.setCarriage(CarriageLimitSwitch.get());
     SmartDashboard.putNumber("Carriage angle:", getDegrees());
-    SmartDashboard.putData(CarriageLimitSwitch);
+    SmartDashboard.putData("Carriage Limit Switch", CarriageLimitSwitch);
     SmartDashboard.putNumber("Carriage PID ", PIDOutput);
 
     if (CarriageLimitSwitch.get() == true){

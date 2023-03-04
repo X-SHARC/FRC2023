@@ -46,7 +46,7 @@ public class RobotContainer {
 
   //Commands 
   static SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
-  static ElevatorCommand elevatorCommand = new ElevatorCommand(elevator, 110);
+  static ElevatorCommand elevatorCommand = new ElevatorCommand(elevator, 75);
   static ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevator);
   static ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
   static ElevatorHome elevatorHome = new ElevatorHome(elevator);
@@ -73,6 +73,12 @@ public class RobotContainer {
 
     JoystickButton elevator2 = new JoystickButton(operator,7);
     elevator2.whileTrue(elevatorDownCommand);
+
+    JoystickButton elevatorpid = new JoystickButton(operator,3);
+    elevatorpid.whileTrue(elevatorCommand);
+
+    JoystickButton elevatorhome = new JoystickButton(operator,4);
+    elevatorhome.whileTrue(elevatorHome);
 
 
     //TODO: add carriage default command: pid, home, limitations

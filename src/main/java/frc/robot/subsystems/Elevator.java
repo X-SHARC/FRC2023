@@ -47,6 +47,7 @@ public class Elevator extends SubsystemBase {
   private ElevatorFeedforward feedForward = new ElevatorFeedforward(kS, kG, kV, kA);
 
   public Elevator() {
+    elevatorMasterMotor.configFactoryDefault();
     RobotState.setElevating(false);
 
     elevatorMasterMotor.clearStickyFaults();
@@ -178,11 +179,11 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("PIDOutput", PIDOutput);
     SmartDashboard.putNumber("Elevator Distance:", distance);
     SmartDashboard.putNumber("Elevator Perpendicular Distance:", perpendicularDistance);
-    SmartDashboard.putData(topLimitSwitch);
-    SmartDashboard.putData(bottomLimitSwitch);
+    SmartDashboard.putData("Top Limit Switch:", topLimitSwitch);
+    SmartDashboard.putData("Bottom Limit Switch", bottomLimitSwitch);
 
 
-    if(bottomLimitSwitch.get() == true){
+    if(bottomLimitSwitch.get() == false){
       resetEncoder();
     }
     
