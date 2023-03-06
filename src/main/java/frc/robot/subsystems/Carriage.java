@@ -21,7 +21,7 @@ public class Carriage extends SubsystemBase {
   private WPI_TalonFX carriageMotor = new WPI_TalonFX(Constants.CARRIAGE_ID, "canavar");
   public static DigitalInput CarriageLimitSwitch = new DigitalInput(3);
   //ilk değer: 0.01735
-  private double kP = 0.01355;
+  private double kP = 0.02731;
   private double kI = 0.0;
   private double kD = 0.0;
 
@@ -61,7 +61,7 @@ public class Carriage extends SubsystemBase {
   }
 
   public void setDegrees(double setpoint){
-    PIDOutput =  MathUtil.clamp(carriagePID.calculate(angle, setpoint), -0.52, 0.52);
+    PIDOutput =  MathUtil.clamp(carriagePID.calculate(angle, setpoint), -0.87, 0.87);
   //  feedForwardOutput = carriageFeedforward.calculate(angle, setpoint, angle);
   //  output = (PIDOutput  /*+ feedForwardOutput */) / RobotController.getBatteryVoltage();
    // if (CarriageLimitSwitch.get() == false){
@@ -88,6 +88,10 @@ public class Carriage extends SubsystemBase {
 
   public void stop(){
     carriageMotor.set(ControlMode.PercentOutput, 0.0);
+  }
+
+  public boolean isAtSetpoint(){
+    return carriagePID.atSetpoint();
   }
 
 

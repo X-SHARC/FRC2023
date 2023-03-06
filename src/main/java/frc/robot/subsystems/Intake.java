@@ -31,19 +31,19 @@ public class Intake extends SubsystemBase {
   }
 
   public void grabCube(){
-    intakeMotor.set(ControlMode.PercentOutput, 0.65);
+    intakeMotor.set(ControlMode.PercentOutput, -0.65);
   }
 
   public void ejectCube(){
-    intakeMotor.set(ControlMode.PercentOutput, -0.75);
+    intakeMotor.set(ControlMode.PercentOutput, 0.75);
   }
 
   public void grabCone(){
-    intakeMotor.set(ControlMode.PercentOutput, -0.9);
+    intakeMotor.set(ControlMode.PercentOutput, 0.9);
   }
 
   public void ejectCone(){
-    intakeMotor.set(ControlMode.PercentOutput, 0.9);
+    intakeMotor.set(ControlMode.PercentOutput, -0.9);
   }
 
   public void setPercent(double percent){

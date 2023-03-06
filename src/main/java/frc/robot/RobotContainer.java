@@ -9,8 +9,9 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 import frc.robot.commands.CarriageCommand;
+import frc.robot.commands.ConeToLevelTwo;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.ScoreTo2Command;
+import frc.robot.commands.CubeToLevelTwo;
 import frc.robot.commands.Elevator.ElevatorCommand;
 import frc.robot.commands.Elevator.ElevatorDownCommand;
 import frc.robot.commands.Elevator.ElevatorHome;
@@ -50,11 +51,13 @@ public class RobotContainer {
   static ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevator);
   static ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
   static ElevatorHome elevatorHome = new ElevatorHome(elevator);
-  static CarriageCommand carriageCommand = new CarriageCommand(carriage, -45);
+  static CarriageCommand carriageCommand = new CarriageCommand(carriage, -35);
   static IntakeCommand intakeCommand = new IntakeCommand(intake,operator);
 
   public final static PowerDistribution pdh = new PowerDistribution();
-  ScoreTo2Command secondLevel = new ScoreTo2Command(elevator, intake, carriage);
+  CubeToLevelTwo secondLevelcube = new CubeToLevelTwo(elevator, intake, carriage);
+  ConeToLevelTwo secondLevelcone = new ConeToLevelTwo(elevator, intake, carriage);
+
 
   public RobotContainer() {
     // Configure the trigger bindings
@@ -67,17 +70,17 @@ public class RobotContainer {
 
   private void configureBindings() {
     boolean a = RobotState.getTripping();
-    swerveDrivetrain.setDefaultCommand(driveCommand);
+    //swerveDrivetrain.setDefaultCommand(driveCommand);
     JoystickButton elevator1 = new JoystickButton(operator, 8);
     elevator1.whileTrue(elevatorUpCommand);
 
     JoystickButton elevator2 = new JoystickButton(operator,7);
     elevator2.whileTrue(elevatorDownCommand);
 
-    JoystickButton elevatorpid = new JoystickButton(operator,3);
+    JoystickButton elevatorpid = new JoystickButton(driver,3);
     elevatorpid.whileTrue(elevatorCommand);
 
-    JoystickButton elevatorhome = new JoystickButton(operator,4);
+    JoystickButton elevatorhome = new JoystickButton(driver,4);
     elevatorhome.whileTrue(elevatorHome);
 
 
@@ -90,15 +93,23 @@ public class RobotContainer {
    carriage2.whileTrue(new RunCommand(()-> carriage.intakeDown(), carriage));
    carriage2.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
 
-   JoystickButton carriagepid = new JoystickButton(operator, 5);
-   carriagepid.whileTrue(new CarriageCommand(carriage, -75));
-   JoystickButton carriageHome = new JoystickButton(operator, 6);
+    JoystickButton carriagepid = new JoystickButton(operator, 5);
+   carriagepid.whileTrue(new CarriageCommand(carriage, -35)); 
+
+   JoystickButton carriagereset = new JoystickButton(operator, 6);
+   carriagereset.onTrue(new RunCommand(() -> carriage.resetCarriageEncoder(), carriage));
+ /*  JoystickButton carriageHome = new JoystickButton(operator, 6);
    carriageHome.whileTrue(new CarriageCommand(carriage, 0));
+*/
 
+   JoystickButton secondLevelcube = new JoystickButton(driver, 1);
+   secondLevelcube.onTrue(new CubeToLevelTwo(elevator, intake, carriage));
+   secondLevelcube.onFalse(new RunCommand(()->elevator.stop())
+   .alongWith(new RunCommand(()->carriage.stop(),carriage)));
 
-   JoystickButton secondLevel = new JoystickButton(operator, 11);
-   secondLevel.whileTrue(new ScoreTo2Command(elevator, intake, carriage));
-   secondLevel.whileFalse(new RunCommand(()->elevator.stop())
+   JoystickButton secondLevelcone = new JoystickButton(driver, 2);
+   secondLevelcone.onTrue(new CubeToLevelTwo(elevator, intake, carriage));
+   secondLevelcone.onFalse(new RunCommand(()->elevator.stop())
    .alongWith(new RunCommand(()->carriage.stop(),carriage)));
 
 
@@ -114,13 +125,6 @@ public class RobotContainer {
    //TODO: Change this button
    JoystickButton encoderReset = new JoystickButton(operator, 12);
    encoderReset.onTrue(new RunCommand(() -> elevator.resetEncoder(), elevator));
-
-
-   //GAME PIECE SELECTOR BUTTONS
-   /*JoystickButton cubeButton = new JoystickButton(operator, 3);
-   JoystickButton coneButton = new JoystickButton(operator, 4);
-   coneButton.whileTrue(new RunCommand(()->RobotState.setCone()));
-   cubeButton.whileTrue(new RunCommand(()->RobotState.setCube()));*/
 
    JoystickButton intakeButton = new JoystickButton(operator, 2);
    intakeButton.whileTrue(new RunCommand(()->RobotState.setIntaking()));

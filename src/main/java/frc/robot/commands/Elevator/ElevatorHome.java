@@ -14,8 +14,8 @@ public class ElevatorHome extends SequentialCommandGroup {
     this.elevator = elevator;
    
     addCommands(
-      new ElevatorCommand(elevator, 10).withTimeout(0.8),
-      new RunCommand(()->elevator.elevatorHome(0.10), elevator).until(elevator::getHome),
+      new ElevatorCommand(elevator, 5).withTimeout(0.8),
+      new RunCommand(()->elevator.elevatorHome(0.20), elevator).until(elevator::getHome),
       new RunCommand(()-> elevator.stop(), elevator),
       new RunCommand(()-> this.end(true))
     );
