@@ -30,6 +30,7 @@ public class ConeToLevelTwo extends SequentialCommandGroup {
     this.elevator = elevator;
     this.intake = intake;
     this.carriage = carriage;
+    RunCommand intakeCommand = RobotState.getGamePiece() == GamePiece.CONE ? new RunCommand(()->intake.ejectCone())  : new RunCommand(()->intake.ejectCube());
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
@@ -37,12 +38,13 @@ public class ConeToLevelTwo extends SequentialCommandGroup {
 
     addCommands(
       new CarriageCommand(carriage, -45).withTimeout(0.1),
-      new ElevatorCommand(elevator, 85).withTimeout(3)
-      .alongWith(new CarriageCommand(carriage, -35).withTimeout(2)),
+      new ElevatorCommand(elevator, 77).withTimeout(1)
+      .alongWith(new CarriageCommand(carriage, -35).withTimeout(0.4)),
       new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.3),
       new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
       new ElevatorHome(elevator).withTimeout(1.8)
-      .alongWith(new CarriageCommand(carriage, -35).withTimeout(1.3))
+      .alongWith(new CarriageCommand(carriage, -15).withTimeout(1.3))
+
       );
   }
 }

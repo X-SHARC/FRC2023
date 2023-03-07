@@ -94,6 +94,19 @@ public class Carriage extends SubsystemBase {
     return carriagePID.atSetpoint();
   }
 
+  public void carriageHome(double speed){
+    if(CarriageLimitSwitch.get() == false){
+      carriageMotor.set(ControlMode.PercentOutput, speed);
+    }
+    else{
+      resetCarriageEncoder();
+    }
+  }
+
+  public boolean getElevatorHome(){
+    return (CarriageLimitSwitch.get());
+  }
+
 
   @Override
   public void periodic() {

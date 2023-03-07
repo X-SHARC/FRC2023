@@ -5,25 +5,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.Elevator.ElevatorCommand;
 import frc.robot.subsystems.Carriage;
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Intake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ScoreTo3Command extends SequentialCommandGroup {
-  Elevator elevator;
-  Intake intake;
+public class CarriageHome extends SequentialCommandGroup {
   Carriage carriage;
-  double distance;
-  
-  /** Creates a new ScoreTo2Command. */
-  public ScoreTo3Command() {
+  /** Creates a new CarriageHome. */
+  public CarriageHome(Carriage carriage) {
+    this.carriage = carriage;
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    
-    //addCommands(new IntakeCommand(intake), new CarriageCommand(carriage, carriage.getDegrees()), new ElevatorCommand(elevator, elevator.getDistance()));
+    addCommands();
   }
 }

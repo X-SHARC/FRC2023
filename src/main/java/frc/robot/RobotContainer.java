@@ -9,7 +9,9 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 import frc.robot.commands.CarriageCommand;
+import frc.robot.commands.ConeToLevelThree;
 import frc.robot.commands.ConeToLevelTwo;
+import frc.robot.commands.CubeToLevelThree;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.CubeToLevelTwo;
 import frc.robot.commands.Elevator.ElevatorCommand;
@@ -17,6 +19,7 @@ import frc.robot.commands.Elevator.ElevatorDownCommand;
 import frc.robot.commands.Elevator.ElevatorHome;
 import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
+import frc.robot.commands.Swerve.TurnToAngle;
 import frc.robot.lib.drivers.WS2812Driver;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -57,7 +60,12 @@ public class RobotContainer {
   public final static PowerDistribution pdh = new PowerDistribution();
   CubeToLevelTwo secondLevelcube = new CubeToLevelTwo(elevator, intake, carriage);
   ConeToLevelTwo secondLevelcone = new ConeToLevelTwo(elevator, intake, carriage);
+  CubeToLevelThree thirdLevelCube = new CubeToLevelThree(elevator, intake, carriage);
+  ConeToLevelThree thirdLevelCone = new ConeToLevelThree(elevator, intake, carriage);
 
+
+
+  TurnToAngle turnToAngle = new TurnToAngle(swerveDrivetrain, 45);
 
   public RobotContainer() {
     // Configure the trigger bindings
@@ -70,18 +78,18 @@ public class RobotContainer {
 
   private void configureBindings() {
     boolean a = RobotState.getTripping();
-    //swerveDrivetrain.setDefaultCommand(driveCommand);
+    swerveDrivetrain.setDefaultCommand(driveCommand);
     JoystickButton elevator1 = new JoystickButton(operator, 8);
     elevator1.whileTrue(elevatorUpCommand);
 
     JoystickButton elevator2 = new JoystickButton(operator,7);
     elevator2.whileTrue(elevatorDownCommand);
 
-    JoystickButton elevatorpid = new JoystickButton(driver,3);
+    /*JoystickButton elevatorpid = new JoystickButton(driver,3);
     elevatorpid.whileTrue(elevatorCommand);
 
     JoystickButton elevatorhome = new JoystickButton(driver,4);
-    elevatorhome.whileTrue(elevatorHome);
+    elevatorhome.whileTrue(elevatorHome); */
 
 
     //TODO: add carriage default command: pid, home, limitations
@@ -108,10 +116,22 @@ public class RobotContainer {
    .alongWith(new RunCommand(()->carriage.stop(),carriage)));
 
    JoystickButton secondLevelcone = new JoystickButton(driver, 2);
-   secondLevelcone.onTrue(new CubeToLevelTwo(elevator, intake, carriage));
+   secondLevelcone.onTrue(new ConeToLevelTwo(elevator, intake, carriage));
    secondLevelcone.onFalse(new RunCommand(()->elevator.stop())
    .alongWith(new RunCommand(()->carriage.stop(),carriage)));
 
+   JoystickButton thirdLevelcube = new JoystickButton(driver, 3);
+   thirdLevelcube.onTrue(new CubeToLevelThree(elevator, intake, carriage));
+   thirdLevelcube.onFalse(new RunCommand(()->elevator.stop())
+   .alongWith(new RunCommand(()->carriage.stop(),carriage)));
+
+   JoystickButton thirdLevelcone = new JoystickButton(driver, 4);
+   thirdLevelcone.onTrue(new ConeToLevelThree(elevator, intake, carriage));
+   thirdLevelcone.onFalse(new RunCommand(()->elevator.stop())
+   .alongWith(new RunCommand(()->carriage.stop(),carriage)));
+
+   JoystickButton turn = new JoystickButton(driver, 5);
+   turn.whileTrue(turnToAngle);
 
 
     /* 

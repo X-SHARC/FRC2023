@@ -58,7 +58,7 @@ public class Swerve extends SubsystemBase {
   //private final CKIMU gyro;
   private AHRS gyroAhrs = new AHRS();
   //TODO: set device number
-  private Pigeon2 pigeon = new Pigeon2(23);
+  public Pigeon2 pigeon = new Pigeon2(23);
 
   TalonFX driveMotorBL = new TalonFX(11);
   TalonFX angleMotorBL = new TalonFX(16);
@@ -246,11 +246,6 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("swerve field offset", fieldAngle.getDegrees());
     //SmartDashboard.putNumber("Pigeon Yaw:", getGyroDouble());
 
-    //Pigeon Configuration:
-    SmartDashboard.putNumber("Pigeon Yaw:", getGyroDouble());
-    SmartDashboard.putNumber("Pigeon Pitch", getPitch());
-    SmartDashboard.putNumber("Pigeon Yaw", pigeon.getYaw());
-    SmartDashboard.putNumber("Pigeon Compass Heading", pigeon.getAbsoluteCompassHeading());
     
     // SmartDashboard.putNumber("0. SETPOINT", modules[0].drivePID.getSetpoint());
     // /SmartDashboard.putNumber("0. Velocity", modules[0].getDriveMotorRate());
@@ -279,8 +274,6 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("3 BL",modules[2].getDegrees());
     SmartDashboard.putNumber("4 BR",modules[3].getDegrees());*/
 
-
-    
     modules[0].debug();
     modules[1].debug();
     modules[2].debug();

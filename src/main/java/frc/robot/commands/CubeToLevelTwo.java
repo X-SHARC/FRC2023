@@ -25,7 +25,7 @@ public class CubeToLevelTwo extends SequentialCommandGroup {
   Intake intake;
   Carriage carriage;
   double distance;
-  RunCommand intakeCommand;
+  RunCommand intakeCommand = RobotState.getGamePiece() == GamePiece.CONE ? new RunCommand(()->intake.ejectCone())  : new RunCommand(()->intake.ejectCube());
   //Array Structure: [setpoint, timeout]
 
   
@@ -40,13 +40,13 @@ public class CubeToLevelTwo extends SequentialCommandGroup {
   
 
     addCommands(
-      new CarriageCommand(carriage, -35).withTimeout(0.1),
-      new ElevatorCommand(elevator, 65).withTimeout(0.55)
-      .alongWith(new CarriageCommand(carriage, -75).withTimeout(0.55)),
+      new CarriageCommand(carriage, -38).withTimeout(0.1),
+      new ElevatorCommand(elevator, 75).withTimeout(0.55)
+      .alongWith(new CarriageCommand(carriage, -68).withTimeout(0.55)),
       new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.3),
       new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
       new ElevatorHome(elevator).withTimeout(1.8)
-      .alongWith(new CarriageCommand(carriage, -35).withTimeout(1.3))
+      .alongWith(new CarriageCommand(carriage, -13).withTimeout(1.3))
       );
   }
 }
