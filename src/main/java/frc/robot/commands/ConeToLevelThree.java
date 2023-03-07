@@ -16,7 +16,7 @@ import frc.robot.subsystems.Intake;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ConeToLevelTwo extends SequentialCommandGroup {
+public class ConeToLevelThree extends SequentialCommandGroup {
   Elevator elevator;
   Intake intake;
   Carriage carriage;
@@ -26,7 +26,7 @@ public class ConeToLevelTwo extends SequentialCommandGroup {
 
   
   /** Creates a new ScoreTo2Command. */
-  public ConeToLevelTwo(Elevator elevator, Intake intake, Carriage carriage) {
+  public ConeToLevelThree(Elevator elevator, Intake intake, Carriage carriage) {
     this.elevator = elevator;
     this.intake = intake;
     this.carriage = carriage;
@@ -37,7 +37,7 @@ public class ConeToLevelTwo extends SequentialCommandGroup {
 
     addCommands(
       new CarriageCommand(carriage, -45).withTimeout(0.1),
-      new ElevatorCommand(elevator, 85).withTimeout(3)
+      new ElevatorCommand(elevator, 110).withTimeout(3)
       .alongWith(new CarriageCommand(carriage, -35).withTimeout(2)),
       new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.3),
       new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),

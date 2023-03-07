@@ -27,11 +27,6 @@ public class CubeToLevelTwo extends SequentialCommandGroup {
   double distance;
   RunCommand intakeCommand;
   //Array Structure: [setpoint, timeout]
-  double[] carriageAngle = new double[2];
-  double[] elevatorDistance = new double[2];
-  double[] carriageSecondAngle = new double[2];
-  double elevatorHomeTimeout = 0;
-  double[] carriageFinal = new double[2];
 
   
   /** Creates a new ScoreTo2Command. */
