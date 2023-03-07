@@ -148,7 +148,7 @@ public class Elevator extends SubsystemBase {
         elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(speed));
       }
       else resetEncoder();
-
+      
       RobotState.setElevating(true);
     }
 

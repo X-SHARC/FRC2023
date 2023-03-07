@@ -4,7 +4,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import frc.robot.subsystems.Carriage;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -15,8 +17,16 @@ public class CarriageHome extends SequentialCommandGroup {
   /** Creates a new CarriageHome. */
   public CarriageHome(Carriage carriage) {
     this.carriage = carriage;
+
+
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands();
+    addCommands(
+      // degerler ayarli degil
+      new CarriageCommand(carriage, 5).withTimeout(0.8),
+      new RunCommand(()->carriage.carriageHome(0.20), carriage).until(carriage::getCarriageHome),
+      new RunCommand(()-> carriage.stop(), carriage),
+      new RunCommand(()-> this.end(true))
+    );
   }
 }

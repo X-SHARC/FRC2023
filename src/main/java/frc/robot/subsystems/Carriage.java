@@ -78,9 +78,10 @@ public class Carriage extends SubsystemBase {
     carriageMotor.set(ControlMode.PercentOutput, 0.4);
   }}
 
-  public boolean limiter(){
+  /* public boolean limiter(){
     return CarriageLimitSwitch.get();
   }
+  */
 
   public void intakeDown(){
     carriageMotor.set(ControlMode.PercentOutput, -0.4);
@@ -95,15 +96,16 @@ public class Carriage extends SubsystemBase {
   }
 
   public void carriageHome(double speed){
-    if(CarriageLimitSwitch.get() == false){
+    if(CarriageLimitSwitch.get() == false /* true */){
       carriageMotor.set(ControlMode.PercentOutput, speed);
     }
     else{
       resetCarriageEncoder();
     }
+    RobotState.setElevating(true);
   }
 
-  public boolean getElevatorHome(){
+  public boolean getCarriageHome(){
     return (CarriageLimitSwitch.get());
   }
 
@@ -123,4 +125,8 @@ public class Carriage extends SubsystemBase {
 
     // This method will be called once per scheduler run
   }
+
+public boolean CarriageLimitSwitch() {
+    return false;
+}
 }
