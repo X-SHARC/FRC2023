@@ -85,11 +85,12 @@ public class RobotContainer {
     JoystickButton elevator2 = new JoystickButton(operator,7);
     elevator2.whileTrue(elevatorDownCommand);
 
-    /*JoystickButton elevatorpid = new JoystickButton(driver,3);
+    // button atama kontrol + denenecek 
+    JoystickButton elevatorpid = new JoystickButton(driver,6);
     elevatorpid.whileTrue(elevatorCommand);
 
-    JoystickButton elevatorhome = new JoystickButton(driver,4);
-    elevatorhome.whileTrue(elevatorHome); */
+    JoystickButton elevatorhome = new JoystickButton(driver,7);
+    elevatorhome.whileTrue(elevatorHome); 
 
 
     //TODO: add carriage default command: pid, home, limitations
@@ -106,9 +107,11 @@ public class RobotContainer {
 
    JoystickButton carriagereset = new JoystickButton(operator, 6);
    carriagereset.onTrue(new RunCommand(() -> carriage.resetCarriageEncoder(), carriage));
- /*  JoystickButton carriageHome = new JoystickButton(operator, 6);
-   carriageHome.whileTrue(new CarriageCommand(carriage, 0));
-*/
+    
+   // denenecek + button atama kontrol
+   JoystickButton carriageHome = new JoystickButton(operator, 3);
+   carriageHome.whileTrue((new CarriageCommand(carriage, 5)));
+
 
    JoystickButton secondLevelcube = new JoystickButton(driver, 1);
    secondLevelcube.onTrue(new CubeToLevelTwo(elevator, intake, carriage));
