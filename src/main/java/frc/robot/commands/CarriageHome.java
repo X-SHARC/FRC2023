@@ -23,8 +23,8 @@ public class CarriageHome extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       // degerler ayarli degil
-      new CarriageCommand(carriage, 5).withTimeout(0.8),
-      new RunCommand(()->carriage.carriageHome(0.20), carriage).until(carriage::getCarriageHome),
+      new CarriageCommand(carriage, 0).withTimeout(0.8),
+      new RunCommand(()->carriage.carriageHome(0.35), carriage).until(carriage::getCarriageHome),
       new RunCommand(()-> carriage.stop(), carriage),
       new RunCommand(()-> this.end(true))
     );

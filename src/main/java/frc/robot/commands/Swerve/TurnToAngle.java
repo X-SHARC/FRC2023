@@ -7,22 +7,25 @@ package frc.robot.commands.Swerve;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 
 public class TurnToAngle extends CommandBase {
   /** Creates a new TurnToAgnle. */
   Swerve swerve;
   //kp = 0.0075
-  PIDController turnPID = new PIDController(0.0059, 0, 0);
+  PIDController turnPID = new PIDController(0.00059, 0, 0);
+  double kP = 0.0031;
 
   double angleSetpoint;
+
+  double pidOutput = 1;
+  double error;
   
   public TurnToAngle(Swerve swerve, double angleSetpoint) {
     this.swerve = swerve;
     this.angleSetpoint = angleSetpoint;
     addRequirements(swerve);
-    turnPID.setTolerance(5);
+    //turnPID.setTolerance(5);
   }
 
   // Called when the command is initially scheduled.
@@ -32,14 +35,14 @@ public class TurnToAngle extends CommandBase {
   @Override
   public void execute() {
     // ! NOT FIELD RELATIVE
-    swerve.drive(0, 0, 
-    turnPID.calculate(swerve.pigeon.getYaw(), angleSetpoint) * Constants.Swerve.kMaxAngularSpeed
-    , false);
+    //error = angleSetpoint - swerve.getGyroDouble()+180;
+    //pidOutput = error * kP;
+    swerve.drive(0.0, 0.0, 0.4, false);
 
-    SmartDashboard.putBoolean("atSetpoint", turnPID.atSetpoint());
-    SmartDashboard.putNumber("Setpoint", angleSetpoint);
-    SmartDashboard.putNumber("PigeonYaw", swerve.pigeon.getYaw());
 
+    //swerve.drive(0, 0, turnPID.calculate(swerve.pigeon.getYaw(), angleSetpoint), false);
+
+    SmartDashboard.putNumber("Swerve PID out", pidOutput);
   }
 
   @Override

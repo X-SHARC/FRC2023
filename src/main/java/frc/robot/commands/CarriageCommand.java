@@ -22,11 +22,7 @@ public class CarriageCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    if(carriage.CarriageLimitSwitch()){
-      carriage.resetCarriageEncoder();
-    }
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

@@ -40,7 +40,7 @@ public class Carriage extends SubsystemBase {
  // private double feedForwardOutput = 0;
   private double output = 0;
 
-  double GearRatio1 = 1/152.4;
+  double GearRatio1 = 1/121.905;
   // double GearRatio2 = 1/64;
 
   /** Creates a new Carriage. */
@@ -70,7 +70,7 @@ public class Carriage extends SubsystemBase {
 
   public double getRadians(){
     angle = carriageMotor.getSelectedSensorPosition();
-    angle = (angle/2048.0) * 2 * Math.PI * GearRatio1  /* * GearRatio2 */;
+    angle = (angle/2048.0) * 2 * Math.PI * GearRatio1;
     return angle;}
 
   public void intakeUp(){
@@ -96,7 +96,7 @@ public class Carriage extends SubsystemBase {
   }
 
   public void carriageHome(double speed){
-    if(CarriageLimitSwitch.get() == false /* true */){
+    if(CarriageLimitSwitch.get() == false){
       carriageMotor.set(ControlMode.PercentOutput, speed);
     }
     else{
@@ -126,7 +126,4 @@ public class Carriage extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-public boolean CarriageLimitSwitch() {
-    return false;
-}
 }

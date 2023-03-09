@@ -10,9 +10,12 @@
     },
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Bottom Limit Switch": "Digital Input",
+      "/SmartDashboard/Carriage Limit Switch": "Digital Input",
       "/SmartDashboard/DigitalInput[0]": "Digital Input",
       "/SmartDashboard/DigitalInput[1]": "Digital Input",
-      "/SmartDashboard/Field": "Field2d"
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Top Limit Switch:": "Digital Input"
     }
   },
   "NetworkTables Settings": {
@@ -35,6 +38,37 @@
               "id": "NT:/SmartDashboard/Voltage"
             }
           ]
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "height": 338,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/swerve groAngle"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <2>": {
+      "plots": [
+        {
+          "height": 338
         }
       ]
     }

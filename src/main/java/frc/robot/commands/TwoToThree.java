@@ -34,7 +34,7 @@ public class TwoToThree extends SequentialCommandGroup {
 
     addCommands(
       new CarriageCommand(carriage, -35).withTimeout(0.1),
-      new ElevatorCommand(elevator, 75).withTimeout(1)
+      new ElevatorCommand(elevator, 60).withTimeout(1)
       .alongWith(new CarriageCommand(carriage, -55).withTimeout(0.4)),
       new RunCommand(()-> RobotState.setIntaking()).withTimeout(0.4),
       new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),

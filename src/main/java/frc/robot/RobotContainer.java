@@ -9,10 +9,12 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 import frc.robot.commands.CarriageCommand;
+import frc.robot.commands.CarriageHome;
 import frc.robot.commands.ConeToLevelThree;
 import frc.robot.commands.ConeToLevelTwo;
 import frc.robot.commands.CubeToLevelThree;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.TwoToThree;
 import frc.robot.commands.CubeToLevelTwo;
 import frc.robot.commands.Elevator.ElevatorCommand;
 import frc.robot.commands.Elevator.ElevatorDownCommand;
@@ -54,18 +56,20 @@ public class RobotContainer {
   static ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevator);
   static ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
   static ElevatorHome elevatorHome = new ElevatorHome(elevator);
-  static CarriageCommand carriageCommand = new CarriageCommand(carriage, -35);
+  static CarriageHome carriageHomeCommand = new CarriageHome(carriage);
+  static CarriageCommand carriageCommand = new CarriageCommand(carriage, -1);
   static IntakeCommand intakeCommand = new IntakeCommand(intake,operator);
 
   public final static PowerDistribution pdh = new PowerDistribution();
   CubeToLevelTwo secondLevelcube = new CubeToLevelTwo(elevator, intake, carriage);
-  ConeToLevelTwo secondLevelcone = new ConeToLevelTwo(elevator, intake, carriage);
+  ConeToLevelTwo secondLevelcone =  new ConeToLevelTwo(elevator, intake, carriage);
   CubeToLevelThree thirdLevelCube = new CubeToLevelThree(elevator, intake, carriage);
   ConeToLevelThree thirdLevelCone = new ConeToLevelThree(elevator, intake, carriage);
+  TwoToThree twoToThree = new TwoToThree(elevator, intake, carriage);
 
 
 
-  TurnToAngle turnToAngle = new TurnToAngle(swerveDrivetrain, 45);
+  TurnToAngle turnToAngle = new TurnToAngle(swerveDrivetrain, 15);
 
   public RobotContainer() {
     // Configure the trigger bindings
@@ -86,8 +90,8 @@ public class RobotContainer {
     elevator2.whileTrue(elevatorDownCommand);
 
     // button atama kontrol + denenecek 
-    JoystickButton elevatorpid = new JoystickButton(driver,6);
-    elevatorpid.whileTrue(elevatorCommand);
+    /*JoystickButton elevatorpid = new JoystickButton(driver,6);
+    elevatorpid.whileTrue(elevatorCommand);*/
 
     JoystickButton elevatorhome = new JoystickButton(driver,7);
     elevatorhome.whileTrue(elevatorHome); 
@@ -109,8 +113,10 @@ public class RobotContainer {
    carriagereset.onTrue(new RunCommand(() -> carriage.resetCarriageEncoder(), carriage));
     
    // denenecek + button atama kontrol
-   JoystickButton carriageHome = new JoystickButton(operator, 3);
-   carriageHome.whileTrue((new CarriageCommand(carriage, 5)));
+   JoystickButton carriagecommand = new JoystickButton(operator, 3);
+   carriagecommand.onTrue(carriageCommand);
+
+
 
 
    JoystickButton secondLevelcube = new JoystickButton(driver, 1);
@@ -127,11 +133,16 @@ public class RobotContainer {
    thirdLevelcube.onTrue(new CubeToLevelThree(elevator, intake, carriage));
    thirdLevelcube.onFalse(new RunCommand(()->elevator.stop())
    .alongWith(new RunCommand(()->carriage.stop(),carriage)));
-
+ 
    JoystickButton thirdLevelcone = new JoystickButton(driver, 4);
    thirdLevelcone.onTrue(new ConeToLevelThree(elevator, intake, carriage));
    thirdLevelcone.onFalse(new RunCommand(()->elevator.stop())
    .alongWith(new RunCommand(()->carriage.stop(),carriage)));
+
+   /* JoystickButton twoToThree = new JoystickButton(driver, 6);
+   twoToThree.onTrue(new TwoToThree(elevator, intake, carriage));
+   twoToThree.onFalse(new RunCommand(()-> elevator.stop())
+   .alongWith(new RunCommand(()->carriage.stop(),carriage))); */
 
    JoystickButton turn = new JoystickButton(driver, 5);
    turn.whileTrue(turnToAngle);
