@@ -139,11 +139,6 @@ public class RobotContainer {
    thirdLevelcone.onFalse(new RunCommand(()->elevator.stop())
    .alongWith(new RunCommand(()->carriage.stop(),carriage)));
 
-   /* JoystickButton twoToThree = new JoystickButton(driver, 6);
-   twoToThree.onTrue(new TwoToThree(elevator, intake, carriage));
-   twoToThree.onFalse(new RunCommand(()-> elevator.stop())
-   .alongWith(new RunCommand(()->carriage.stop(),carriage))); */
-
    JoystickButton turn = new JoystickButton(driver, 5);
    turn.whileTrue(turnToAngle);
 
