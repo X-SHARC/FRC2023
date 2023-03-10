@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -23,11 +24,11 @@ public class Intake extends SubsystemBase {
   }
 
   public void cubeidle(){
-    intakeMotor.set(ControlMode.PercentOutput,-3.0/RobotContainer.pdh.getVoltage());
+    intakeMotor.set(ControlMode.PercentOutput,-3.0/RobotController.getBatteryVoltage());
   }
 
   public void coneidle(){
-    intakeMotor.set(ControlMode.PercentOutput,1.2/RobotContainer.pdh.getVoltage());
+    intakeMotor.set(ControlMode.PercentOutput,1.2/RobotController.getBatteryVoltage());
   }
 
   public void grabCube(){

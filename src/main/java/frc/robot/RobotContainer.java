@@ -15,6 +15,7 @@ import frc.robot.commands.ConeToLevelTwo;
 import frc.robot.commands.CubeToLevelThree;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.TwoToThree;
+import frc.robot.commands.Autonomous.AutoAlign;
 import frc.robot.commands.CubeToLevelTwo;
 import frc.robot.commands.Elevator.ElevatorCommand;
 import frc.robot.commands.Elevator.ElevatorDownCommand;
@@ -42,32 +43,33 @@ public class RobotContainer {
   private final static Joystick operator = new Joystick(1);
 
   //Subsystems
-  static Swerve swerveDrivetrain = new Swerve(true);
-  static Elevator elevator = new Elevator();
-  static Intake intake = new Intake();
-  static Carriage carriage = new Carriage();
+  Swerve swerveDrivetrain = new Swerve(true);
+  Elevator elevator = new Elevator();
+  Intake intake = new Intake();
+  Carriage carriage = new Carriage();
 
   //TODO: Change the LED length
-  static WS2812Driver rgbLED = new WS2812Driver(0, 13);
+  WS2812Driver rgbLED = new WS2812Driver(0, 13);
 
   //Commands 
-  static SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
-  static ElevatorCommand elevatorCommand = new ElevatorCommand(elevator, 75);
-  static ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevator);
-  static ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
-  static ElevatorHome elevatorHome = new ElevatorHome(elevator);
-  static CarriageHome carriageHomeCommand = new CarriageHome(carriage);
-  static CarriageCommand carriageCommand = new CarriageCommand(carriage, -1);
-  static IntakeCommand intakeCommand = new IntakeCommand(intake,operator);
+  SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
+  ElevatorCommand elevatorCommand = new ElevatorCommand(elevator, 75);
+  ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevator);
+  ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
+  ElevatorHome elevatorHome = new ElevatorHome(elevator);
+  CarriageHome carriageHomeCommand = new CarriageHome(carriage);
+  CarriageCommand carriageCommand = new CarriageCommand(carriage, -67);
+  IntakeCommand intakeCommand = new IntakeCommand(intake,operator);
 
-  public final static PowerDistribution pdh = new PowerDistribution();
+  PowerDistribution pdh = new PowerDistribution();
+
   CubeToLevelTwo secondLevelcube = new CubeToLevelTwo(elevator, intake, carriage);
   ConeToLevelTwo secondLevelcone =  new ConeToLevelTwo(elevator, intake, carriage);
   CubeToLevelThree thirdLevelCube = new CubeToLevelThree(elevator, intake, carriage);
   ConeToLevelThree thirdLevelCone = new ConeToLevelThree(elevator, intake, carriage);
   TwoToThree twoToThree = new TwoToThree(elevator, intake, carriage);
 
-
+  AutoAlign autoAlign = new AutoAlign(swerveDrivetrain);
 
   TurnToAngle turnToAngle = new TurnToAngle(swerveDrivetrain, 15);
 
@@ -140,7 +142,7 @@ public class RobotContainer {
    .alongWith(new RunCommand(()->carriage.stop(),carriage)));
 
    JoystickButton turn = new JoystickButton(driver, 5);
-   turn.whileTrue(turnToAngle);
+   turn.whileTrue(autoAlign);
 
 
     /* 

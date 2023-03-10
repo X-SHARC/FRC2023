@@ -34,7 +34,7 @@ public class ConeToLevelThree extends SequentialCommandGroup {
     addCommands(
       new CarriageCommand(carriage, -30).withTimeout(0.1),
       new ElevatorCommand(elevator, 112).withTimeout(1)
-      .alongWith(new CarriageCommand(carriage, -22).withTimeout(0.4)),
+      .alongWith(new CarriageCommand(carriage, -30).withTimeout(0.4)),
       new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.3),
       new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
       new ElevatorHome(elevator).withTimeout(1.8)
