@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -19,6 +20,7 @@ import frc.robot.RobotState;
 
 public class Carriage extends SubsystemBase {
   private WPI_TalonFX carriageMotor = new WPI_TalonFX(Constants.CARRIAGE_ID, "canavar");
+  private CANCoder encoder = new CANCoder(0);
   public static DigitalInput CarriageLimitSwitch = new DigitalInput(3);
   //ilk değer: 0.01735
   private double kP = 0.02731;
@@ -48,16 +50,21 @@ public class Carriage extends SubsystemBase {
     carriageMotor.setInverted(false);
     carriageMotor.setNeutralMode(NeutralMode.Brake);
     carriagePID.setTolerance(1.5);
+    encoder.configMagnetOffset(0);
   }
 
   public void resetCarriageEncoder(){
     carriageMotor.setSelectedSensorPosition(0);
   }
 
-  public double getDegrees(){
+  public double getIntegratedDegrees(){
     angle = carriageMotor.getSelectedSensorPosition() * GearRatio1;
     angle = (angle/2048.0) * 360;
     return angle;
+  }
+
+  public double getDegrees(){
+    return encoder.getAbsolutePosition();
   }
 
   public void setDegrees(double setpoint){
