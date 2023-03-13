@@ -106,7 +106,7 @@ public class RobotContainer {
    JoystickButton carriage1 = new JoystickButton(operator, 10);
    //BU COMMENTLERİ BURAK VE AYSU'YA VE ELA'YA SORMADAN AÇMAYIN
    carriage1.whileTrue(new RunCommand(()-> carriage.intakeUp(), carriage));
-   //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇMAYIN
+   //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇgiMAYIN
    carriage1.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
    //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇMAYIN
    JoystickButton carriage2 = new JoystickButton(operator, 9);
