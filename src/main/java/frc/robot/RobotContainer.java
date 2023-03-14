@@ -5,10 +5,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 import frc.robot.RobotState.GamePiece;
-import frc.robot.commands.CarriageCommand;
-import frc.robot.commands.CarriageHome;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.TwoToThree;
 import frc.robot.commands.Autonomous.AutoAlign;
 import frc.robot.commands.Elevator.ElevatorCommand;
 import frc.robot.commands.Elevator.ElevatorDownCommand;
@@ -49,16 +46,12 @@ public class RobotContainer {
   ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevator);
   ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
   ElevatorHome elevatorHome = new ElevatorHome(elevator);
-  CarriageHome carriageHomeCommand = new CarriageHome(carriage);
-  CarriageCommand carriageCommand = new CarriageCommand(carriage, 67);
   IntakeCommand intakeCommand = new IntakeCommand(intake,operator);
 
   PowerDistribution pdh = new PowerDistribution();
 
-  TwoToThree twoToThree = new TwoToThree(elevator, intake, carriage);
 
   AutoAlign autoAlign = new AutoAlign(swerveDrivetrain);
-
   TurnToAngle turnToAngle = new TurnToAngle(swerveDrivetrain, 15);
 
   public RobotContainer() {
@@ -132,7 +125,7 @@ public class RobotContainer {
     new SequentialCommandGroup(
       new InstantCommand(()->carriage.setSetpoint(38)),
       new ElevatorCommand(elevator, 75).withTimeout(1)
-      .alongWith(new CarriageCommand(carriage, 68).withTimeout(0.4)),
+      .alongWith(new InstantCommand(()->carriage.setSetpoint(68))),
       new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
       new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
       new ElevatorHome(elevator).withTimeout(1.8)
