@@ -45,11 +45,17 @@ public class Carriage extends SubsystemBase {
   // double GearRatio2 = 1/64;
   private double offset = 105.2;
 
+  private double softLimit = (115 * 2048)/(360 * GearRatio1);
+
   /** Creates a new Carriage. */
   public Carriage() {
     carriageMotor.setInverted(true);
     carriageMotor.setNeutralMode(NeutralMode.Brake);
     carriagePID.setTolerance(1.5);
+
+
+    carriageMotor.configReverseSoftLimitEnable(true);
+    carriageMotor.configReverseSoftLimitThreshold(softLimit);
   }
 
   public void resetCarriageEncoder(){

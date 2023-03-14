@@ -97,7 +97,7 @@ public class RobotContainer {
   */
 
     JoystickButton carriagepid = new JoystickButton(operator, 5);
-   carriagepid.onTrue(new InstantCommand(()-> carriage.setSetpoint(67))); 
+   carriagepid.onTrue(new InstantCommand(()-> carriage.setSetpoint(30))); 
   
    // denenecek + button atama kontrol
    JoystickButton carriagecommand = new JoystickButton(operator, 3);
@@ -197,18 +197,18 @@ public class RobotContainer {
 
    JoystickButton intakeButton = new JoystickButton(operator, 2);
    intakeButton.whileTrue(
-    new InstantCommand(()->RobotState.setIntaking())
-    .beforeStarting(new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece()==GamePiece.CONE? 85:100)))
+    new RunCommand(()->RobotState.setIntaking())
+    .beforeStarting(new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece()==GamePiece.CONE? 78:100)))
     );
 
    intakeButton.whileFalse(
-    new InstantCommand(()-> RobotState.setIntakeIdle())
-    .andThen(new InstantCommand(()->carriage.setSetpoint(3)))
+    new RunCommand(()-> RobotState.setIntakeIdle())
+    .beforeStarting(new InstantCommand(()->carriage.setSetpoint(3)))
     );
 
    JoystickButton ejectButton = new JoystickButton(operator, 1);
    ejectButton.whileTrue(new RunCommand(()->RobotState.setEjecting()).beforeStarting(
-    new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece() == GamePiece.CONE ? 44:78 ))
+    new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece() == GamePiece.CONE ? 50:75 ))
    ));
    ejectButton.whileFalse(new RunCommand(()-> RobotState.setIntakeIdle()));
 

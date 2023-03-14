@@ -46,7 +46,7 @@ public class Elevator extends SubsystemBase {
   private ElevatorFeedforward feedForward = new ElevatorFeedforward(kS, kG, kV, kA);
 
   //(115*17.42*2048)/(gearCircumference*2)
-  private double softLimit = (70*17.42*2048)/(gearCircumference*2);
+  private double softLimit = (115*17.42*2048)/(gearCircumference*2);
 
   public Elevator() {
     elevatorMasterMotor.configFactoryDefault();
@@ -108,7 +108,7 @@ public class Elevator extends SubsystemBase {
 
     public void elevatorUp(){
      if (topLimitSwitch.get() == true && RobotState.getInstance().canElevatorMove()){  // elektronik yanlış
-        elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(0.3));
+        elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(0.45));
         RobotState.setElevating(true);
       }
      }
@@ -133,7 +133,7 @@ public class Elevator extends SubsystemBase {
 
     public void elevatorDown(){
     if (bottomLimitSwitch.get() == true && RobotState.getInstance().canElevatorMove()){
-      elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(0.3));
+      elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(0.45));
       RobotState.setElevating(true);
     }
    }
