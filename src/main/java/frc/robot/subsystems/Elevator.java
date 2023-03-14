@@ -9,7 +9,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
@@ -46,6 +45,9 @@ public class Elevator extends SubsystemBase {
   private PIDController elevatorPID = new PIDController(kP, kI, kD);
   private ElevatorFeedforward feedForward = new ElevatorFeedforward(kS, kG, kV, kA);
 
+  //(115*17.42*2048)/(gearCircumference*2)
+  private double softLimit = (70*17.42*2048)/(gearCircumference*2);
+
   public Elevator() {
     elevatorMasterMotor.configFactoryDefault();
     RobotState.setElevating(false);
@@ -58,6 +60,12 @@ public class Elevator extends SubsystemBase {
     elevatorSlaveMotor.setNeutralMode(NeutralMode.Brake);
     elevatorSlaveMotor.follow(elevatorMasterMotor);
     elevatorPID.setTolerance(1);
+
+    elevatorMasterMotor.configForwardSoftLimitEnable(true);
+    elevatorSlaveMotor.configForwardSoftLimitEnable(true);
+    elevatorMasterMotor.configForwardSoftLimitThreshold(softLimit);
+    elevatorSlaveMotor.configForwardSoftLimitThreshold(softLimit);
+
   }
 
     
@@ -104,10 +112,6 @@ public class Elevator extends SubsystemBase {
         RobotState.setElevating(true);
       }
      }
-
-    public void set(){
-      //to do: add safety 
-    }
 
     public void set(double speed){
       if(speed<0){
@@ -181,6 +185,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator Perpendicular Distance:", perpendicularDistance);
     SmartDashboard.putData("Top Limit Switch:", topLimitSwitch);
     SmartDashboard.putData("Bottom Limit Switch", bottomLimitSwitch);
+    SmartDashboard.putNumber("Soft Limit Sensor Units", softLimit);
 
 
     if(bottomLimitSwitch.get() == false){

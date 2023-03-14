@@ -80,8 +80,8 @@ public class Swerve extends SubsystemBase {
       new TalonFX(17),
       new TalonFX(13),
       new CANCoder(4),
-      false,
-      false,
+      true,
+      true,
       new PIDController(pidValues[0], 0, 0),
       -298), //! Front Left
 
@@ -90,27 +90,30 @@ public class Swerve extends SubsystemBase {
       new TalonFX(14),
       new TalonFX(18),
       new CANCoder(3),
-      false,
-      false,
-      new PIDController(pidValues[1], 0, 0),-40), //! Front Right
+      true,
+      true,
+      new PIDController(pidValues[1], 0, 0),
+      -40), //! Front Right
 
     new SwerveModule(
       "RL",
       new TalonFX(11),
       new TalonFX(16),
       new CANCoder(2), 
-      false,
-      false,
-      new PIDController(pidValues[2], 0, 0),-35), //! Back Left
+      true,
+      true,
+      new PIDController(pidValues[2], 0, 0),
+      -35), //! Back Left
 
     new SwerveModule(
       "RR",
       new TalonFX(10),
       new TalonFX(12),
       new CANCoder(1),
-      false,
-      false,
-      new PIDController(pidValues[3], 0, 0),-11)  //! Back Right
+      true,
+      true,
+      new PIDController(pidValues[3], 0, 0),
+      -11)  //! Back Right
   };
 
 

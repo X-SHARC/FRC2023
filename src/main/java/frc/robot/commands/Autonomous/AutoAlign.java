@@ -37,9 +37,9 @@ public class AutoAlign extends CommandBase {
 
   @Override
   public void execute() {
-    double rotation = -Constants.Swerve.kMaxAngularSpeed*rotationController.calculate(swerve.getGyroDouble(), 0);
+    double rotation = Constants.Swerve.kMaxAngularSpeed*rotationController.calculate(swerve.getGyroDouble(), 0);
     lowerCone.updatePitch(LimelightHelpers.getTY("limelight"));
-    double output = Constants.Swerve.kMaxSpeed * -1. * sidewaysController.calculate(LimelightHelpers.getTX("limelight"));
+    double output = Constants.Swerve.kMaxSpeed * 1. * sidewaysController.calculate(LimelightHelpers.getTX("limelight"));
     double distance  = lowerCone.getDistance();
     System.out.println(" Calculated Distance: " + distance);
     //systematic error is 13 centimeters
@@ -52,7 +52,7 @@ public class AutoAlign extends CommandBase {
       swerve.drive(0, output, rotation, false);
     }
     else{
-      double distanceOutput = distanceController.calculate(distance, 65)*Constants.Swerve.kMaxSpeed;
+      double distanceOutput = -distanceController.calculate(distance, 65)*Constants.Swerve.kMaxSpeed;
       swerve.drive(distanceOutput, output, rotation, false);
 
     }

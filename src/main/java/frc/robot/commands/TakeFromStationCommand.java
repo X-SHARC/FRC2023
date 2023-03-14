@@ -4,8 +4,12 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.RobotState;
+import frc.robot.RobotState.GamePiece;
 import frc.robot.commands.Elevator.ElevatorCommand;
+import frc.robot.commands.Elevator.ElevatorHome;
 import frc.robot.subsystems.Carriage;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
@@ -20,11 +24,17 @@ public class TakeFromStationCommand extends SequentialCommandGroup {
   double distance;
   /** Creates a new TakeFromStationCommand. */
   public TakeFromStationCommand() {
+    InstantCommand inCommand = RobotState.getGamePiece() == GamePiece.CONE ? 
+    new InstantCommand(()->intake.grabCone()): new InstantCommand(()->intake.grabCube());
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
-    addCommands(
-
+    //TODO: Açı, süre ve yükseklikleri değiştir
+    addCommands(new ElevatorCommand(elevator, 100).alongWith(
+      new CarriageCommand(carriage, -45)).withTimeout(2.5)
+      .andThen(inCommand.withTimeout(2.5))
+      .andThen(new ElevatorHome(elevator).alongWith(new CarriageCommand(carriage, -15))).withTimeout(2)
+      .andThen(new CarriageCommand(carriage, 0)).withTimeout(3)
     );
   }
 }

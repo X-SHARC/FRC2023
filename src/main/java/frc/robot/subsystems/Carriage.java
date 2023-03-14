@@ -130,7 +130,9 @@ public class Carriage extends SubsystemBase {
 
   @Override
   public void periodic() {
-    setDegrees(setpoint);
+    if(setpoint>=3 && setpoint<=115){
+      setDegrees(setpoint);
+    }
     RobotState.setCarriage(CarriageLimitSwitch.get());
     SmartDashboard.putNumber("Carriage angle:", getDegrees());
     SmartDashboard.putData("Carriage Limit Switch", CarriageLimitSwitch);
