@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -55,7 +56,7 @@ public class RobotContainer {
   ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
   ElevatorHome elevatorHome = new ElevatorHome(elevator);
   CarriageHome carriageHomeCommand = new CarriageHome(carriage);
-  CarriageCommand carriageCommand = new CarriageCommand(carriage, -67);
+  CarriageCommand carriageCommand = new CarriageCommand(carriage, 67);
   IntakeCommand intakeCommand = new IntakeCommand(intake,operator);
 
   PowerDistribution pdh = new PowerDistribution();
@@ -97,23 +98,33 @@ public class RobotContainer {
 
 
     //TODO: add carriage default command: pid, home, limitations
+   //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇMAYIN
+    /*
    JoystickButton carriage1 = new JoystickButton(operator, 10);
+   //BU COMMENTLERİ BURAK VE AYSU'YA VE ELA'YA SORMADAN AÇMAYIN
    carriage1.whileTrue(new RunCommand(()-> carriage.intakeUp(), carriage));
+   //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇgiMAYIN
    carriage1.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
-
+   //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇMAYIN
    JoystickButton carriage2 = new JoystickButton(operator, 9);
+   //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇMAYIN
    carriage2.whileTrue(new RunCommand(()-> carriage.intakeDown(), carriage));
+   //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇMAYIN
    carriage2.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
+   //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇMAYIN
+    */
 
     JoystickButton carriagepid = new JoystickButton(operator, 5);
-   carriagepid.whileTrue(new CarriageCommand(carriage, -35)); 
+   carriagepid.whileTrue(new InstantCommand(()-> carriage.setSetpoint(67))); 
 
+   /*
    JoystickButton carriagereset = new JoystickButton(operator, 6);
    carriagereset.onTrue(new RunCommand(() -> carriage.resetCarriageEncoder(), carriage));
-    
+    */
+  
    // denenecek + button atama kontrol
    JoystickButton carriagecommand = new JoystickButton(operator, 3);
-   carriagecommand.onTrue(carriageCommand);
+   carriagecommand.onTrue(new InstantCommand(()-> carriage.setSetpoint(5)));
 
 
 

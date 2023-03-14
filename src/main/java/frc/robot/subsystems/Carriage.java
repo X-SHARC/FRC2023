@@ -13,6 +13,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -20,10 +21,11 @@ import frc.robot.RobotState;
 
 public class Carriage extends SubsystemBase {
   private WPI_TalonFX carriageMotor = new WPI_TalonFX(Constants.CARRIAGE_ID, "canavar");
-  private CANCoder encoder = new CANCoder(0);
+  private DutyCycleEncoder encoder = new DutyCycleEncoder(2);
   public static DigitalInput CarriageLimitSwitch = new DigitalInput(3);
   //ilk değer: 0.01735
-  private double kP = 0.02731;
+  private double kP = 0.016;
+  //private double kP = 0.0;
   private double kI = 0.0;
   private double kD = 0.0;
 
@@ -37,20 +39,19 @@ public class Carriage extends SubsystemBase {
 
   private double angle = 0;
 
-  double setpoint;
-  private double PIDOutput = 0;
+  double setpoint = 5;
  // private double feedForwardOutput = 0;
   private double output = 0;
 
   double GearRatio1 = 1/121.905;
   // double GearRatio2 = 1/64;
+  private double offset = 105.2;
 
   /** Creates a new Carriage. */
   public Carriage() {
-    carriageMotor.setInverted(false);
+    carriageMotor.setInverted(true);
     carriageMotor.setNeutralMode(NeutralMode.Brake);
     carriagePID.setTolerance(1.5);
-    encoder.configMagnetOffset(0);
   }
 
   public void resetCarriageEncoder(){
@@ -63,13 +64,23 @@ public class Carriage extends SubsystemBase {
     return angle;
   }
 
-  public double getDegrees(){
-    return encoder.getAbsolutePosition();
+  public void setSetpoint(double setpoint){
+    this.setpoint = setpoint;
   }
 
+  public double getDegrees(){
+    return Math.IEEEremainder((encoder.get() * 360. + offset), 360.);
+    //return encoder.getAbsolutePosition();
+  }
+
+  public void resetEncoder(){
+    encoder.reset();
+  }
+  
+
   public void setDegrees(double setpoint){
-    PIDOutput =  MathUtil.clamp(carriagePID.calculate(getDegrees(), setpoint), -0.87, 0.87);
-  //  feedForwardOutput = carriageFeedforward.calculate(angle, setpoint, angle);
+    double PIDOutput =  MathUtil.clamp(carriagePID.calculate(getDegrees(), setpoint), -0.6, 0.6);
+    //double feedForwardOutput = carriageFeedforward.calculate(setpoint,);
   //  output = (PIDOutput  /*+ feedForwardOutput */) / RobotController.getBatteryVoltage();
    // if (CarriageLimitSwitch.get() == false){
     carriageMotor.set(ControlMode.PercentOutput, (PIDOutput * 1));
@@ -119,10 +130,12 @@ public class Carriage extends SubsystemBase {
 
   @Override
   public void periodic() {
+    setDegrees(setpoint);
     RobotState.setCarriage(CarriageLimitSwitch.get());
     SmartDashboard.putNumber("Carriage angle:", getDegrees());
     SmartDashboard.putData("Carriage Limit Switch", CarriageLimitSwitch);
-    SmartDashboard.putNumber("Carriage PID ", PIDOutput);
+    SmartDashboard.putNumber("Carriage PID ", carriagePID.getPositionError());
+    SmartDashboard.putNumber("Carriage Setpoint ", carriagePID.getSetpoint());
 
     if (CarriageLimitSwitch.get() == true){
       stop();

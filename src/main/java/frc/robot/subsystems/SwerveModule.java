@@ -37,9 +37,11 @@ public class SwerveModule {
   public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.1543, 1.1543, 0.23523);
 
   private int resetOffset = 0;
-  private boolean driveEncoderInverted;
+  private boolean driveEncoderInverted = false; 
 
-  public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, CANCoder rotEncoder, boolean driveEncoderInverted, PIDController drivePID, double offset) {
+  private boolean isDriveMotorInverted = false;
+
+  public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, CANCoder rotEncoder, boolean driveEncoderInverted, boolean isDriveMotorInverted,PIDController drivePID, double offset) {
     this.name = name;
     this.driveMotor = driveMotor;
     this.angleMotor = angleMotor;
@@ -47,9 +49,10 @@ public class SwerveModule {
     this.driveMotor.setNeutralMode(NeutralMode.Brake);
     this.angleMotor.setNeutralMode(NeutralMode.Brake);
     this.driveEncoderInverted = driveEncoderInverted;
+    this.isDriveMotorInverted = isDriveMotorInverted;
     this.drivePID = drivePID;
 
-    driveMotor.setInverted(this.driveEncoderInverted);
+    driveMotor.setInverted(isDriveMotorInverted);
     rotPID.disableContinuousInput();
     rotEncoder.configMagnetOffset(offset);
   }
