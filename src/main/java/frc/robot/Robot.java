@@ -7,13 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.RobotState.ElevatorLevel;
-import frc.robot.RobotState.GamePiece;
-import frc.robot.RobotState.IntakeState;
-import frc.robot.RobotState.SwerveState;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.Elevator.ElevatorCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to

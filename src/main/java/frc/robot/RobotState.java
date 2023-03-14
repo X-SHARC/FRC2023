@@ -7,7 +7,7 @@ package frc.robot;
 /** Add your docs here. */
 public class RobotState {
 
-    public static  RobotState robotState;
+    private static RobotState robotState;
     public enum GamePiece{
         CONE,
         CUBE, 

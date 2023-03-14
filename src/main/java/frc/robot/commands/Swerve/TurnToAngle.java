@@ -34,15 +34,7 @@ public class TurnToAngle extends CommandBase {
 
   @Override
   public void execute() {
-    // ! NOT FIELD RELATIVE
-    //error = angleSetpoint - swerve.getGyroDouble()+180;
-    //pidOutput = error * kP;
-    swerve.drive(0.0, 0.0, 0.4, false);
-
-
-    //swerve.drive(0, 0, turnPID.calculate(swerve.pigeon.getYaw(), angleSetpoint), false);
-
-    SmartDashboard.putNumber("Swerve PID out", pidOutput);
+    swerve.drive(0, 0, turnPID.calculate(swerve.pigeon.getYaw(), angleSetpoint), isFinished());
   }
 
   @Override

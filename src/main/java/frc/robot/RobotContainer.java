@@ -24,9 +24,6 @@ import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.commands.Swerve.TurnToAngle;
 import frc.robot.lib.drivers.WS2812Driver;
-
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;

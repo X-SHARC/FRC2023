@@ -68,7 +68,7 @@ public class Carriage extends SubsystemBase {
   }
 
   public void setDegrees(double setpoint){
-    PIDOutput =  MathUtil.clamp(carriagePID.calculate(angle, setpoint), -0.87, 0.87);
+    PIDOutput =  MathUtil.clamp(carriagePID.calculate(getDegrees(), setpoint), -0.87, 0.87);
   //  feedForwardOutput = carriageFeedforward.calculate(angle, setpoint, angle);
   //  output = (PIDOutput  /*+ feedForwardOutput */) / RobotController.getBatteryVoltage();
    // if (CarriageLimitSwitch.get() == false){
