@@ -30,11 +30,12 @@ public class SwerveModule {
   // If using relative, find a way to mechanically zero out wheel headings before starting the robot.
   Gearbox driveRatio = new Gearbox(6.86, 2);
   
-  private PIDController rotPID = new PIDController(Constants.Swerve.kAngleP, 0, 0);
+  private PIDController rotPID = new PIDController(0.00898888, 0, 0.00008);
 
   public PIDController drivePID;
 
-  public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.1543, 1.1543, 0.23523);
+  //public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.1543, 1.1543, 0.23523);
+  public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(0.85, 1.1543, 1.3523);
 
   private int resetOffset = 0;
   private boolean driveEncoderInverted = false; 
@@ -90,8 +91,9 @@ public class SwerveModule {
 
   public void calibrate(String Name, boolean offsetCalibration, boolean driveCalibration, boolean rotCalibration){
     if(offsetCalibration){
-      SmartDashboard.putNumber(Name + " Rot Encoder Value", getAngle().getDegrees());
-      SmartDashboard.putNumber(Name + " PID Setpoint", rotPID.getSetpoint());
+      SmartDashboard.putNumber("Swerve Rot" + Name +  "Encoder Value", getAngle().getDegrees());
+      SmartDashboard.putNumber("Swerve Rot" + Name + " PID Setpoint", rotPID.getSetpoint());
+      SmartDashboard.putNumber("Swerve Rot" + Name + " PID Error", rotPID.getPositionError());
     }
     // ? all the values below should be tunable in Glass
     if(rotCalibration){
@@ -120,8 +122,8 @@ public class SwerveModule {
   }
 
   public void debug(){
-    SmartDashboard.putNumber(name + " Vel Actual", getDriveMotorRate() );
-    SmartDashboard.putNumber(name + " Vel Setpoint ", drivePID.getSetpoint() );
+    SmartDashboard.putNumber("Swerve Debug " + name + " Vel Actual", getDriveMotorRate() );
+    SmartDashboard.putNumber("Swerve Debug " + name + " Vel Setpoint ", drivePID.getSetpoint() );
   }
 
   public void stopMotors(){
@@ -146,10 +148,10 @@ public class SwerveModule {
             -1.0, 
             1.0)
     );
-     drivePID.calculate(getDriveMotorRate(), state.speedMetersPerSecond);
-    double driveOutput = 
-      -driveFeedforward.calculate(state.speedMetersPerSecond)
-      ;
+     
+    double driveOutput = driveFeedforward.calculate(state.speedMetersPerSecond);
+    driveOutput += drivePID.calculate(getDriveMotorRate(), state.speedMetersPerSecond);
+
     driveOutput = driveOutput / RobotController.getBatteryVoltage();
     driveMotor.set(TalonFXControlMode.PercentOutput, driveOutput);
     

@@ -65,10 +65,10 @@ public class Swerve extends SubsystemBase {
   // TODO: Update module offsets to match your CANCoder offsets | Done
 
   private double[] pidValues = {
-    0.09698,
-    0.09698,
-    0.09698,
-    0.09698
+    0.9698,
+    0.9698,
+    0.9698,
+    0.9698
   };
 
 
@@ -80,7 +80,7 @@ public class Swerve extends SubsystemBase {
       new TalonFX(17),
       new TalonFX(13),
       new CANCoder(4),
-      true,
+      false,
       true,
       new PIDController(pidValues[0], 0, 0),
       -298), //! Front Left
@@ -90,7 +90,7 @@ public class Swerve extends SubsystemBase {
       new TalonFX(14),
       new TalonFX(18),
       new CANCoder(3),
-      true,
+      false,
       true,
       new PIDController(pidValues[1], 0, 0),
       -40), //! Front Right
@@ -100,7 +100,7 @@ public class Swerve extends SubsystemBase {
       new TalonFX(11),
       new TalonFX(16),
       new CANCoder(2), 
-      true,
+      false,
       true,
       new PIDController(pidValues[2], 0, 0),
       -35), //! Back Left
@@ -110,7 +110,7 @@ public class Swerve extends SubsystemBase {
       new TalonFX(10),
       new TalonFX(12),
       new CANCoder(1),
-      true,
+      false,
       true,
       new PIDController(pidValues[3], 0, 0),
       -11)  //! Back Right
@@ -230,7 +230,7 @@ public class Swerve extends SubsystemBase {
     for (int i = 0; i < states.length; i++) {
       SwerveModule module = modules[i];
       SwerveModuleState state = states[i];
-      module.setDesiredState(state);
+      module.setClosedLoop(state);
     }
 
     

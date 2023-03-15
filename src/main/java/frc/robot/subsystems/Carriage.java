@@ -20,7 +20,7 @@ import frc.robot.RobotState;
 public class Carriage extends SubsystemBase {
   private WPI_TalonFX carriageMotor = new WPI_TalonFX(Constants.CARRIAGE_ID, "canavar");
   private DutyCycleEncoder encoder = new DutyCycleEncoder(2);
-  public static DigitalInput CarriageLimitSwitch = new DigitalInput(3);
+  public static DigitalInput minimumSwitch = new DigitalInput(3);
   //ilk değer: 0.01735
   private double kP = 0.016;
   //private double kP = 0.0;
@@ -49,13 +49,15 @@ public class Carriage extends SubsystemBase {
 
   /** Creates a new Carriage. */
   public Carriage() {
+    encoder.setConnectedFrequencyThreshold(200);
+    carriageMotor.configFactoryDefault();
     carriageMotor.setInverted(true);
     carriageMotor.setNeutralMode(NeutralMode.Brake);
     carriagePID.setTolerance(1.5);
 
 
-    carriageMotor.configReverseSoftLimitEnable(true);
-    carriageMotor.configReverseSoftLimitThreshold(softLimit);
+    //carriageMotor.configReverseSoftLimitEnable(true);
+    //carriageMotor.configReverseSoftLimitThreshold(softLimit);
   }
 
   public void resetCarriageEncoder(){
@@ -86,7 +88,7 @@ public class Carriage extends SubsystemBase {
     double PIDOutput =  MathUtil.clamp(carriagePID.calculate(getDegrees(), setpoint), -0.6, 0.6);
     //double feedForwardOutput = carriageFeedforward.calculate(setpoint,);
   //  output = (PIDOutput  /*+ feedForwardOutput */) / RobotController.getBatteryVoltage();
-   // if (CarriageLimitSwitch.get() == false){
+   // if (minimumSwitch.get() == false){
     carriageMotor.set(ControlMode.PercentOutput, (PIDOutput * 1));
   } //}
 
@@ -96,12 +98,13 @@ public class Carriage extends SubsystemBase {
     return angle;}
 
   public void intakeUp(){
-    if (CarriageLimitSwitch.get() == false){
+    //if (minimumSwitch.get() == false){
     carriageMotor.set(ControlMode.PercentOutput, 0.4);
-  }}
+   // }
+  }
 
   /* public boolean limiter(){
-    return CarriageLimitSwitch.get();
+    return minimumSwitch.get();
   }
   */
 
@@ -118,7 +121,7 @@ public class Carriage extends SubsystemBase {
   }
 
   public void carriageHome(double speed){
-    if(CarriageLimitSwitch.get() == false){
+    if(minimumSwitch.get() == false){
       carriageMotor.set(ControlMode.PercentOutput, speed);
     }
     else{
@@ -128,26 +131,43 @@ public class Carriage extends SubsystemBase {
   }
 
   public boolean getCarriageHome(){
-    return (CarriageLimitSwitch.get());
+    return (minimumSwitch.get());
+  }
+
+  public boolean isAlive(){
+    return encoder.isConnected();
   }
 
 
   @Override
   public void periodic() {
-    if(setpoint>=3 && setpoint<=115){
-      setDegrees(setpoint);
+
+    if(false && RobotState.getCarriage() == RobotState.CarriageState.AUTO){
+      if(setpoint>=3 && setpoint<=115){
+        setDegrees(setpoint);
+      } 
     }
-    RobotState.setCarriage(CarriageLimitSwitch.get());
-    SmartDashboard.putNumber("Carriage angle:", getDegrees());
-    SmartDashboard.putData("Carriage Limit Switch", CarriageLimitSwitch);
-    SmartDashboard.putNumber("Carriage PID ", carriagePID.getPositionError());
+    else if(RobotState.getCarriage() == RobotState.CarriageState.MANUAL){
+
+    }
+    else{
+      stop();
+    }
+
+    RobotState.setCarriage(minimumSwitch.get());
+    SmartDashboard.putBoolean("Carriage Is Alive", isAlive());
+    SmartDashboard.putNumber("Carriage Frequency", encoder.getFrequency());
+    SmartDashboard.putNumber("Carriage Angle", getDegrees());
+    SmartDashboard.putBoolean("Carriage Limit Switch", minimumSwitch.get());
+    SmartDashboard.putNumber("Carriage PID Position Error", carriagePID.getPositionError());
     SmartDashboard.putNumber("Carriage Setpoint ", carriagePID.getSetpoint());
 
-    if (CarriageLimitSwitch.get() == true){
+    /* 
+    if (minimumSwitch.get() == true){
       stop();
       resetCarriageEncoder();
     }
-
+    */
 
   }
 

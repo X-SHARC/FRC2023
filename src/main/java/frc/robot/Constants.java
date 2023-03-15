@@ -32,7 +32,7 @@ public final class Constants {
 		public static final double kDriveV = 2.3289/10;
 		public static final double kDriveA = 0.31447/10;
 	  
-		public static final double kAngleP = 0.007;
+		public static final double kAngleP = 0.00884888;
 
 		public static final double wheelCircumference = 2 * Math.PI * Units.inchesToMeters(2);
 

@@ -25,6 +25,11 @@ public class RobotState {
         STOP
     }
 
+    public enum CarriageState{
+        AUTO,
+        MANUAL,
+    }
+
     public enum SwerveState{
         MOVING,
         REST
@@ -34,6 +39,7 @@ public class RobotState {
     public static GamePiece currentGamePiece = GamePiece.EMPTY;
     public static ElevatorLevel currentElevatorLevel = ElevatorLevel.ZERO;
     public static SwerveState currentSwerveState = SwerveState.REST;
+    public static CarriageState currentCarriageState = CarriageState.AUTO;
     public static boolean isElevating = false;
     public static boolean isTripping = false;
     public static boolean isCarriageHome = false;
@@ -56,6 +62,18 @@ public class RobotState {
         if(currentIntakeState!= IntakeState.INTAKING){
             currentIntakeState = IntakeState.INTAKING;
         }
+    }
+
+    public static void setCarriageAutonomous(){
+        currentCarriageState = CarriageState.AUTO;
+    }
+    
+    public static void setCarriageManual(){
+        currentCarriageState = CarriageState.MANUAL;
+    }
+
+    public static CarriageState getCarriage(){
+        return currentCarriageState;
     }
 
     public static void setEjecting(){

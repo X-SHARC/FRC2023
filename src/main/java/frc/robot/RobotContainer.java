@@ -81,7 +81,7 @@ public class RobotContainer {
 
 
    //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇMAYIN
-  /* 
+  /*
    JoystickButton carriage1 = new JoystickButton(operator, 10);
    //BU COMMENTLERİ BURAK VE AYSU'YA VE ELA'YA SORMADAN AÇMAYIN
    carriage1.whileTrue(new RunCommand(()-> carriage.intakeUp(), carriage));
@@ -210,7 +210,10 @@ public class RobotContainer {
    ejectButton.whileTrue(new RunCommand(()->RobotState.setEjecting()).beforeStarting(
     new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece() == GamePiece.CONE ? 50:75 ))
    ));
-   ejectButton.whileFalse(new RunCommand(()-> RobotState.setIntakeIdle()));
+   ejectButton.whileFalse(
+    new RunCommand(()-> RobotState.setIntakeIdle())
+    .beforeStarting(new RunCommand(()->carriage.setSetpoint(3)).withTimeout(0.2))
+    );
 
   
 
