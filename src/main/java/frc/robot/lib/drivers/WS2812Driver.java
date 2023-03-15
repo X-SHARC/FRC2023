@@ -30,7 +30,6 @@ public class WS2812Driver extends SubsystemBase {
     m_led.setLength(m_ledBuffer.getLength());
     this.ll = ledLength;
 
-    setColor(0, 255, 0);
     //breathe();
     //showPercentage(0.5);
     //blink(0, 255, 0);

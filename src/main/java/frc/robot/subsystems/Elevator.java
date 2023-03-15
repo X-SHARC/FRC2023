@@ -50,6 +50,7 @@ public class Elevator extends SubsystemBase {
 
   public Elevator() {
     elevatorMasterMotor.configFactoryDefault();
+    elevatorSlaveMotor.configFactoryDefault();
     RobotState.setElevating(false);
 
     elevatorMasterMotor.clearStickyFaults();
@@ -107,7 +108,7 @@ public class Elevator extends SubsystemBase {
 
 
     public void elevatorUp(){
-     if (topLimitSwitch.get() == true && RobotState.getInstance().canElevatorMove()){  // elektronik yanlış
+     if (topLimitSwitch.get() == true){  // elektronik yanlış
         elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(0.45));
         RobotState.setElevating(true);
       }
@@ -115,13 +116,13 @@ public class Elevator extends SubsystemBase {
 
     public void set(double speed){
       if(speed<0){
-        if (bottomLimitSwitch.get() == true && RobotState.getInstance().canElevatorMove()){
+        if (bottomLimitSwitch.get() == true){
           elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(Math.abs(speed)));
           RobotState.setElevating(true);
         }
       }
       else if(speed>0){
-        if (topLimitSwitch.get() == true && RobotState.getInstance().canElevatorMove()){  // elektronik yanlış
+        if (topLimitSwitch.get() == true){  // elektronik yanlış
           elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(Math.abs(speed)));
           RobotState.setElevating(true);
         }
@@ -132,7 +133,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void elevatorDown(){
-    if (bottomLimitSwitch.get() == true && RobotState.getInstance().canElevatorMove()){
+    if (bottomLimitSwitch.get() == true ){
       elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(0.45));
       RobotState.setElevating(true);
     }

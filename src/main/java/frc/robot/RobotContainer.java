@@ -38,7 +38,8 @@ public class RobotContainer {
   Carriage carriage = new Carriage();
 
   //TODO: Change the LED length
-  WS2812Driver rgbLED = new WS2812Driver(0, 13);
+  WS2812Driver leftLED = new WS2812Driver(0, 44);
+  
 
   //Commands 
   SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
@@ -153,9 +154,9 @@ public class RobotContainer {
    JoystickButton thirdLevelcone = new JoystickButton(driver, 4);
    thirdLevelcone.onTrue(
     new SequentialCommandGroup(
-      new InstantCommand(()->carriage.setSetpoint(48)).withTimeout(0.1),
+      new InstantCommand(()->carriage.setSetpoint(48)),
       new ElevatorCommand(elevator, 112).withTimeout(1)
-      .alongWith(new InstantCommand(()->carriage.setSetpoint(30))),
+      .alongWith(new InstantCommand(()->carriage.setSetpoint(36))),
       new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.3),
       new InstantCommand(()->RobotState.setIntakeIdle()),
       new ElevatorHome(elevator).withTimeout(1.8)

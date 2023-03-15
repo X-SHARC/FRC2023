@@ -142,7 +142,7 @@ public class Carriage extends SubsystemBase {
   @Override
   public void periodic() {
 
-    if(false && RobotState.getCarriage() == RobotState.CarriageState.AUTO){
+    if(isAlive() && RobotState.getCarriage() == RobotState.CarriageState.AUTO){
       if(setpoint>=3 && setpoint<=115){
         setDegrees(setpoint);
       } 

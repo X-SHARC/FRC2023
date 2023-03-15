@@ -30,12 +30,12 @@ public class SwerveModule {
   // If using relative, find a way to mechanically zero out wheel headings before starting the robot.
   Gearbox driveRatio = new Gearbox(6.86, 2);
   
-  private PIDController rotPID = new PIDController(0.00898888, 0, 0.00008);
+  private PIDController rotPID = new PIDController(0.0084888, 0, 0.00008);
 
   public PIDController drivePID;
 
   //public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.1543, 1.1543, 0.23523);
-  public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(0.85, 1.1543, 1.3523);
+  public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(0.65, 1.2343, 2.8523);
 
   private int resetOffset = 0;
   private boolean driveEncoderInverted = false; 
