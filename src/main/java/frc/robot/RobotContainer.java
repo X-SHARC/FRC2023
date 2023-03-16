@@ -107,7 +107,33 @@ public class RobotContainer {
 
 
 
+   JoystickButton secondLevel = new JoystickButton(driver, 2);
+   secondLevel.onTrue(
+    new SequentialCommandGroup(
+      //new RunCommand(()->carriage.setSetpoint(15), carriage).withTimeout(0.5),
+      new ElevatorCommand(elevator, RobotState.getGamePiece() == GamePiece.CONE ? 60: 75)
+      .alongWith(new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece() == GamePiece.CUBE ? 68:38))),
+      new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
+      new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
+      new ElevatorHome(elevator).withTimeout(1.8)
+      .alongWith(new InstantCommand(()->carriage.setSetpoint(5)))
+    ).beforeStarting(()->carriage.setSetpoint(15))
+   );
 
+   JoystickButton thirdLevel = new JoystickButton(driver, 4);
+   thirdLevel.onTrue(
+    new SequentialCommandGroup(
+      //new RunCommand(()->carriage.setSetpoint(15), carriage).withTimeout(0.5),
+      new ElevatorCommand(elevator, RobotState.getGamePiece() == GamePiece.CONE ? 60: 75)
+      .alongWith(new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece() == GamePiece.CUBE ? 68:38))),
+      new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
+      new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
+      new ElevatorHome(elevator).withTimeout(1.8)
+      .alongWith(new InstantCommand(()->carriage.setSetpoint(5)))
+    ).beforeStarting(()->carriage.setSetpoint(15))
+   );
+
+/* DRIVER AUTOSCORE BUTTONS
    JoystickButton secondLevelcone = new JoystickButton(driver, 1);
    secondLevelcone.onTrue(
     new SequentialCommandGroup(
@@ -118,7 +144,7 @@ public class RobotContainer {
       new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
       new ElevatorHome(elevator).withTimeout(1.8)
       .alongWith(new InstantCommand(()->carriage.setSetpoint(5)))
-    )
+    ).beforeStarting(()->carriage.setSetpoint(15))
    );
    secondLevelcone.onFalse(new RunCommand(()->elevator.stop()));
 
@@ -132,7 +158,7 @@ public class RobotContainer {
       new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
       new ElevatorHome(elevator).withTimeout(1.8)
       .alongWith(new InstantCommand(()->carriage.setSetpoint(5)))
-    )
+    ).beforeStarting(()->carriage.setSetpoint(15))
    );
 
    secondLevelcone.onFalse(new RunCommand(()->elevator.stop()));
@@ -147,7 +173,7 @@ public class RobotContainer {
       new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
       new ElevatorHome(elevator).withTimeout(1.8)
       .alongWith(new InstantCommand(()->carriage.setSetpoint(5)))
-    )
+    ).beforeStarting(()->carriage.setSetpoint(15))
    );
 
    thirdLevelcube.onFalse(new RunCommand(()->elevator.stop()));
@@ -162,10 +188,9 @@ public class RobotContainer {
       new InstantCommand(()->RobotState.setIntakeIdle()),
       new ElevatorHome(elevator).withTimeout(1.8)
       .alongWith(new InstantCommand(()->carriage.setSetpoint(5)))
-      )
+      ).beforeStarting(()->carriage.setSetpoint(15))
    );
-   thirdLevelcone.onFalse(new RunCommand(()->elevator.stop()));
-
+   thirdLevelcone.onFalse(new RunCommand(()->elevator.stop())); */
    /*JoystickButton takeFromStation = new JoystickButton(operator, 10);
    takeFromStation.onTrue(
     new SequentialCommandGroup(

@@ -53,7 +53,7 @@ public class SwerveDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    scale = Math.abs(joystick.getRightTriggerAxis()) < 0.4 ? 1: scale2;
+    scale = Math.abs(joystick.getRightTriggerAxis()) < 0.25 ? 1: scale2;
 
     //WILL BE TESTED, is it needed? asansör açıkken swerve kitlemek ne kadar mantıklı? 
     //scale = RobotState.getElevatorLevelInt() > 2 ? scale : slowScale;

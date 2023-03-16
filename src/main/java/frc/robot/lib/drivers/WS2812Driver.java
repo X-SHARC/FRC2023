@@ -8,6 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
 import frc.robot.RobotState.GamePiece;
@@ -22,7 +23,8 @@ public class WS2812Driver extends SubsystemBase {
   boolean breatheReversed = false;
   int breatheH = 10;
   int blinkCount = 0;
-  int ll; 
+  int ll;
+  private int beginning; 
 
   public WS2812Driver(int dataPort, int ledLength) {
     m_led = new AddressableLED(dataPort);
@@ -54,7 +56,7 @@ public class WS2812Driver extends SubsystemBase {
     }*/
     if(RobotState.currentGamePiece==GamePiece.CONE) coneLED();
     else if (RobotState.currentGamePiece == GamePiece.CUBE) cubeLED();
-    else setColor(0, 225, 0);
+    else sliding(new Color(0, 255, 0));
   }
 
   public static void setColor(int r, int g, int b) {
@@ -77,6 +79,18 @@ public class WS2812Driver extends SubsystemBase {
     }
     array[0] = last;
     return array;
+  }
+
+  public void sliding(Color color){
+    for(var i = 0; i < m_ledBuffer.getLength();i++){
+      if(i>=beginning&&i<=beginning+8){
+        m_ledBuffer.setLED(i, color);
+      }
+      else m_ledBuffer.setRGB(i, 0, 0, 0);
+    }
+    m_led.setData(m_ledBuffer);
+    beginning++;
+    beginning %= 44; 
   }
 
   public void toggleRGB(){
@@ -160,10 +174,12 @@ public class WS2812Driver extends SubsystemBase {
 
   //TODO: not sure of the index values
   public void coneLED(){
+    //sliding(new Color(255, 255, 0));
     setColor(255,255,0);
   }
 
   public void cubeLED(){
+    //sliding(new Color(75, 0, 130));
     setColor(75,0,130);
   }
 }
