@@ -40,8 +40,8 @@ public final class Constants {
 		public static final double kMaxAngularSpeed = 2*Math.PI; // 1/2 rotation per second
 		public static final double kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared
 		
-		public static final double kLength = 0.5903;
-		public static final double kWidth = 0.5953;
+		public static final double kLength = 0.48530;
+		public static final double kWidth = 0.48530;
 		//public static final double kLength = 0.75;
 		//public static final double kWidth = 0.75;
 

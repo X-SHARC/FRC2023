@@ -48,6 +48,7 @@ public class RobotContainer {
   ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
   ElevatorHome elevatorHome = new ElevatorHome(elevator);
   IntakeCommand intakeCommand = new IntakeCommand(intake,operator);
+  SharcTrajectory trajectoryGenerator = new SharcTrajectory();
 
   PowerDistribution pdh = new PowerDistribution();
 
@@ -223,6 +224,6 @@ public class RobotContainer {
   
 
   public Command getAutonomousCommand() {
-    return null;
+    return trajectoryGenerator.getControllerCommand(swerveDrivetrain, "4mForward");
   }
 }
