@@ -164,7 +164,7 @@ public class Swerve extends SubsystemBase {
     return pigeon.getPitch();
   }
 
-  SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.Swerve.kinematics, gyroAhrs.getRotation2d(),
+  public SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.Swerve.kinematics, gyroAhrs.getRotation2d(),
   swerveModulePositions);
 
   private Rotation2d teleopAngle = new Rotation2d(0);
@@ -215,6 +215,7 @@ public class Swerve extends SubsystemBase {
     );
     // resetAllEncoders();
   }
+
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     if(xSpeed<0.1 && ySpeed<0.1 && rot<0.2) RobotState.setSwerve(SwerveState.REST);
