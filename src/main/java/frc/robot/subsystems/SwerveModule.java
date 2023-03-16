@@ -28,14 +28,14 @@ public class SwerveModule {
 //CANCoder being used as absoulute encoder
   // Using absolute has the advantage of zeroing the modules autonomously.
   // If using relative, find a way to mechanically zero out wheel headings before starting the robot.
-  Gearbox driveRatio = new Gearbox(6.86, 2);
+  Gearbox driveRatio = new Gearbox(6.86, 1);
   
   private PIDController rotPID = new PIDController(0.0084888, 0, 0.00008);
 
   public PIDController drivePID;
 
   //public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.1543, 1.1543, 0.23523);
-  public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(0.65, 1.2343, 2.8523);
+  public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(2.5145, 2.5143, 0.09128523);
 
   private int resetOffset = 0;
   private boolean driveEncoderInverted = false; 
@@ -69,7 +69,8 @@ public class SwerveModule {
   }
 
   public double getPosition(){
-    return driveMotor.getSelectedSensorPosition() / 2048.0 * Constants.Swerve.wheelCircumference;
+    return 
+    driveRatio.calculate(driveMotor.getSelectedSensorPosition() / 2048.0) * Constants.Swerve.wheelCircumference;
   }
 
     // ! added drive ratio, check odometry
@@ -150,7 +151,7 @@ public class SwerveModule {
     );
      
     double driveOutput = driveFeedforward.calculate(state.speedMetersPerSecond);
-    driveOutput += drivePID.calculate(getDriveMotorRate(), state.speedMetersPerSecond);
+    drivePID.calculate(getDriveMotorRate(), state.speedMetersPerSecond);
 
     driveOutput = driveOutput / RobotController.getBatteryVoltage();
     driveMotor.set(TalonFXControlMode.PercentOutput, driveOutput);

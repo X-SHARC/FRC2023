@@ -5,6 +5,9 @@
         "open": true
       },
       "SmartDashboard": {
+        "Path X Controller": {
+          "open": true
+        },
         "open": true
       }
     },
@@ -15,7 +18,17 @@
       "/SmartDashboard/DigitalInput[0]": "Digital Input",
       "/SmartDashboard/DigitalInput[1]": "Digital Input",
       "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Path Rotation Controller": "PIDController",
+      "/SmartDashboard/Path X Controller": "PIDController",
+      "/SmartDashboard/Path Y Controller": "PIDController",
       "/SmartDashboard/Top Limit Switch:": "Digital Input"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables Settings": {

@@ -164,7 +164,7 @@ public class Swerve extends SubsystemBase {
     return pigeon.getPitch();
   }
 
-  public SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.Swerve.kinematics, gyroAhrs.getRotation2d(),
+  public SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.Swerve.kinematics, getGyro(),
   swerveModulePositions);
 
   private Rotation2d teleopAngle = new Rotation2d(0);
@@ -232,7 +232,7 @@ public class Swerve extends SubsystemBase {
     for (int i = 0; i < states.length; i++) {
       SwerveModule module = modules[i];
       SwerveModuleState state = states[i];
-      module.setDesiredState(state);
+      module.setClosedLoop(state);
     }
 
     
@@ -276,37 +276,24 @@ public class Swerve extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("swerve groAngle", getGyroDouble());
-    SmartDashboard.putNumber("swerve field offset", fieldAngle.getDegrees());
-    //SmartDashboard.putNumber("Pigeon Yaw:", getGyroDouble());
+    swerveModulePositions = new SwerveModulePosition[] {
+      modules[0].getModulePosition(),
+      modules[1].getModulePosition(),
+      modules[2].getModulePosition(),
+      modules[3].getModulePosition()
+    };
 
+    SmartDashboard.putNumber("Swerve Gyro Angle", getGyroDouble());
+    SmartDashboard.putNumber("Swerve Field Offset", fieldAngle.getDegrees());
     
-    // SmartDashboard.putNumber("0. SETPOINT", modules[0].drivePID.getSetpoint());
-    // /SmartDashboard.putNumber("0. Velocity", modules[0].getDriveMotorRate());
+    SmartDashboard.putNumber("Odometry Pose X", getPose().getX());
+    SmartDashboard.putNumber("Odometry Pose Y", getPose().getY());
+    SmartDashboard.putNumber("Odometry Rot", getPose().getRotation().getRadians());
 
-    // SmartDashboard.putNumber("1. SETPOINT", modules[1].drivePID.getSetpoint());
-    // SmartDashboard.putNumber("1. Velocity", modules[1].getDriveMotorRate());
-
-    // SmartDashboard.putNumber("2. SETPOINT", modules[2].drivePID.getSetpoint());
-    // SmartDashboard.putNumber("2. Velocity", modules[2].getDriveMotorRate());
-
-    // SmartDashboard.putNumber("3. SETPOINT", modules[3].drivePID.getSetpoint());
-    // SmartDashboard.putNumber("3. Velocity", modules[3].getDriveMotorRate());
-    
-    /*
-    SmartDashboard.putNumber("1. modül", modules[1].getDriveMotorRate());
-    SmartDashboard.putNumber("2. modül", modules[2].getDriveMotorRate());
-    SmartDashboard.putNumber("3. modül", modules[3].getDriveMotorRate());
-    SmartDashboard.putNumber("average Distance", getAverageDistance());
-    */
-    SmartDashboard.putNumber("Posex", getPose().getX());
-    SmartDashboard.putNumber("Posey", getPose().getY());
-    SmartDashboard.putNumber("Rot", getPose().getRotation().getRadians());
-
-    /*SmartDashboard.putNumber("1 FL",modules[0].getDegrees());
+    SmartDashboard.putNumber("1 FL",modules[0].getDegrees());
     SmartDashboard.putNumber("2 FR",modules[1].getDegrees());
     SmartDashboard.putNumber("3 BL",modules[2].getDegrees());
-    SmartDashboard.putNumber("4 BR",modules[3].getDegrees());*/
+    SmartDashboard.putNumber("4 BR",modules[3].getDegrees());
 
     modules[0].debug();
     modules[1].debug();

@@ -21,16 +21,15 @@ public class SharcTrajectory {
         //pathState = (PathPlannerState) trajectory.sample(1);
     }
 
-    PIDController xSpeedController = new PIDController(0, 0, 0);
+    PIDController xSpeedController = new PIDController(0.1, 0, 0);
     PIDController ySpeedController = new PIDController(0, 0, 0);
     PIDController rotController = new PIDController(0, 0, 0);
 
     public Command getControllerCommand(Swerve swerve, String trajName) {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, 3, 4);
+        swerve.addTrajectoryToField2d(trajectory);
+        swerve.resetOdometry(trajectory.getInitialHolonomicPose());
         return new SequentialCommandGroup(
-            new InstantCommand(()->{
-                swerve.resetOdometry(trajectory.getInitialHolonomicPose());
-            }),
             new PPSwerveControllerCommand(
                 trajectory,
                 swerve::getPose,
@@ -39,7 +38,7 @@ public class SharcTrajectory {
                 ySpeedController,
                 rotController,
                 swerve::setClosedLoopStates,
-                true,
+                false,
                 swerve)
         );
     }
