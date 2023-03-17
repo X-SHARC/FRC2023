@@ -12,13 +12,7 @@ import frc.robot.commands.Elevator.ElevatorDownCommand;
 import frc.robot.commands.Elevator.ElevatorHome;
 import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
-import frc.robot.commands.Swerve.TurnToAngle;
 import frc.robot.lib.drivers.WS2812Driver;
-
-import java.sql.Driver;
-
-import com.pathplanner.lib.server.PathPlannerServer;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -31,8 +25,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-
-
 public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -44,8 +36,6 @@ public class RobotContainer {
   Elevator elevator = new Elevator();
   Intake intake = new Intake();
   Carriage carriage = new Carriage();
-
-  //TODO: Change the LED length
   WS2812Driver leftLED = new WS2812Driver(0, 44);
   
 
@@ -59,10 +49,7 @@ public class RobotContainer {
   SharcTrajectory trajectoryGenerator = new SharcTrajectory();
 
   PowerDistribution pdh = new PowerDistribution();
-
-
   AutoAlign autoAlign = new AutoAlign(swerveDrivetrain);
-  TurnToAngle turnToAngle = new TurnToAngle(swerveDrivetrain, 15);
 
   public RobotContainer() {
     configureBindings();

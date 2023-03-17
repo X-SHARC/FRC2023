@@ -23,6 +23,7 @@ public class WS2812Driver extends SubsystemBase {
   int blinkCount = 0;
   private int beginning;  
   private int m_rainbowFirstPixelHue;
+  private int emergency_beginning;
 
   public WS2812Driver(int dataPort, int ledLength) {
     m_led = new AddressableLED(dataPort);
@@ -33,7 +34,8 @@ public class WS2812Driver extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(RobotState.currentGamePiece==GamePiece.CONE) coneLED();
+    if(!RobotState.isCarriageEncoderAlive()) emergency(8);
+    else if(RobotState.currentGamePiece==GamePiece.CONE) coneLED();
     else if (RobotState.currentGamePiece == GamePiece.CUBE) cubeLED();
     else sliding(new Color(0, 255, 0));
   }
@@ -57,6 +59,17 @@ public class WS2812Driver extends SubsystemBase {
     }
     array[0] = last;
     return array;
+  }
+  public void emergency(int errorLength){
+    for(var i = 0; i < m_ledBuffer.getLength();i++){
+      if(i>=emergency_beginning&&i<=emergency_beginning+errorLength){
+        m_ledBuffer.setLED(i, new Color(255,0,0));
+      }
+      else m_ledBuffer.setRGB(i, 0, 0, 0);
+    }
+    m_led.setData(m_ledBuffer);
+    emergency_beginning++;
+    emergency_beginning %= 44; 
   }
 
   public void sliding(Color color){

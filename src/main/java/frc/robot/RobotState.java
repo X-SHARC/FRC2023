@@ -43,11 +43,20 @@ public class RobotState {
     public static boolean isElevated = false;
     public static boolean isTripping = false;
     public static boolean isCarriageHome = false;
+    public static boolean isCarriageEncoderAlive = false;
     
     private RobotState(){
         //reset(); 
     }
 
+    public static void setCarriageEncoder(boolean alive){
+        isCarriageEncoderAlive = alive;
+    }
+
+    public static boolean isCarriageEncoderAlive(){
+        return isCarriageEncoderAlive;
+    }
+    
     public static void setGamePiece(GamePiece gamePiece){
         currentGamePiece = gamePiece;
     }

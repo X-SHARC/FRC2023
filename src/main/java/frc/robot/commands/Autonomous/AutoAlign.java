@@ -45,15 +45,15 @@ public class AutoAlign extends CommandBase {
     //systematic error is 13 centimeters
     
     if(Math.abs(swerve.getGyroDouble())>=3){
-      swerve.drive(0, 0, rotation, false);
+      swerve.drive(0, 0, rotation, false, true);
     }
     else if(Math.abs(LimelightHelpers.getTX("limelight"))>=4){
       System.out.println("The value of PID Output: "  + output);
-      swerve.drive(0, output, rotation, false);
+      swerve.drive(0, output, rotation, false,true);
     }
     else{
       double distanceOutput = -distanceController.calculate(distance, 65)*Constants.Swerve.kMaxSpeed;
-      swerve.drive(distanceOutput, output, rotation, false);
+      swerve.drive(distanceOutput, output, rotation, false,true);
 
     }
   }

@@ -110,16 +110,15 @@ public class Carriage extends SubsystemBase {
 
   @Override
   public void periodic() {
+    boolean isAlive = isAlive();
+    RobotState.setCarriageEncoder(isAlive);
 
-    if(isAlive() && RobotState.getCarriage() == RobotState.CarriageState.AUTO){
+    if(isAlive && RobotState.getCarriage() == RobotState.CarriageState.AUTO){
       if(setpoint>=3 && setpoint<=115){
         setDegrees(setpoint);
       } 
     }
-    else if(RobotState.getCarriage() == RobotState.CarriageState.MANUAL){
-
-    }
-    else{
+    else if(!isAlive && RobotState.getCarriage() == RobotState.CarriageState.AUTO){
       stop();
     }
 

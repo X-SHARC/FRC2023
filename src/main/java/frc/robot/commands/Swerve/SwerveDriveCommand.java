@@ -86,7 +86,7 @@ public class SwerveDriveCommand extends CommandBase {
 
     //double[] speeds ={xSpeed, ySpeed, rot}; 
     //SmartDashboard.putNumberArray("controller speeds", speeds);
-    swerveSubsystem.drive(xSpeed, ySpeed, rot, true);
+    swerveSubsystem.drive(xSpeed, ySpeed, rot, true, false);
   }
 
 }
