@@ -6,10 +6,8 @@ import frc.robot.subsystems.Elevator;
 
 
 public class ElevatorHome extends SequentialCommandGroup {
-  /** Creates a new ElevatorHome. */
   Elevator elevator;
 
-  //Carriage Homing will be added after carriage pid
   public ElevatorHome(Elevator elevator) {
     this.elevator = elevator;
    
