@@ -26,8 +26,8 @@ public class SwerveModule {
   private PIDController rotPID = new PIDController(0.0084888, 0, 0.00008);
 
 
-  //public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.1543, 1.1543, 0.23523);
-  private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(2.5145, 2.5143, 0.09128523);
+  private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.85, 1.85, 5.23523);
+  //private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(2.5145, 1.5143, 0.128523);
   private final PIDController drivePID = new PIDController(0, 0, 0);
 
   private boolean driveEncoderInverted = false; 

@@ -48,7 +48,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Swerve Debug FL Vel Actual"
+              "id": "NT:/SmartDashboard/Swerve Drive Debug FL Vel Actual"
             },
             {
               "color": [
@@ -57,7 +57,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Swerve Debug FL Vel Setpoint "
+              "id": "NT:/SmartDashboard/Swerve Drive Debug FL Vel Setpoint "
             }
           ]
         }
@@ -66,54 +66,14 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 338,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Swerve Debug RL Vel Setpoint "
-            },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Swerve Debug RL Vel Actual"
-            }
-          ]
+          "height": 338
         }
       ]
     },
     "Plot <2>": {
       "plots": [
         {
-          "height": 338,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Swerve Debug RR Vel Actual"
-            },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Swerve Debug RR Vel Setpoint "
-            }
-          ]
+          "height": 338
         }
       ]
     },
@@ -129,16 +89,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Swerve Debug FR Vel Actual"
-            },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Swerve Debug FR Vel Setpoint "
+              "id": "NT:/SmartDashboard/Swerve Drive Debug FR Vel Actual"
             }
           ]
         }

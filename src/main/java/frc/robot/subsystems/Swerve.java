@@ -24,8 +24,8 @@ import frc.robot.RobotState.SwerveState;
 
 public class Swerve extends SubsystemBase {
   private boolean isCalibrating;
-  private boolean offsetCalibration = true;
-  private boolean driveCalibration = false;
+  private boolean offsetCalibration = false;
+  private boolean driveCalibration = true;
 
   private Rotation2d fieldAngle = new Rotation2d();
 

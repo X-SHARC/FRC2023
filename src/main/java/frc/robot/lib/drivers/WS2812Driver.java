@@ -24,6 +24,8 @@ public class WS2812Driver extends SubsystemBase {
   private int beginning;  
   private int m_rainbowFirstPixelHue;
   private int emergency_beginning;
+  private int j;
+  private int blinkFrequency;
 
   public WS2812Driver(int dataPort, int ledLength) {
     m_led = new AddressableLED(dataPort);
@@ -50,6 +52,20 @@ public class WS2812Driver extends SubsystemBase {
   public void turnOff() {
     setColor(0, 0, 0);
     m_led.setData(m_ledBuffer);
+}
+
+private void blink(int r, int g, int b) {
+  if (blinkFrequency != 0) {
+      if (j % blinkFrequency == 0) {
+          setColor(0, 0, 0);
+          j = 1;
+      } else if (j % (blinkFrequency / 2) == 0) {
+        setColor(r, g, b);
+      }
+      j++;
+  } else {
+    setColor(r, g, b);
+  }
 }
 
   public int[] shiftArray(int[] array){
