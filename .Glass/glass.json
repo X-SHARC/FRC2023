@@ -25,6 +25,10 @@
     },
     "windows": {
       "/SmartDashboard/Field": {
+        "Robot": {
+          "arrowWeight": 2.0,
+          "weight": 1.0
+        },
         "window": {
           "visible": true
         }
@@ -66,14 +70,54 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 338
+          "height": 338,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve Drive Debug RL Vel Actual"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve Drive Debug RL Vel Setpoint "
+            }
+          ]
         }
       ]
     },
     "Plot <2>": {
       "plots": [
         {
-          "height": 338
+          "height": 338,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve Drive Debug RR Vel Actual"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve Drive Debug RR Vel Setpoint "
+            }
+          ]
         }
       ]
     },
@@ -90,6 +134,15 @@
                 1.0
               ],
               "id": "NT:/SmartDashboard/Swerve Drive Debug FR Vel Actual"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve Drive Debug FR Vel Setpoint "
             }
           ]
         }

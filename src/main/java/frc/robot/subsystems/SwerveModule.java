@@ -26,9 +26,9 @@ public class SwerveModule {
   private PIDController rotPID = new PIDController(0.0084888, 0, 0.00008);
 
 
-  private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.85, 1.85, 5.23523);
+  private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.899, 1.899, 5.23523);
   //private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(2.5145, 1.5143, 0.128523);
-  private final PIDController drivePID = new PIDController(0, 0, 0);
+  private final PIDController drivePID = new PIDController(0.31, 0, 0);
 
   private boolean driveEncoderInverted = false; 
 
@@ -61,9 +61,7 @@ public class SwerveModule {
 
   public double getPosition(){
     return 
-    driveRatio.calculate(
-      driveMotor.getSelectedSensorPosition() / 2048.0 * Constants.Swerve.wheelCircumference
-      );
+      driveMotor.getSelectedSensorPosition() * (Constants.Swerve.wheelCircumference / (6.86 * 2048.0));
   }
 
   public double getDriveMotorRate(){
@@ -104,6 +102,10 @@ public class SwerveModule {
     driveMotor.setSelectedSensorPosition(0);    
   }
 
+  public void outputDistance(){
+    SmartDashboard.putNumber("Swerve Distance " + name , getPosition());
+  }
+
   public void resetBothEncoders(){
     resetDriveEncoder();
     resetRotationEncoder();
@@ -131,10 +133,9 @@ public class SwerveModule {
             1.0)
     );
      
-    double driveOutput = driveFeedforward.calculate(state.speedMetersPerSecond);
-    drivePID.calculate(getDriveMotorRate(), state.speedMetersPerSecond);
+    double driveOutput = driveFeedforward.calculate(state.speedMetersPerSecond)/ RobotController.getBatteryVoltage();
+    driveOutput += drivePID.calculate(getDriveMotorRate(), state.speedMetersPerSecond);
 
-    driveOutput = driveOutput / RobotController.getBatteryVoltage();
     driveMotor.set(TalonFXControlMode.PercentOutput, driveOutput);
     
   }

@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.Pigeon2;
+
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -55,7 +57,7 @@ public class Swerve extends SubsystemBase {
       new TalonFX(13),
       new CANCoder(4),
       false,
-      true,
+      false,
       -298), //! Front Left
 
     new SwerveModule(
@@ -64,7 +66,7 @@ public class Swerve extends SubsystemBase {
       new TalonFX(18),
       new CANCoder(3),
       false,
-      true,
+      false,
       -40), //! Front Right
 
     new SwerveModule(
@@ -73,7 +75,7 @@ public class Swerve extends SubsystemBase {
       new TalonFX(16),
       new CANCoder(2), 
       false,
-      true,
+      false,
       -35), //! Back Left
 
     new SwerveModule(
@@ -82,7 +84,7 @@ public class Swerve extends SubsystemBase {
       new TalonFX(12),
       new CANCoder(1),
       false,
-      true,
+      false,
       -11)  //! Back Right
   };
 
@@ -94,9 +96,16 @@ public class Swerve extends SubsystemBase {
     modules[3].getModulePosition()
   };
 
+  private SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
+    Constants.Swerve.kinematics,
+    getGyro(),
+    swerveModulePositions,
+    new Pose2d());
+
   public Swerve(boolean isCalibrating) {
     this.isCalibrating = isCalibrating;
     resetAllEncoders();
+    
     SmartDashboard.putData("Field", field2D);
   }
   
@@ -157,11 +166,11 @@ public class Swerve extends SubsystemBase {
   }
 
   public Pose2d getPose(){
-    return odometry.getPoseMeters();
+    return poseEstimator.getEstimatedPosition();
   }
 
-  public void resetOdometry(Pose2d pose) {
-    odometry.resetPosition(
+  public void resetPoseEstimator(Pose2d pose) {
+    poseEstimator.resetPosition(
       getGyro(),
       swerveModulePositions,
       pose
@@ -216,7 +225,12 @@ public class Swerve extends SubsystemBase {
       modules[3].getModulePosition()
     };
 
-    odometry.update(
+    modules[0].outputDistance();
+    modules[1].outputDistance();
+    modules[2].outputDistance();
+    modules[3].outputDistance();
+
+    poseEstimator.update(
       getGyro(),
       swerveModulePositions
       );
@@ -226,9 +240,9 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Swerve Gyro Angle", getGyroDouble());
     SmartDashboard.putNumber("Swerve Field Offset", fieldAngle.getDegrees());
     
-    SmartDashboard.putNumber("Odometry Pose X", getPose().getX());
-    SmartDashboard.putNumber("Odometry Pose Y", getPose().getY());
-    SmartDashboard.putNumber("Odometry Rot", getPose().getRotation().getRadians());
+    SmartDashboard.putNumber("Pose Estimator Pose X", getPose().getX());
+    SmartDashboard.putNumber("Pose Estimator Y", getPose().getY());
+    SmartDashboard.putNumber("Pose Estimator Rot", getPose().getRotation().getDegrees());
 
     if(isCalibrating){
       modules[0].calibrate("Front Left", offsetCalibration, driveCalibration);

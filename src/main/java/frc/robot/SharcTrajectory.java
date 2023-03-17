@@ -16,19 +16,23 @@ public class SharcTrajectory {
     //private PathPlannerTrajectory trajectory;
     //private PathPlannerState pathState;
 
+    PIDController xSpeedController = new PIDController(2.4, 0, 0);
+    PIDController ySpeedController = new PIDController(2.4, 0, 0);
+    PIDController rotController = new PIDController(0.5, 0, 0);
+    
     public SharcTrajectory(){
+        rotController.enableContinuousInput(-Math.PI, Math.PI);
         //trajectory = PathPlanner.loadPath("Cube&Dock", 3, 4);
         //pathState = (PathPlannerState) trajectory.sample(1);
+        //rotController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
-    PIDController xSpeedController = new PIDController(0.1, 0, 0);
-    PIDController ySpeedController = new PIDController(0, 0, 0);
-    PIDController rotController = new PIDController(0, 0, 0);
 
     public Command getControllerCommand(Swerve swerve, String trajName) {
+        
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, 3, 4);
         swerve.addTrajectoryToField2d(trajectory);
-        swerve.resetOdometry(trajectory.getInitialHolonomicPose());
+        swerve.resetPoseEstimator(trajectory.getInitialHolonomicPose());
         return new SequentialCommandGroup(
             new PPSwerveControllerCommand(
                 trajectory,

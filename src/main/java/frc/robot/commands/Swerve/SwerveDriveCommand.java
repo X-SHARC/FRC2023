@@ -70,7 +70,7 @@ public class SwerveDriveCommand extends CommandBase {
     } 
       
 
-    final var xSpeed = xSpeedLimiter.calculate(
+    final var xSpeed = -xSpeedLimiter.calculate(
       (Math.abs(joystick.getLeftY()) < 0.1) ? 0 : joystick.getLeftY())
       * Constants.Swerve.kMaxSpeed * scale;
 
@@ -86,7 +86,7 @@ public class SwerveDriveCommand extends CommandBase {
 
     //double[] speeds ={xSpeed, ySpeed, rot}; 
     //SmartDashboard.putNumberArray("controller speeds", speeds);
-    swerveSubsystem.drive(xSpeed, ySpeed, rot, true, false);
+    swerveSubsystem.drive(xSpeed, ySpeed, rot, true, true);
   }
 
 }
