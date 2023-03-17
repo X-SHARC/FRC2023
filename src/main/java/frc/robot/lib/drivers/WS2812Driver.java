@@ -40,20 +40,6 @@ public class WS2812Driver extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //TODO: Default may change
-    /*switch(RobotState.currentGamePiece){
-      case CONE: 
-        coneLED();
-        break;
-      case CUBE:
-        cubeLED();
-        break;
-      case EMPTY:
-        toggleRGB();
-        break;
-      default:
-        toggleRGB();
-    }*/
     if(RobotState.currentGamePiece==GamePiece.CONE) coneLED();
     else if (RobotState.currentGamePiece == GamePiece.CUBE) cubeLED();
     else sliding(new Color(0, 255, 0));

@@ -17,7 +17,7 @@ import frc.robot.RobotState;
 
 public class Intake extends SubsystemBase {
   WPI_TalonSRX intakeMotor = new WPI_TalonSRX(Constants.INTAKE_ID);
-  /** Creates a new Intake. */
+  
   public Intake() {
     intakeMotor.setInverted(true);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
@@ -53,7 +53,6 @@ public class Intake extends SubsystemBase {
 
   public void stop(){
     intakeMotor.set(ControlMode.PercentOutput, 0.0);
-    RobotState.getInstance();
     RobotState.setIntakeIdle();
   }
 
