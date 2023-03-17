@@ -26,24 +26,15 @@ import frc.robot.RobotState;
 import frc.robot.RobotState.SwerveState;
 
 public class Swerve extends SubsystemBase {
-
-  /*
-  TODO realtime PID tuning - look into docs
-  TODO look into feedforward tuning
-
-  */
-
   private boolean isCalibrating;
   private boolean offsetCalibration = true;
   private boolean driveCalibration = false;
-  private boolean rotCalibration = true;
 
   private Rotation2d fieldAngle = new Rotation2d();
 
   private final Field2d field2D = new Field2d();
   
   /**
-   * TODO: These are example values and will need to be adjusted for your robot!
    * Modules are in the order of -
    * Front Left
    * Front Right
@@ -55,22 +46,7 @@ public class Swerve extends SubsystemBase {
    * https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/swerve-drive-kinematics.html#constructing-the-kinematics-object
    */
 
-  //private final CKIMU gyro;
-  private AHRS gyroAhrs = new AHRS();
-  //TODO: set device number
   public Pigeon2 pigeon = new Pigeon2(23);
-
-
-  // TODO: Update these CAN device IDs to match your TalonFX + CANCoder device IDs | Done
-  // TODO: Update module offsets to match your CANCoder offsets | Done
-
-  /*private double[] pidValues = {
-    ,
-    ,
-    ,
-    0.9698
-  };*/
-
 
   final boolean invertAllModules = true;
   private double kP = 0.00156;
@@ -83,7 +59,6 @@ public class Swerve extends SubsystemBase {
       new CANCoder(4),
       false,
       true,
-      new PIDController(kP, 0, 0),
       -298), //! Front Left
 
     new SwerveModule(
@@ -93,7 +68,6 @@ public class Swerve extends SubsystemBase {
       new CANCoder(3),
       false,
       true,
-      new PIDController(kP, 0, 0),
       -40), //! Front Right
 
     new SwerveModule(
@@ -103,7 +77,6 @@ public class Swerve extends SubsystemBase {
       new CANCoder(2), 
       false,
       true,
-      new PIDController(kP, 0, 0),
       -35), //! Back Left
 
     new SwerveModule(
@@ -113,7 +86,6 @@ public class Swerve extends SubsystemBase {
       new CANCoder(1),
       false,
       true,
-      new PIDController(kP, 0, 0),
       -11)  //! Back Right
   };
 
@@ -128,16 +100,6 @@ public class Swerve extends SubsystemBase {
   public Swerve(boolean isCalibrating) {
     this.isCalibrating = isCalibrating;
     resetAllEncoders();
-    
-    new Thread(() -> {
-      try {
-        Thread.sleep(1000);
-        gyroAhrs.reset();
-      } catch (Exception e) {
-        //TODO: handle exception
-      }
-    }).start();
-  
     SmartDashboard.putData("Field", field2D);
   }
   
@@ -145,10 +107,6 @@ public class Swerve extends SubsystemBase {
     return Rotation2d.fromDegrees(
         getGyroDouble()
         );
-  }
-
-  public double getNavxDouble(){
-    return Math.IEEEremainder(gyroAhrs.getAngle(), 360) * (Constants.kGyroReversed ? -1.0 : 1.0);
   }
 
   public double getGyroDouble(){
@@ -159,15 +117,15 @@ public class Swerve extends SubsystemBase {
     pigeon.setYaw(0);
   }
 
-  //can be used to align the charge station
   public double getPitch(){
     return pigeon.getPitch();
   }
 
-  public SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.Swerve.kinematics, getGyro(),
-  swerveModulePositions);
-
-  private Rotation2d teleopAngle = new Rotation2d(0);
+  public SwerveDriveOdometry odometry = new SwerveDriveOdometry(
+    Constants.Swerve.kinematics,
+    getGyro(),
+    swerveModulePositions
+    );
 
   public void stopModules(){
     modules[0].stopMotors();
@@ -181,7 +139,6 @@ public class Swerve extends SubsystemBase {
     resetPigeon();
     for (int i = modules.length-1; i >= 0; i--) {
       SwerveModule module = modules[i];
-      //module.resetRotationEncoder();
       module.resetDriveEncoder();
     }
   }
@@ -189,8 +146,7 @@ public class Swerve extends SubsystemBase {
   public void resetRotEncoders(){
     for (int i = modules.length-1; i >= 0; i--) {
       SwerveModule module = modules[i];
-      //module.resetRotationEncoder();
-      module.resetRotationEncoder();
+        module.resetRotationEncoder();
     }
   }
 
@@ -213,11 +169,9 @@ public class Swerve extends SubsystemBase {
       swerveModulePositions,
       pose
     );
-    // resetAllEncoders();
   }
 
-
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean openLoop) {
     if(xSpeed<0.1 && ySpeed<0.1 && rot<0.2) RobotState.setSwerve(SwerveState.REST);
     else RobotState.setSwerve(SwerveState.MOVING);
 
@@ -232,27 +186,9 @@ public class Swerve extends SubsystemBase {
     for (int i = 0; i < states.length; i++) {
       SwerveModule module = modules[i];
       SwerveModuleState state = states[i];
-      module.setClosedLoop(state);
+      if(openLoop) module.setDesiredState(state);
+      else module.setClosedLoop(state);
     }
-
-    
-  }
-
-  public void resetFieldOrientation() {
-    resetFieldOrientation(new Rotation2d(getGyroDouble()));
-  }
-  public void resetFieldOrientation(Rotation2d angle) {
-    this.fieldAngle = angle;
-  }
-
-  public void resetFieldOrientedTeleOp(){
-    this.teleopAngle = getGyro();
-  }
-
-  public void manualGyroReset(){
-    this.teleopAngle = new Rotation2d(0);
-    this.fieldAngle = new Rotation2d(0);
-    gyroAhrs.reset();
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
@@ -283,6 +219,13 @@ public class Swerve extends SubsystemBase {
       modules[3].getModulePosition()
     };
 
+    odometry.update(
+      getGyro(),
+      swerveModulePositions
+      );
+
+    field2D.setRobotPose(getPose());
+
     SmartDashboard.putNumber("Swerve Gyro Angle", getGyroDouble());
     SmartDashboard.putNumber("Swerve Field Offset", fieldAngle.getDegrees());
     
@@ -290,34 +233,11 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Odometry Pose Y", getPose().getY());
     SmartDashboard.putNumber("Odometry Rot", getPose().getRotation().getRadians());
 
-    SmartDashboard.putNumber("1 FL",modules[0].getDegrees());
-    SmartDashboard.putNumber("2 FR",modules[1].getDegrees());
-    SmartDashboard.putNumber("3 BL",modules[2].getDegrees());
-    SmartDashboard.putNumber("4 BR",modules[3].getDegrees());
-
-    modules[0].debug();
-    modules[1].debug();
-    modules[2].debug();
-    modules[3].debug();
-
-    // moduleStates[0].speedMetersPerSecond = Math.abs(modules[0].getDriveEncoderVelocity());
-    // moduleStates[1].speedMetersPerSecond = Math.abs(modules[1].getDriveEncoderVelocity());
-    // moduleStates[2].speedMetersPerSecond = Math.abs(modules[2].getDriveEncoderVelocity());
-    // moduleStates[3].speedMetersPerSecond = Math.abs(modules[3].getDriveEncoderVelocity());
-
-    odometry.update(
-      getGyro(),
-      swerveModulePositions
-      );
-      
-
-    field2D.setRobotPose(getPose());
-
     if(isCalibrating){
-      modules[0].calibrate("Front Left", offsetCalibration, driveCalibration, rotCalibration);
-      modules[1].calibrate("Front Right", offsetCalibration, driveCalibration, rotCalibration);
-      modules[2].calibrate("Back Left", offsetCalibration, driveCalibration, rotCalibration);
-      modules[3].calibrate("Back Right", offsetCalibration, driveCalibration, rotCalibration);
+      modules[0].calibrate("Front Left", offsetCalibration, driveCalibration);
+      modules[1].calibrate("Front Right", offsetCalibration, driveCalibration);
+      modules[2].calibrate("Back Left", offsetCalibration, driveCalibration);
+      modules[3].calibrate("Back Right", offsetCalibration, driveCalibration);
     }
 
   }
