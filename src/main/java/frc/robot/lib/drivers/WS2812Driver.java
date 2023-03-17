@@ -45,7 +45,6 @@ public class WS2812Driver extends SubsystemBase {
     m_led.setData(m_ledBuffer);
 }
 
-
   public void turnOff() {
     setColor(0, 0, 0);
     m_led.setData(m_ledBuffer);
