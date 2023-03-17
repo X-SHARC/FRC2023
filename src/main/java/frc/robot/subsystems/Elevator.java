@@ -28,11 +28,6 @@ public class Elevator extends SubsystemBase {
   private double kI = 0.0;
   private double kD = 0.0;
 
-  private double kG = 0.0;
-  private double kS = 0.0;
-  private double kV = 0.0;
-  private double kA = 0.0; 
-
   private double distance = 0;
   private double perpendicularDistance = 0;
 
@@ -40,39 +35,33 @@ public class Elevator extends SubsystemBase {
   
   private double gearCircumference = Units.inchesToMeters(1.91) * Math.PI * 100;
 
-  private double output = 0;
-
   private PIDController elevatorPID = new PIDController(kP, kI, kD);
-  private ElevatorFeedforward feedForward = new ElevatorFeedforward(kS, kG, kV, kA);
 
-  //(115*17.42*2048)/(gearCircumference*2)
   private double softLimit = (115*17.42*2048)/(gearCircumference*2);
 
   public Elevator() {
     elevatorMasterMotor.configFactoryDefault();
     elevatorSlaveMotor.configFactoryDefault();
-    RobotState.setElevating(false);
+    RobotState.setElevated(false);
 
     elevatorMasterMotor.clearStickyFaults();
+    elevatorSlaveMotor.clearStickyFaults();
 
     elevatorSlaveMotor.setInverted(false);
     elevatorMasterMotor.setInverted(false);
+
     elevatorMasterMotor.setNeutralMode(NeutralMode.Brake);
     elevatorSlaveMotor.setNeutralMode(NeutralMode.Brake);
+
     elevatorSlaveMotor.follow(elevatorMasterMotor);
     elevatorPID.setTolerance(1);
 
     elevatorMasterMotor.configForwardSoftLimitEnable(true);
-    elevatorSlaveMotor.configForwardSoftLimitEnable(true);
     elevatorMasterMotor.configForwardSoftLimitThreshold(softLimit);
-    elevatorSlaveMotor.configForwardSoftLimitThreshold(softLimit);
-
   }
 
-    
     public void resetEncoder(){
       elevatorMasterMotor.setSelectedSensorPosition(0);
-      RobotState.setElevating(false);
     }
 
     public double getError(){
@@ -94,23 +83,15 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setDistance(double setpoint){
-      double distance = getDistance();
-
-      
-      PIDOutput = elevatorPID.calculate(distance, setpoint);
-      //feedForwardOutput = feedForward.calculate(60.0);
-      //output = (PIDOutput /*+ feedForwardOutput*/) / RobotController.getBatteryVoltage();
+      PIDOutput = elevatorPID.calculate(getDistance(), setpoint);
       if(topLimitSwitch.get() == true){
         elevatorMasterMotor.set(ControlMode.PercentOutput, PIDOutput);
-        RobotState.setElevating(true);
       }
     }
 
-
     public void elevatorUp(){
-     if (topLimitSwitch.get() == true){  // elektronik yanlış
+     if (topLimitSwitch.get() == true){  
         elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(0.45));
-        RobotState.setElevating(true);
       }
      }
 
@@ -118,30 +99,24 @@ public class Elevator extends SubsystemBase {
       if(speed<0){
         if (bottomLimitSwitch.get() == true){
           elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(Math.abs(speed)));
-          RobotState.setElevating(true);
         }
       }
       else if(speed>0){
         if (topLimitSwitch.get() == true){  // elektronik yanlış
           elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(Math.abs(speed)));
-          RobotState.setElevating(true);
         }
       }
-      else{
-        stop();
-      }
+      else stop();
     }
 
     public void elevatorDown(){
     if (bottomLimitSwitch.get() == true ){
       elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(0.45));
-      RobotState.setElevating(true);
     }
    }
 
     public void stop(){
       elevatorMasterMotor.set(ControlMode.PercentOutput, 0.0);
-      RobotState.setElevating(false);
     }
 
     public boolean getHome(){
@@ -152,9 +127,10 @@ public class Elevator extends SubsystemBase {
       if (bottomLimitSwitch.get() == true){
         elevatorMasterMotor.set(ControlMode.PercentOutput, -limiter.calculate(speed));
       }
-      else resetEncoder();
-      
-      RobotState.setElevating(true);
+      else{
+        resetEncoder();
+      } 
+        
     }
 
     private void saveFalcons(){
@@ -173,14 +149,18 @@ public class Elevator extends SubsystemBase {
       
     }
 
-
   @Override
   public void periodic() {
     RobotState.setElevatorLevel(getLevel());
 
-    //SmartDashboard.putNumber("Current", pdh.getCurrent(19));
     perpendicularDistance = getPerpendicularDistance();
     distance = getDistance();
+
+    if(distance>10){
+      RobotState.setElevated(true);
+    }
+    else RobotState.setElevated(false);
+
     SmartDashboard.putNumber("PIDOutput", PIDOutput);
     SmartDashboard.putNumber("Elevator Distance:", distance);
     SmartDashboard.putNumber("Elevator Perpendicular Distance:", perpendicularDistance);
@@ -188,21 +168,8 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putData("Bottom Limit Switch", bottomLimitSwitch);
     SmartDashboard.putNumber("Soft Limit Sensor Units", softLimit);
 
-
     if(bottomLimitSwitch.get() == false){
       resetEncoder();
-    }
-    
-  /*   if (Math.abs(operator.getY())>0.15){
-      new RunCommand(()->percent(operator.getY()*0.5),this);
-    }
-    else new RunCommand(()->stop(), this); */
-
-    //WILL BE TESTED
-    if(RobotState.getSwerveState() == SwerveState.MOVING){
-      //Will this command work????
-      //new ElevatorHome(this);
-      stop();
     }
 
     } 
