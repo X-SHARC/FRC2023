@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -45,7 +46,7 @@ public class Swerve extends SubsystemBase {
    * https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/swerve-drive-kinematics.html#constructing-the-kinematics-object
    */
 
-  public Pigeon2 pigeon = new Pigeon2(23);
+  public WPI_Pigeon2 pigeon = new WPI_Pigeon2(23);
 
   final boolean invertAllModules = true;
   private double kP = 0.00156;
@@ -57,7 +58,7 @@ public class Swerve extends SubsystemBase {
       new TalonFX(13),
       new CANCoder(4),
       false,
-      false,
+      true,
       -298), //! Front Left
 
     new SwerveModule(
@@ -66,7 +67,7 @@ public class Swerve extends SubsystemBase {
       new TalonFX(18),
       new CANCoder(3),
       false,
-      false,
+      true,
       -40), //! Front Right
 
     new SwerveModule(
@@ -75,7 +76,7 @@ public class Swerve extends SubsystemBase {
       new TalonFX(16),
       new CANCoder(2), 
       false,
-      false,
+      true,
       -35), //! Back Left
 
     new SwerveModule(
@@ -84,7 +85,7 @@ public class Swerve extends SubsystemBase {
       new TalonFX(12),
       new CANCoder(1),
       false,
-      false,
+      true,
       -11)  //! Back Right
   };
 
@@ -116,7 +117,7 @@ public class Swerve extends SubsystemBase {
   }
 
   public double getGyroDouble(){
-    return Math.IEEEremainder(pigeon.getYaw(), 360) * (Constants.kGyroReversed ? 1.0 : -1.0); 
+    return Math.IEEEremainder(pigeon.getAngle(), 360) * (Constants.kGyroReversed ? -1.0 : 1.0); 
   }
 
   public void resetPigeon(){
@@ -225,11 +226,6 @@ public class Swerve extends SubsystemBase {
       modules[3].getModulePosition()
     };
 
-    modules[0].outputDistance();
-    modules[1].outputDistance();
-    modules[2].outputDistance();
-    modules[3].outputDistance();
-
     poseEstimator.update(
       getGyro(),
       swerveModulePositions
@@ -245,6 +241,11 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Pose Estimator Rot", getPose().getRotation().getDegrees());
 
     if(isCalibrating){
+      modules[0].outputDistance();
+      modules[1].outputDistance();
+      modules[2].outputDistance();
+      modules[3].outputDistance();
+
       modules[0].calibrate("Front Left", offsetCalibration, driveCalibration);
       modules[1].calibrate("Front Right", offsetCalibration, driveCalibration);
       modules[2].calibrate("Back Left", offsetCalibration, driveCalibration);
@@ -252,7 +253,6 @@ public class Swerve extends SubsystemBase {
     }
 
   }
-
 
   public void addTrajectoryToField2d(Trajectory traj) {
     field2D.getObject("traj").setTrajectory(traj);

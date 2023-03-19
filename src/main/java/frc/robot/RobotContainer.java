@@ -209,6 +209,6 @@ public class RobotContainer {
   
 
   public Command getAutonomousCommand() {
-    return trajectoryGenerator.getControllerCommand(swerveDrivetrain, "eglence");
+    return trajectoryGenerator.getControllerCommand(swerveDrivetrain, "LeftCube1");
   }
 }

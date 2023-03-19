@@ -16,9 +16,9 @@ public class SharcTrajectory {
     //private PathPlannerTrajectory trajectory;
     //private PathPlannerState pathState;
 
-    PIDController xSpeedController = new PIDController(2.4, 0, 0);
-    PIDController ySpeedController = new PIDController(2.4, 0, 0);
-    PIDController rotController = new PIDController(0.5, 0, 0);
+    PIDController xSpeedController = new PIDController(5.7, 0, 0);
+    PIDController ySpeedController = new PIDController(5.7, 0, 0);
+    PIDController rotController = new PIDController(1.5, 0, 0);
     
     public SharcTrajectory(){
         rotController.enableContinuousInput(-Math.PI, Math.PI);
