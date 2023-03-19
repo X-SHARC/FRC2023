@@ -34,9 +34,9 @@ public final class Constants {
 	  
 		public static final double kAngleP = 0.00884888;
 
-		public static final double wheelCircumference = 2 * Math.PI * Units.inchesToMeters(2);
+		public static final double wheelCircumference = 2 * Math.PI  * Units.inchesToMeters(1.8999);
 
-        public static final double kMaxSpeed = Units.feetToMeters(16.2); // 16.2 feet per second
+        public static final double kMaxSpeed = Units.feetToMeters(13.2); // 16.2 feet per second
 		public static final double kMaxAngularSpeed = 2*Math.PI; // 1/2 rotation per second
 		public static final double kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared
 		
@@ -47,10 +47,10 @@ public final class Constants {
 
 		public static final SwerveDriveKinematics kinematics =
 			new SwerveDriveKinematics(
-				new Translation2d(kLength / 2, kWidth / 2),
-				new Translation2d(kLength / 2, -kWidth / 2),
-				new Translation2d(-kLength / 2, kWidth / 2),
-				new Translation2d(-kLength / 2, -kWidth / 2)
+				new Translation2d(kLength / 2., kWidth / 2.),
+				new Translation2d(kLength / 2., -kWidth / 2.),
+				new Translation2d(-kLength / 2., kWidth / 2.),
+				new Translation2d(-kLength / 2., -kWidth / 2.)
 			);
 			
 		

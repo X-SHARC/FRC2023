@@ -17,41 +17,34 @@ import frc.robot.Constants;
 import frc.robot.lib.util.Gearbox;
 
 public class SwerveModule {
-  // CANCoder & SRXMagEncoder has 4096 ticks/rotation
-  private static double kEncoderTicksPerRotation = 4096;
-
   private String name;
   private TalonFX driveMotor;
   private TalonFX angleMotor;
-  //private Encoder rotEncoder;
   private CANCoder rotEncoder;
-//CANCoder being used as absoulute encoder
-  // Using absolute has the advantage of zeroing the modules autonomously.
-  // If using relative, find a way to mechanically zero out wheel headings before starting the robot.
-  Gearbox driveRatio = new Gearbox(6.86, 2);
+  Gearbox driveRatio = new Gearbox(6.86, 1);
   
   private PIDController rotPID = new PIDController(0.0084888, 0, 0.00008);
 
-  public PIDController drivePID;
 
-  //public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.1543, 1.1543, 0.23523);
-  public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(0.65, 1.2343, 2.8523);
+  private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.899, 1.899, 5.23523);
+  //private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(2.5145, 1.5143, 0.128523);
+  private final PIDController drivePID = new PIDController(0.31, 0, 0);
 
-  private int resetOffset = 0;
   private boolean driveEncoderInverted = false; 
 
   private boolean isDriveMotorInverted = false;
 
-  public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, CANCoder rotEncoder, boolean driveEncoderInverted, boolean isDriveMotorInverted,PIDController drivePID, double offset) {
+  public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, CANCoder rotEncoder, boolean driveEncoderInverted, boolean isDriveMotorInverted, double offset) {
     this.name = name;
     this.driveMotor = driveMotor;
     this.angleMotor = angleMotor;
     this.rotEncoder = rotEncoder;
+
     this.driveMotor.setNeutralMode(NeutralMode.Brake);
     this.angleMotor.setNeutralMode(NeutralMode.Brake);
+
     this.driveEncoderInverted = driveEncoderInverted;
     this.isDriveMotorInverted = isDriveMotorInverted;
-    this.drivePID = drivePID;
 
     driveMotor.setInverted(isDriveMotorInverted);
     rotPID.disableContinuousInput();
@@ -60,26 +53,25 @@ public class SwerveModule {
 
   public double getDegrees(){
     return rotEncoder.getAbsolutePosition();
-    /*return Math.IEEEremainder((rotEncoder.getPosition() * 360. + offset.getDegrees()),
-     360.);*/
   }
 
   public SwerveModulePosition getModulePosition(){
-    return new SwerveModulePosition(getPosition(),getAngle());
+    return new SwerveModulePosition(getPosition(), getAngle());
   }
 
   public double getPosition(){
-    return driveMotor.getSelectedSensorPosition() / 2048.0 * Constants.Swerve.wheelCircumference;
+    return 
+      driveMotor.getSelectedSensorPosition() * (Constants.Swerve.wheelCircumference / (6.86 * 2048.0));
   }
 
-    // ! added drive ratio, check odometry
   public double getDriveMotorRate(){
-    return driveRatio.calculate(
-      ((getDriveEncoderVelocity() * 10) / 2048.0) * Constants.Swerve.wheelCircumference
+    return 
+    driveRatio.calculate(
+      ((getDriveRawVelocity() * 10) / 2048.0) * Constants.Swerve.wheelCircumference
     );
   }
 
-  public double getDriveEncoderVelocity(){
+  public double getDriveRawVelocity(){
     return (driveEncoderInverted ? -1 : 1) * driveMotor.getSelectedSensorVelocity();
   }
 
@@ -89,18 +81,16 @@ public class SwerveModule {
     );
   }
 
-  public void calibrate(String Name, boolean offsetCalibration, boolean driveCalibration, boolean rotCalibration){
+  public void calibrate(String Name, boolean offsetCalibration, boolean driveCalibration){
     if(offsetCalibration){
-      SmartDashboard.putNumber("Swerve Rot" + Name +  "Encoder Value", getAngle().getDegrees());
-      SmartDashboard.putNumber("Swerve Rot" + Name + " PID Setpoint", rotPID.getSetpoint());
-      SmartDashboard.putNumber("Swerve Rot" + Name + " PID Error", rotPID.getPositionError());
-    }
-    // ? all the values below should be tunable in Glass
-    if(rotCalibration){
-      // SmartDashboard.putData(Name + " Rotation PID", rotPID);     
+      SmartDashboard.putNumber("Swerve Rot Debug" + Name +  "Encoder Value", getAngle().getDegrees());
+      SmartDashboard.putNumber("Swerve Rot Debug" + Name + " PID Setpoint", rotPID.getSetpoint());
+      SmartDashboard.putNumber("Swerve Rot Debug" + Name + " PID Error", rotPID.getPositionError());
     }
     if(driveCalibration){
-      // SmartDashboard.putData(Name + " Drive PID", drivePID);
+      SmartDashboard.putNumber("Swerve Drive Debug " + name + " Vel Actual", getDriveMotorRate() );
+      SmartDashboard.putNumber("Swerve Drive Debug" + Name + " PID Error", drivePID.getVelocityError());
+      SmartDashboard.putNumber("Swerve Drive Debug " + name + " Vel Setpoint ", drivePID.getSetpoint() );
     }
   }
 
@@ -112,18 +102,13 @@ public class SwerveModule {
     driveMotor.setSelectedSensorPosition(0);    
   }
 
-  public void resetDriveEncoderbyOffset(){
-    //implement resetting by offset
+  public void outputDistance(){
+    SmartDashboard.putNumber("Swerve Distance " + name , getPosition());
   }
 
   public void resetBothEncoders(){
     resetDriveEncoder();
     resetRotationEncoder();
-  }
-
-  public void debug(){
-    SmartDashboard.putNumber("Swerve Debug " + name + " Vel Actual", getDriveMotorRate() );
-    SmartDashboard.putNumber("Swerve Debug " + name + " Vel Setpoint ", drivePID.getSetpoint() );
   }
 
   public void stopMotors(){
@@ -137,8 +122,7 @@ public class SwerveModule {
     // Find the difference between our current rotational position + our new rotational position
     Rotation2d rotationDelta = state.angle.minus(currentRotation);
     double desiredRotation = currentRotation.getDegrees() + rotationDelta.getDegrees();
-      // TODO: desiredRotation = (state - currentRotation) + currentRotation
-      // ????
+
     angleMotor.set(TalonFXControlMode.PercentOutput, 
         MathUtil.clamp( 
           ( rotPID.calculate(
@@ -149,10 +133,9 @@ public class SwerveModule {
             1.0)
     );
      
-    double driveOutput = driveFeedforward.calculate(state.speedMetersPerSecond);
+    double driveOutput = driveFeedforward.calculate(state.speedMetersPerSecond)/ RobotController.getBatteryVoltage();
     driveOutput += drivePID.calculate(getDriveMotorRate(), state.speedMetersPerSecond);
 
-    driveOutput = driveOutput / RobotController.getBatteryVoltage();
     driveMotor.set(TalonFXControlMode.PercentOutput, driveOutput);
     
   }

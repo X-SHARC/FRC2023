@@ -12,18 +12,18 @@ import frc.robot.commands.Elevator.ElevatorDownCommand;
 import frc.robot.commands.Elevator.ElevatorHome;
 import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
-import frc.robot.commands.Swerve.TurnToAngle;
 import frc.robot.lib.drivers.WS2812Driver;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
-
 
 public class RobotContainer {
 
@@ -36,8 +36,6 @@ public class RobotContainer {
   Elevator elevator = new Elevator();
   Intake intake = new Intake();
   Carriage carriage = new Carriage();
-
-  //TODO: Change the LED length
   WS2812Driver leftLED = new WS2812Driver(0, 44);
   
 
@@ -51,22 +49,14 @@ public class RobotContainer {
   SharcTrajectory trajectoryGenerator = new SharcTrajectory();
 
   PowerDistribution pdh = new PowerDistribution();
-
-
   AutoAlign autoAlign = new AutoAlign(swerveDrivetrain);
-  TurnToAngle turnToAngle = new TurnToAngle(swerveDrivetrain, 15);
 
   public RobotContainer() {
-    // Configure the trigger bindings
-    /*RobotState.setGamePiece(GamePiece.EMPTY);
-    RobotState.setIntakeState(IntakeState.STOP);
-    RobotState.setSwerve(SwerveState.REST);
-    RobotState.setElevatorLevel(ElevatorLevel.ZERO);*/
     configureBindings();
+    DriverStation.silenceJoystickConnectionWarning(true);
   }
 
   private void configureBindings() {
-    boolean a = RobotState.getTripping();
     swerveDrivetrain.setDefaultCommand(driveCommand);
     JoystickButton elevator1 = new JoystickButton(operator, 8);
     elevator1.whileTrue(elevatorUpCommand);
@@ -74,29 +64,8 @@ public class RobotContainer {
     JoystickButton elevator2 = new JoystickButton(operator,7);
     elevator2.whileTrue(elevatorDownCommand);
 
-    // button atama kontrol + denenecek 
-    /*JoystickButton elevatorpid = new JoystickButton(driver,6);
-    elevatorpid.whileTrue(elevatorCommand);*/
-
     JoystickButton elevatorhome = new JoystickButton(driver,7);
     elevatorhome.whileTrue(elevatorHome); 
-
-
-   //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇMAYIN
-  /*
-   JoystickButton carriage1 = new JoystickButton(operator, 10);
-   //BU COMMENTLERİ BURAK VE AYSU'YA VE ELA'YA SORMADAN AÇMAYIN
-   carriage1.whileTrue(new RunCommand(()-> carriage.intakeUp(), carriage));
-   //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇgiMAYIN
-   carriage1.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
-   //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇMAYIN
-   JoystickButton carriage2 = new JoystickButton(operator, 9);
-   //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇMAYIN
-   carriage2.whileTrue(new RunCommand(()-> carriage.intakeDown(), carriage));
-   //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇMAYIN
-   carriage2.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
-   //BU COMMENTLERİ BURAK VE AYSU'YA SORMADAN AÇMAYIN
-  */
 
     JoystickButton carriagepid = new JoystickButton(operator, 5);
    carriagepid.onTrue(new InstantCommand(()-> carriage.setSetpoint(30))); 
@@ -104,8 +73,6 @@ public class RobotContainer {
    // denenecek + button atama kontrol
    JoystickButton carriagecommand = new JoystickButton(operator, 3);
    carriagecommand.onTrue(new InstantCommand(()-> carriage.setSetpoint(5)));
-
-
 
    JoystickButton secondLevel = new JoystickButton(driver, 2);
    secondLevel.onTrue(
@@ -131,10 +98,16 @@ public class RobotContainer {
       new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
       new ElevatorHome(elevator).withTimeout(1.8)
       .alongWith(new InstantCommand(()->carriage.setSetpoint(5)))
-    ).beforeStarting(()->carriage.setSetpoint(15))
+    )
+    .beforeStarting(
+      Commands.parallel(
+       new InstantCommand( ()->carriage.setSetpoint(15)),
+       new WaitCommand(0.2)
+       )
+      )
    );
 
-/* DRIVER AUTOSCORE BUTTONS
+/* DRIVER AUTOSCORE BUTTONS -- DEPRECATED
    JoystickButton secondLevelcone = new JoystickButton(driver, 1);
    secondLevelcone.onTrue(
     new SequentialCommandGroup(
@@ -208,17 +181,6 @@ public class RobotContainer {
    JoystickButton turn = new JoystickButton(driver, 5);
    turn.whileTrue(autoAlign);
 
-
-    /* 
-   JoystickButton carriageButton = new JoystickButton(operator, 1);
-   carriageButton.whileTrue(carriageCommand);
-
-   JoystickButton resetCarriageButton = new JoystickButton(operator, 2);
-   resetCarriageButton.onTrue(new RunCommand(()-> carriage.resetCarriageEncoder()));
-  */
-
-  //new JoystickButton(operator, 10).onTrue(new InstantCommand(()->carriage.setSetpoint(0)))
-
    //TODO: Change this button
    JoystickButton encoderReset = new JoystickButton(operator, 12);
    encoderReset.onTrue(new RunCommand(() -> elevator.resetEncoder(), elevator));
@@ -243,13 +205,11 @@ public class RobotContainer {
     .beforeStarting(new RunCommand(()->carriage.setSetpoint(3)).withTimeout(0.2))
     );
 
-  
-
    intake.setDefaultCommand(intakeCommand);
   }
   
 
   public Command getAutonomousCommand() {
-    return trajectoryGenerator.getControllerCommand(swerveDrivetrain, "4mForward");
+    return trajectoryGenerator.getControllerCommand(swerveDrivetrain, "LeftCube1");
   }
 }

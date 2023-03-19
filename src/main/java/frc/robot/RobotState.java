@@ -40,14 +40,23 @@ public class RobotState {
     public static ElevatorLevel currentElevatorLevel = ElevatorLevel.ZERO;
     public static SwerveState currentSwerveState = SwerveState.REST;
     public static CarriageState currentCarriageState = CarriageState.AUTO;
-    public static boolean isElevating = false;
+    public static boolean isElevated = false;
     public static boolean isTripping = false;
     public static boolean isCarriageHome = false;
+    public static boolean isCarriageEncoderAlive = false;
     
     private RobotState(){
         //reset(); 
     }
 
+    public static void setCarriageEncoder(boolean alive){
+        isCarriageEncoderAlive = alive;
+    }
+
+    public static boolean isCarriageEncoderAlive(){
+        return isCarriageEncoderAlive;
+    }
+    
     public static void setGamePiece(GamePiece gamePiece){
         currentGamePiece = gamePiece;
     }
@@ -92,8 +101,8 @@ public class RobotState {
         currentIntakeState = intakeState;
     }
 
-    public static void setElevating(boolean elevating){
-        isElevating = elevating;
+    public static void setElevated(boolean elevated){
+        isElevated = elevated;
     }
 
     public static void setSwerve(SwerveState swerveState){
@@ -124,8 +133,8 @@ public class RobotState {
         return currentIntakeState;
     }
 
-    public static boolean getElevating(){
-        return isElevating;
+    public static boolean isElevated(){
+        return isElevated;
     }
 
     public static boolean getTripping(){
@@ -166,7 +175,7 @@ public class RobotState {
         currentGamePiece = null;
         currentElevatorLevel = null;
         currentIntakeState = IntakeState.IDLE;
-        isElevating = false;
+        isElevated = false;
         isTripping = false;
     }
 

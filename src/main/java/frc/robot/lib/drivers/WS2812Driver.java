@@ -17,44 +17,27 @@ public class WS2812Driver extends SubsystemBase {
   /** Creates a new WS2812Driver. */
   private static AddressableLED m_led;
   private static AddressableLEDBuffer m_ledBuffer;
-  int[] rgb = new int[10];
-  boolean isRGB = false;
   int breathe = 255;
   boolean breatheReversed = false;
   int breatheH = 10;
   int blinkCount = 0;
-  int ll;
-  private int beginning; 
+  private int beginning;  
+  private int m_rainbowFirstPixelHue;
+  private int emergency_beginning;
+  private int j;
+  private int blinkFrequency;
 
   public WS2812Driver(int dataPort, int ledLength) {
     m_led = new AddressableLED(dataPort);
     m_ledBuffer = new AddressableLEDBuffer(ledLength);
     m_led.setLength(m_ledBuffer.getLength());
-    this.ll = ledLength;
-
-    //breathe();
-    //showPercentage(0.5);
-    //blink(0, 255, 0);
     m_led.start();
   }
 
   @Override
   public void periodic() {
-    //TODO: Default may change
-    /*switch(RobotState.currentGamePiece){
-      case CONE: 
-        coneLED();
-        break;
-      case CUBE:
-        cubeLED();
-        break;
-      case EMPTY:
-        toggleRGB();
-        break;
-      default:
-        toggleRGB();
-    }*/
-    if(RobotState.currentGamePiece==GamePiece.CONE) coneLED();
+    if(!RobotState.isCarriageEncoderAlive()) emergency(8);
+    else if(RobotState.currentGamePiece==GamePiece.CONE) coneLED();
     else if (RobotState.currentGamePiece == GamePiece.CUBE) cubeLED();
     else sliding(new Color(0, 255, 0));
   }
@@ -66,10 +49,23 @@ public class WS2812Driver extends SubsystemBase {
     m_led.setData(m_ledBuffer);
 }
 
-
   public void turnOff() {
     setColor(0, 0, 0);
     m_led.setData(m_ledBuffer);
+}
+
+private void blink(int r, int g, int b) {
+  if (blinkFrequency != 0) {
+      if (j % blinkFrequency == 0) {
+          setColor(0, 0, 0);
+          j = 1;
+      } else if (j % (blinkFrequency / 2) == 0) {
+        setColor(r, g, b);
+      }
+      j++;
+  } else {
+    setColor(r, g, b);
+  }
 }
 
   public int[] shiftArray(int[] array){
@@ -79,6 +75,17 @@ public class WS2812Driver extends SubsystemBase {
     }
     array[0] = last;
     return array;
+  }
+  public void emergency(int errorLength){
+    for(var i = 0; i < m_ledBuffer.getLength();i++){
+      if(i>=emergency_beginning&&i<=emergency_beginning+errorLength){
+        m_ledBuffer.setLED(i, new Color(255,0,0));
+      }
+      else m_ledBuffer.setRGB(i, 0, 0, 0);
+    }
+    m_led.setData(m_ledBuffer);
+    emergency_beginning++;
+    emergency_beginning %= 44; 
   }
 
   public void sliding(Color color){
@@ -94,22 +101,12 @@ public class WS2812Driver extends SubsystemBase {
   }
 
   public void toggleRGB(){
-    if(!isRGB){
-      for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-        rgb[i] = i * 180/m_ledBuffer.getLength();
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      final var hue = (m_rainbowFirstPixelHue + (i * 180 / m_ledBuffer.getLength())) % 180;
+        m_ledBuffer.setHSV(i, hue, 255, 128);
       }
-      isRGB = true;
-    }
-    shiftArray(rgb);
-
-    for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-      m_ledBuffer.setHSV(i, rgb[i], 255, 255); 
-    }
-
-    //length -> 180 degrees
-    //1 -> 180/length
-    //
-    m_led.setData(m_ledBuffer);
+      m_rainbowFirstPixelHue += 3;
+      m_rainbowFirstPixelHue %= 180;
   }
 
   public void breathe(){
@@ -172,14 +169,11 @@ public class WS2812Driver extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
-  //TODO: not sure of the index values
   public void coneLED(){
-    //sliding(new Color(255, 255, 0));
     setColor(255,255,0);
   }
 
   public void cubeLED(){
-    //sliding(new Color(75, 0, 130));
     setColor(75,0,130);
   }
 }

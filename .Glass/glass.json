@@ -5,6 +5,9 @@
         "open": true
       },
       "SmartDashboard": {
+        "Path X Controller": {
+          "open": true
+        },
         "open": true
       }
     },
@@ -15,7 +18,21 @@
       "/SmartDashboard/DigitalInput[0]": "Digital Input",
       "/SmartDashboard/DigitalInput[1]": "Digital Input",
       "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Path Rotation Controller": "PIDController",
+      "/SmartDashboard/Path X Controller": "PIDController",
+      "/SmartDashboard/Path Y Controller": "PIDController",
       "/SmartDashboard/Top Limit Switch:": "Digital Input"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "Robot": {
+          "arrowWeight": 2.0,
+          "weight": 1.0
+        },
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables Settings": {
@@ -35,7 +52,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Swerve Debug FL Vel Actual"
+              "id": "NT:/SmartDashboard/Swerve Drive Debug FL Vel Actual"
             },
             {
               "color": [
@@ -44,7 +61,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Swerve Debug FL Vel Setpoint "
+              "id": "NT:/SmartDashboard/Swerve Drive Debug FL Vel Setpoint "
             }
           ]
         }
@@ -62,7 +79,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Swerve Debug RL Vel Setpoint "
+              "id": "NT:/SmartDashboard/Swerve Drive Debug RL Vel Actual"
             },
             {
               "color": [
@@ -71,7 +88,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Swerve Debug RL Vel Actual"
+              "id": "NT:/SmartDashboard/Swerve Drive Debug RL Vel Setpoint "
             }
           ]
         }
@@ -89,7 +106,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Swerve Debug RR Vel Actual"
+              "id": "NT:/SmartDashboard/Swerve Drive Debug RR Vel Actual"
             },
             {
               "color": [
@@ -98,7 +115,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Swerve Debug RR Vel Setpoint "
+              "id": "NT:/SmartDashboard/Swerve Drive Debug RR Vel Setpoint "
             }
           ]
         }
@@ -116,7 +133,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Swerve Debug FR Vel Actual"
+              "id": "NT:/SmartDashboard/Swerve Drive Debug FR Vel Actual"
             },
             {
               "color": [
@@ -125,7 +142,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Swerve Debug FR Vel Setpoint "
+              "id": "NT:/SmartDashboard/Swerve Drive Debug FR Vel Setpoint "
             }
           ]
         }
