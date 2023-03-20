@@ -21,7 +21,6 @@ public class Elevator extends SubsystemBase {
 
   SlewRateLimiter limiter = new SlewRateLimiter(0.05);
 
-  public DigitalInput topLimitSwitch = new DigitalInput(1);
   public DigitalInput bottomLimitSwitch = new DigitalInput(0);
 
   private double kP = 0.045;
@@ -52,6 +51,9 @@ public class Elevator extends SubsystemBase {
 
     elevatorMasterMotor.setNeutralMode(NeutralMode.Brake);
     elevatorSlaveMotor.setNeutralMode(NeutralMode.Brake);
+
+    elevatorMasterMotor.setSafetyEnabled(false);
+    elevatorMasterMotor.setSafetyEnabled(false);
 
     elevatorSlaveMotor.follow(elevatorMasterMotor);
     elevatorPID.setTolerance(1);
@@ -94,9 +96,8 @@ public class Elevator extends SubsystemBase {
     }
 
     public void elevatorUp(){
-     if (topLimitSwitch.get() == true){  
         elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(0.45));
-      }
+      
      }
 
     public void set(double speed){
@@ -106,9 +107,8 @@ public class Elevator extends SubsystemBase {
         }
       }
       else if(speed>0){
-        if (topLimitSwitch.get() == true){  // elektronik yanlış
           elevatorMasterMotor.set(ControlMode.PercentOutput, limiter.calculate(Math.abs(speed)));
-        }
+        
       }
       else stop();
     }
@@ -169,7 +169,6 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("PIDOutput", PIDOutput);
     SmartDashboard.putNumber("Elevator Distance:", distance);
     SmartDashboard.putNumber("Elevator Perpendicular Distance:", perpendicularDistance);
-    SmartDashboard.putData("Top Limit Switch:", topLimitSwitch);
     SmartDashboard.putData("Bottom Limit Switch", bottomLimitSwitch);
     SmartDashboard.putNumber("Soft Limit Sensor Units", softLimit);
 
