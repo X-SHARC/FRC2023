@@ -144,6 +144,10 @@ public class RobotState {
         return currentGamePiece;
     }
 
+    public static boolean isCone(){
+        return getGamePiece() == GamePiece.CONE;
+    }
+
     public static IntakeState getIntaking(){
         return currentIntakeState;
     }

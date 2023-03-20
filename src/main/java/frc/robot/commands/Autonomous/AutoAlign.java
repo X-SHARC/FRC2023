@@ -52,7 +52,7 @@ public class AutoAlign extends CommandBase {
       swerve.drive(0, output, rotation, false,true);
     }
     else{
-      double distanceOutput = -distanceController.calculate(distance, 65)*Constants.Swerve.kMaxSpeed;
+      double distanceOutput = -distanceController.calculate(distance, 70)*Constants.Swerve.kMaxSpeed;
       swerve.drive(distanceOutput, output, rotation, false,true);
 
     }

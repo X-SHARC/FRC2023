@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -79,8 +80,17 @@ public class RobotContainer {
    secondLevel.onTrue(
     new SequentialCommandGroup(
       //new RunCommand(()->carriage.setSetpoint(15), carriage).withTimeout(0.5),
-      new ElevatorCommand(elevator, RobotState.getGamePiece() == GamePiece.CONE ? 75: 60).withTimeout(0.9)
-      .alongWith(new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece() == GamePiece.CUBE ? 68:38))),
+      new ConditionalCommand(
+        new ElevatorCommand(elevator, 60).withTimeout(0.9),
+        new ElevatorCommand(elevator, 62).withTimeout(0.9),
+        RobotState::isCone
+      )
+        .alongWith(
+          new ConditionalCommand(
+            new InstantCommand(()->carriage.setSetpoint(38)),
+            new InstantCommand(()->carriage.setSetpoint(50)),
+            RobotState::isCone
+          )),
       new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
       new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
       new ElevatorHome(elevator).withTimeout(1.8)
@@ -99,8 +109,17 @@ public class RobotContainer {
    thirdLevel.onTrue(
     new SequentialCommandGroup(
       //new RunCommand(()->carriage.setSetpoint(15), carriage).withTimeout(0.5),
-      new ElevatorCommand(elevator, RobotState.getGamePiece() == GamePiece.CONE ? 112: 101).withTimeout(0.9)
-      .alongWith(new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece() == GamePiece.CUBE ? 32:48))),
+      new ConditionalCommand(
+        new ElevatorCommand(elevator, 114).withTimeout(0.9),
+        new ElevatorCommand(elevator, 110).withTimeout(0.9),
+        RobotState::isCone 
+      )
+      .alongWith(
+        new ConditionalCommand(
+          new InstantCommand(()->carriage.setSetpoint(48)),
+          new InstantCommand(()->carriage.setSetpoint(38)),
+          RobotState::isCone
+        )),
       new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
       new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
       new ElevatorHome(elevator).withTimeout(1.8)
