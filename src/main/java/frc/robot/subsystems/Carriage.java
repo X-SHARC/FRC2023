@@ -123,7 +123,6 @@ public class Carriage extends SubsystemBase {
     }
 
     SmartDashboard.putBoolean("Carriage Is Alive", isAlive());
-    SmartDashboard.putNumber("Carriage Frequency", encoder.getFrequency());
     SmartDashboard.putNumber("Carriage Angle", getDegrees());
     SmartDashboard.putNumber("Carriage PID Position Error", carriagePID.getPositionError());
     SmartDashboard.putNumber("Carriage Setpoint ", carriagePID.getSetpoint());
