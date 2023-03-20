@@ -156,24 +156,17 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //RobotState.setElevatorLevel(getLevel());
-
-    perpendicularDistance = getPerpendicularDistance();
-    distance = getDistance();
-
-    if(distance>10){
-      RobotState.setElevated(true);
-    }
-    else RobotState.setElevated(false);
 
     SmartDashboard.putNumber("PIDOutput", PIDOutput);
-    SmartDashboard.putNumber("Elevator Distance:", distance);
-    SmartDashboard.putNumber("Elevator Perpendicular Distance:", perpendicularDistance);
+    SmartDashboard.putNumber("Elevator Distance:", getDistance());
     SmartDashboard.putData("Bottom Limit Switch", bottomLimitSwitch);
-    SmartDashboard.putNumber("Soft Limit Sensor Units", softLimit);
 
     if(bottomLimitSwitch.get() == false){
       resetEncoder();
+      RobotState.setElevated(false);
+    }
+    else{
+      RobotState.setElevated(true);
     }
 
     } 
