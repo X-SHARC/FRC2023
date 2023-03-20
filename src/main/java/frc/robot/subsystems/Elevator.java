@@ -5,16 +5,15 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
 import frc.robot.RobotState.ElevatorLevel;
-import frc.robot.RobotState.SwerveState;
 
 public class Elevator extends SubsystemBase {
   private WPI_TalonFX elevatorMasterMotor = new WPI_TalonFX(32, "canavar");
@@ -90,7 +89,8 @@ public class Elevator extends SubsystemBase {
         -0.9,
         0.9
       );
-      elevatorMasterMotor.set(ControlMode.PercentOutput, PIDOutput);
+      
+      elevatorMasterMotor.set(ControlMode.PercentOutput, ((PIDOutput*12.)/RobotController.getBatteryVoltage()));
     }
 
     public void elevatorUp(){
