@@ -24,7 +24,7 @@ public class IntakeCommand extends CommandBase {
 
   @Override
   public void execute() {
-  if(edu.wpi.first.wpilibj.RobotState.isTeleop()){
+  if(RobotState.isTeleop()){
     if(operator.getThrottle() > 0.6) RobotState.setCone();
     else if (operator.getThrottle() < -0.6) RobotState.setCube();
     else RobotState.setGamePiece(GamePiece.EMPTY);

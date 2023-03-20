@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+
 /** Add your docs here. */
 public class RobotState {
 
@@ -47,6 +50,18 @@ public class RobotState {
     
     private RobotState(){
         //reset(); 
+    }
+
+    public static boolean isTeleop(){
+        return edu.wpi.first.wpilibj.RobotState.isTeleop();
+    }
+
+    public static boolean isBlueAlliance(){
+        return DriverStation.getAlliance() == Alliance.Blue;
+    }
+
+    public static boolean isRedAlliance(){
+        return DriverStation.getAlliance() == Alliance.Red;
     }
 
     public static void setCarriageEncoder(boolean alive){

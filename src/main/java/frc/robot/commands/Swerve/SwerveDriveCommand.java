@@ -4,12 +4,14 @@
 
 package frc.robot.commands.Swerve;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.RobotState;
 import frc.robot.subsystems.Swerve;
 
 public class SwerveDriveCommand extends CommandBase {
@@ -47,21 +49,16 @@ public class SwerveDriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    swerveSubsystem.resetRotEncoders();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    scale = Math.abs(joystick.getRightTriggerAxis()) < 0.25 ? 1: scale2;
+    scale = RobotState.isElevated() ? 0.45 : 1;
 
-    //WILL BE TESTED, is it needed? asansör açıkken swerve kitlemek ne kadar mantıklı? 
-    //scale = RobotState.getElevatorLevelInt() > 2 ? scale : slowScale;
-    //scale = Math.abs(joystick.getRightTriggerAxis()) > 0.4 ? 0.8 : scale2;
-    //132 ve 15
-    if(scale == scale2){
-      joystick.setRumble(RumbleType.kRightRumble, 0.55);
-      joystick.setRumble(RumbleType.kLeftRumble, 0.55);
+    if(scale == 0.45){
+      joystick.setRumble(RumbleType.kRightRumble, 0.45);
+      joystick.setRumble(RumbleType.kLeftRumble, 0.45);
     } 
       
     else{
@@ -70,22 +67,27 @@ public class SwerveDriveCommand extends CommandBase {
     } 
       
 
-    final var xSpeed = -xSpeedLimiter.calculate(
-      (Math.abs(joystick.getLeftY()) < 0.1) ? 0 : joystick.getLeftY())
-      * Constants.Swerve.kMaxSpeed * scale;
+    double xSpeed = xSpeedLimiter.calculate(
+      MathUtil.applyDeadband(joystick.getLeftY(), 0.15) * Constants.Swerve.kMaxSpeed 
+      )
+      * scale;
 
     
-    final var ySpeed = ySpeedLimiter.calculate(
-      (Math.abs(joystick.getLeftX()) <  0.1) ? 0 : joystick.getLeftX())
-      * Constants.Swerve.kMaxSpeed * scale;
+    double ySpeed = ySpeedLimiter.calculate(
+      MathUtil.applyDeadband(joystick.getLeftX(), 0.15) * Constants.Swerve.kMaxSpeed
+      )
+      * scale;
      
-    final var rot = -rotLimiter.calculate(
-      (Math.abs(joystick.getRightX()) < 0.1) ? 0 : joystick.getRightX())
-      * Constants.Swerve.kMaxAngularSpeed * scale;
+    double rot = -rotLimiter.calculate(
+      MathUtil.applyDeadband(joystick.getRightX(), 0.15) * Constants.Swerve.kMaxAngularSpeed
+      )
+      * scale;
+    
+    if(!RobotState.isBlueAlliance()){
+      xSpeed = -xSpeed;
+      ySpeed = -ySpeed;
+    }
 
-
-    //double[] speeds ={xSpeed, ySpeed, rot}; 
-    //SmartDashboard.putNumberArray("controller speeds", speeds);
     swerveSubsystem.drive(xSpeed, ySpeed, rot, true, true);
   }
 
