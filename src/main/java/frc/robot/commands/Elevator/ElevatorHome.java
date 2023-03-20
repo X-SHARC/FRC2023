@@ -10,12 +10,11 @@ public class ElevatorHome extends SequentialCommandGroup {
 
   public ElevatorHome(Elevator elevator) {
     this.elevator = elevator;
+    addRequirements(elevator);
    
     addCommands(
       new ElevatorCommand(elevator, 5).withTimeout(0.8),
       new RunCommand(()->elevator.elevatorHome(0.20), elevator).until(elevator::getHome),
-      new RunCommand(()-> elevator.stop(), elevator),
-      new RunCommand(()-> this.end(true))
-    );
+      new RunCommand(()-> elevator.stop(), elevator)    );
   }
 }

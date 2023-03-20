@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -83,10 +84,13 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setDistance(double setpoint){
-      PIDOutput = elevatorPID.calculate(getDistance(), setpoint);
-      if(topLimitSwitch.get() == true){
-        elevatorMasterMotor.set(ControlMode.PercentOutput, PIDOutput);
-      }
+
+      PIDOutput = MathUtil.clamp(
+        elevatorPID.calculate(getDistance(), setpoint),
+        -0.9,
+        0.9
+      );
+      elevatorMasterMotor.set(ControlMode.PercentOutput, PIDOutput);
     }
 
     public void elevatorUp(){
@@ -129,6 +133,7 @@ public class Elevator extends SubsystemBase {
       }
       else{
         resetEncoder();
+        stop();
       } 
         
     }
@@ -151,7 +156,7 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    RobotState.setElevatorLevel(getLevel());
+    //RobotState.setElevatorLevel(getLevel());
 
     perpendicularDistance = getPerpendicularDistance();
     distance = getDistance();

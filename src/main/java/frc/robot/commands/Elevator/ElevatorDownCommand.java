@@ -5,7 +5,6 @@
 package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Carriage;
 import frc.robot.subsystems.Elevator;
 
 public class ElevatorDownCommand extends CommandBase {
@@ -13,7 +12,7 @@ public class ElevatorDownCommand extends CommandBase {
   
   public ElevatorDownCommand(Elevator elevator) {
     this.elevator = elevator;
-    //addRequirements(elevator);
+    addRequirements(elevator);
   }
 
   @Override

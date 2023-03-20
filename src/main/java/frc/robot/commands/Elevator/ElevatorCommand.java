@@ -15,7 +15,7 @@ public class ElevatorCommand extends CommandBase {
     this.elevator = elevator;
     this.distance = distance;
     //! ADD REQUIREMENTS DO NOT WORK FIX ME
-    //addRequirements(elevator);
+    addRequirements(elevator);
   }
   
 

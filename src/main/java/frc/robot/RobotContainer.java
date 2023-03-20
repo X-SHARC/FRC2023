@@ -29,6 +29,7 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final static XboxController driver = new XboxController(0);
+  //private final static Joystick driver = new Joystick(0);
   private final static Joystick operator = new Joystick(1);
 
   //Subsystems
@@ -78,7 +79,7 @@ public class RobotContainer {
    secondLevel.onTrue(
     new SequentialCommandGroup(
       //new RunCommand(()->carriage.setSetpoint(15), carriage).withTimeout(0.5),
-      new ElevatorCommand(elevator, RobotState.getGamePiece() == GamePiece.CONE ? 60: 75).withTimeout(0.9)
+      new ElevatorCommand(elevator, RobotState.getGamePiece() == GamePiece.CONE ? 75: 60).withTimeout(0.9)
       .alongWith(new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece() == GamePiece.CUBE ? 68:38))),
       new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
       new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
@@ -218,6 +219,6 @@ public class RobotContainer {
   
 
   public Command getAutonomousCommand() {
-    return trajectoryGenerator.getLeftTwoCubeWithDock(swerveDrivetrain, elevator,intake,carriage);
+    return trajectoryGenerator.getLeftTwoCubeWithDock(swerveDrivetrain, elevator, intake, carriage);
   }
 }

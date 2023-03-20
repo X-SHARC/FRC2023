@@ -19,9 +19,9 @@ public class SwerveDriveCommand extends CommandBase {
   Swerve swerveSubsystem;
   Joystick driver;
 
-  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(2.5);
-  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(2.5);
-  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(4.5);
+  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(10);
+  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(10);
+  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(10);
 
   double scale = 1;
 
@@ -45,7 +45,10 @@ public class SwerveDriveCommand extends CommandBase {
 
   @Override
   public void execute() {
-    scale = RobotState.isElevated() ? 0.45 : 1;
+    if(RobotState.isElevated() || joystick.getRawButton(6)){
+      scale = 0.3;
+    }
+    else scale = 1;
 
     if(scale == 0.45){
       joystick.setRumble(RumbleType.kRightRumble, 0.45);
@@ -59,20 +62,17 @@ public class SwerveDriveCommand extends CommandBase {
       
 
     double xSpeed = xSpeedLimiter.calculate(
-      MathUtil.applyDeadband(joystick.getLeftY(), 0.15) * Constants.Swerve.kMaxSpeed 
-      )
-      * scale;
+      (Math.abs(joystick.getLeftY()) < 0.1) ? 0 : joystick.getLeftY())
+      * Constants.Swerve.kMaxSpeed * scale;
 
     
     double ySpeed = ySpeedLimiter.calculate(
-      MathUtil.applyDeadband(joystick.getLeftX(), 0.15) * Constants.Swerve.kMaxSpeed
-      )
-      * scale;
+      (Math.abs(joystick.getLeftX()) <  0.1) ? 0 : joystick.getLeftX())
+      * Constants.Swerve.kMaxSpeed * scale;
      
     double rot = -rotLimiter.calculate(
-      MathUtil.applyDeadband(joystick.getRightX(), 0.15) * Constants.Swerve.kMaxAngularSpeed
-      )
-      * scale;
+      (Math.abs(joystick.getRawAxis(3)) < 0.1) ? 0 : joystick.getRawAxis(3))
+      * Constants.Swerve.kMaxAngularSpeed * scale;
     
     if(!RobotState.isBlueAlliance()){
       xSpeed = -xSpeed;

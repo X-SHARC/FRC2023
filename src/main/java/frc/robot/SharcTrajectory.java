@@ -6,6 +6,7 @@ import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -21,6 +22,9 @@ import edu.wpi.first.math.controller.PIDController;
 public class SharcTrajectory {
     //private PathPlannerTrajectory trajectory;
     //private PathPlannerState pathState;
+
+    double chargeStationMaxVel = 1.5;
+    double chargeStationMaxAccel = 2;
 
     PIDController xSpeedController = new PIDController(5.7, 0, 0);
     PIDController ySpeedController = new PIDController(5.7, 0, 0);
@@ -43,17 +47,20 @@ public class SharcTrajectory {
                 new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
                 new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
                 new ElevatorHome(elevator).withTimeout(0.8)
-                    .alongWith(new InstantCommand(()->carriage.setSetpoint(15)))
+                    .alongWith(new InstantCommand(()->carriage.setSetpoint(15))),
+                new InstantCommand(()->elevator.stop())
             ),
-            getControllerCommand(swerve, "LeftCube1", true).withTimeout(2.5),
+            getControllerCommand(swerve, "LeftCube1", true, 3, 4).withTimeout(2.5),
             new InstantCommand(()->carriage.setSetpoint(100)),
             new RunCommand(()->RobotState.setIntaking())
-            .withTimeout(0.9).raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(1)),
+            .withTimeout(0.9),
+            //.raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(1)),
             new InstantCommand(()->carriage.setSetpoint(10)),
             new InstantCommand(()->RobotState.setIntakeIdle()),
-            getControllerCommand(swerve, "LeftCube2", false).withTimeout(2.5),
+            getControllerCommand(swerve, "LeftCube2", false, 3, 4).withTimeout(2.5),
             new RunCommand(()->RobotState.setEjecting()).withTimeout(0.6)
-            .withTimeout(0.9).raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(1)),
+            .withTimeout(0.9),
+            //.raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(1)),
             new InstantCommand(()->RobotState.setIntakeIdle())
         );
     }
@@ -67,27 +74,50 @@ public class SharcTrajectory {
                 new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
                 new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
                 new ElevatorHome(elevator).withTimeout(0.8)
-                    .alongWith(new InstantCommand(()->carriage.setSetpoint(15)))
+                    .alongWith(new InstantCommand(()->carriage.setSetpoint(15))),
+                new InstantCommand(()->elevator.stop())
             ),
-            getControllerCommand(swerve, "LeftCube1", true).withTimeout(2.5),
-            new InstantCommand(()->carriage.setSetpoint(100)),
-            new RunCommand(()->RobotState.setIntaking())
-            .withTimeout(0.9),
-            //.raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(1)),
-            new InstantCommand(()->carriage.setSetpoint(10)),
-            new InstantCommand(()->RobotState.setIntakeIdle()),
-            getControllerCommand(swerve, "LeftCube2", false).withTimeout(2.5),
-            new RunCommand(()->RobotState.setEjecting()).withTimeout(0.6)
-            .withTimeout(0.9),
-            //.raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(1)),
-            new InstantCommand(()->RobotState.setIntakeIdle()),
-            getControllerCommand(swerve, "LeftCubeDock", false)
+            Commands.parallel(
+                new SequentialCommandGroup(
+                    getControllerCommand(swerve, "LeftCube1", true, 3, 4).withTimeout(2.5),
+                    new InstantCommand(()->carriage.setSetpoint(100)),
+                    new RunCommand(()->RobotState.setIntaking())
+                    .withTimeout(0.9).raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(1)),
+                    new InstantCommand(()->carriage.setSetpoint(10)),
+                    new InstantCommand(()->RobotState.setIntakeIdle()),
+                    getControllerCommand(swerve, "LeftCube2", false, 3, 4).withTimeout(2.5),
+                    new RunCommand(()->RobotState.setEjecting()).withTimeout(0.6)
+                    .withTimeout(0.9).raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(1)),
+                    new InstantCommand(()->RobotState.setIntakeIdle()),
+                    getControllerCommand(swerve, "LeftCubeDock", false, chargeStationMaxVel, chargeStationMaxAccel),
+                    new RunCommand(()->swerve.stopModules()).withTimeout(1)
+                ),
+                new RunCommand(()->elevator.stop())
+            )
+            
         );
     }
 
-    public Command getControllerCommand(Swerve swerve, String trajName, boolean isFirstTrajectory) {
+    public Command getOneCubeAndBack(Swerve swerve, Elevator elevator, Carriage carriage){
+        RobotState.setGamePiece(RobotState.GamePiece.CUBE);
+        return new SequentialCommandGroup(
+            new SequentialCommandGroup(
+                new ElevatorCommand(elevator, RobotState.getGamePiece() == GamePiece.CONE ? 112: 101).withTimeout(0.9)
+                    .alongWith(new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece() == GamePiece.CUBE ? 32:48))),
+                new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
+                new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
+                new ElevatorHome(elevator).withTimeout(0.8)
+                    .alongWith(new InstantCommand(()->carriage.setSetpoint(15))),
+                new InstantCommand(()->elevator.stop())
+            ),
+            getControllerCommand(swerve, "1Cube&Back", true, chargeStationMaxVel, chargeStationMaxAccel),
+            new RunCommand(()->swerve.stopModules()).withTimeout(1)
+        );
+    }
+
+    public Command getControllerCommand(Swerve swerve, String trajName, boolean isFirstTrajectory, double maxVel, double maxAccel) {
         
-        PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, 3, 4);
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, maxVel, maxAccel);
         swerve.addTrajectoryToField2d(trajectory);
 
         if(isFirstTrajectory) swerve.resetPoseEstimator(trajectory.getInitialHolonomicPose());

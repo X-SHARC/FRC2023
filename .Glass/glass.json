@@ -43,7 +43,7 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": 338,
+          "height": 359,
           "series": [
             {
               "color": [
@@ -70,7 +70,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 338,
+          "height": 400,
           "series": [
             {
               "color": [
@@ -97,7 +97,7 @@
     "Plot <2>": {
       "plots": [
         {
-          "height": 338,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -119,12 +119,15 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <3>": {
       "plots": [
         {
-          "height": 338,
+          "height": 368,
           "series": [
             {
               "color": [
@@ -145,6 +148,20 @@
               "id": "NT:/SmartDashboard/Swerve Drive Debug FR Vel Setpoint "
             }
           ]
+        }
+      ]
+    },
+    "Plot <4>": {
+      "plots": [
+        {
+          "height": 341
+        }
+      ]
+    },
+    "Plot <5>": {
+      "plots": [
+        {
+          "height": 338
         }
       ]
     }

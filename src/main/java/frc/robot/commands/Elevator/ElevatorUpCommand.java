@@ -11,7 +11,7 @@ public class ElevatorUpCommand extends CommandBase {
   Elevator elevator;
   public ElevatorUpCommand(Elevator elevator) {
     this.elevator = elevator;
-    //addRequirements(elevator);
+    addRequirements(elevator);
   }
 
   @Override
