@@ -19,12 +19,9 @@ public class ElevatorUpCommand extends CommandBase {
 
   @Override
   public void execute() {
-    if (elevator.topLimitSwitch.get() == true){
-        elevator.elevatorUp();}
-    else{
-        elevator.stop();
-      }
-    }
+      elevator.elevatorUp();
+  }
+    
 
 
   @Override
