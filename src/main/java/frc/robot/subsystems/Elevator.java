@@ -58,8 +58,8 @@ public class Elevator extends SubsystemBase {
     elevatorSlaveMotor.follow(elevatorMasterMotor);
     elevatorPID.setTolerance(1);
 
-    //elevatorMasterMotor.configForwardSoftLimitEnable(true);
-    //elevatorMasterMotor.configForwardSoftLimitThreshold(softLimit);
+    elevatorMasterMotor.configForwardSoftLimitEnable(true);
+    elevatorMasterMotor.configForwardSoftLimitThreshold(softLimit);
   }
 
     public void resetEncoder(){
