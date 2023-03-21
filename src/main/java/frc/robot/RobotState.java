@@ -24,6 +24,7 @@ public class RobotState {
     public enum IntakeState{
         INTAKING,
         EJECTING,
+        SHOOTING,
         IDLE,
         STOP
     }
@@ -50,6 +51,14 @@ public class RobotState {
     
     private RobotState(){
         //reset(); 
+    }
+
+    public static void setShooting(){
+        currentIntakeState = IntakeState.SHOOTING;
+    }
+
+    public static boolean isShooting(){
+        return currentIntakeState == IntakeState.SHOOTING;
     }
 
     public static boolean isTeleop(){
