@@ -63,7 +63,5 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putString("Current Game Piece:", RobotState.currentGamePiece.toString());
-
-    // This method will be called once per scheduler run
   }
 }

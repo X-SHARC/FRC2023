@@ -74,7 +74,7 @@ public class RobotState {
     }
 
     public static void setCarriageEncoder(boolean alive){
-        isCarriageEncoderAlive = alive;
+        if(isCarriageEncoderAlive != alive) isCarriageEncoderAlive = alive;
     }
 
     public static boolean isCarriageEncoderAlive(){
@@ -82,19 +82,15 @@ public class RobotState {
     }
     
     public static void setGamePiece(GamePiece gamePiece){
-        currentGamePiece = gamePiece;
+        if(currentGamePiece != gamePiece) currentGamePiece = gamePiece;
     }
 
     public static void setCone(){
-        if(currentGamePiece != GamePiece.CONE){
-            currentGamePiece = GamePiece.CONE;
-        }
+        if(currentGamePiece != GamePiece.CONE) currentGamePiece = GamePiece.CONE;
     }
 
     public static void setIntaking(){
-        if(currentIntakeState!= IntakeState.INTAKING){
-            currentIntakeState = IntakeState.INTAKING;
-        }
+        if(currentIntakeState!= IntakeState.INTAKING) currentIntakeState = IntakeState.INTAKING;
     }
 
     public static void setCarriageAutonomous(){
@@ -126,7 +122,7 @@ public class RobotState {
     }
 
     public static void setElevated(boolean elevated){
-        isElevated = elevated;
+        if(isElevated != elevated) isElevated = elevated;
     }
 
     public static void setSwerve(SwerveState swerveState){
