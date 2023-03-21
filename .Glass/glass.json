@@ -154,14 +154,54 @@
     "Plot <4>": {
       "plots": [
         {
-          "height": 341
+          "height": 341,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve Drive Debug FL Vel Actual"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve Drive Debug FL Vel Setpoint "
+            }
+          ]
         }
       ]
     },
     "Plot <5>": {
       "plots": [
         {
-          "height": 338
+          "height": 338,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve Drive Debug RL Vel Setpoint "
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve Drive Debug RL Vel Actual"
+            }
+          ]
         }
       ]
     }
