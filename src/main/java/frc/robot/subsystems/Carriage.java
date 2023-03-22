@@ -21,7 +21,7 @@ public class Carriage extends SubsystemBase {
   private WPI_TalonFX carriageMotor = new WPI_TalonFX(Constants.CARRIAGE_ID, "canavar");
   private DutyCycleEncoder encoder = new DutyCycleEncoder(2);
   
-  private double kP = 0.018;
+  private double kP = 0.01877;
   private double kI = 0.0;
   private double kD = 0.0;
 

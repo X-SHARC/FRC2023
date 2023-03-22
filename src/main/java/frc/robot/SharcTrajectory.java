@@ -86,40 +86,41 @@ public class SharcTrajectory {
         RobotState.setGamePiece(RobotState.GamePiece.CUBE);
         return new SequentialCommandGroup(
             new SequentialCommandGroup(
-                new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.5),
+                new RunCommand(()-> carriage.setDegrees(20), carriage).withTimeout(0.3),
                 new ConditionalCommand(
-                  new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.9),
-                  new RunCommand(()-> elevator.setDistance(105), elevator).withTimeout(0.9),
+                  new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.8),
+                  new RunCommand(()-> elevator.setDistance(104), elevator).withTimeout(0.7),
                   RobotState::isCone
                   ),
                 new InstantCommand(()-> elevator.stop(), elevator),
                 new ConditionalCommand(
-                  new RunCommand(()-> carriage.setDegrees(48), carriage).withTimeout(0.5),
-                  new RunCommand(()-> carriage.setDegrees(38), carriage).withTimeout(0.5),
+                  new RunCommand(()-> carriage.setDegrees(48), carriage).withTimeout(0.4),
+                  new RunCommand(()-> carriage.setDegrees(32), carriage).withTimeout(0.33),
                   RobotState::isCone
                 ),
                 new InstantCommand(()-> carriage.stop(), carriage),
                 new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
                 new InstantCommand(()->RobotState.setIntakeIdle()),
-                new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(1),
+                new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.3),
                 new InstantCommand(()-> carriage.stop(), carriage),
-                new ElevatorHome(elevator).withTimeout(0.9),
+                new ElevatorHome(elevator).withTimeout(0.7),
                 new InstantCommand(()-> elevator.stop(), elevator),
-                new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(1),
+                new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(0.3),
                 new InstantCommand(()-> carriage.stop(), carriage)
               ),
             Commands.parallel(
                 new SequentialCommandGroup(
                     getControllerCommand(swerve, "LeftCube1", true, 3, 4).withTimeout(2.5),
-                    new InstantCommand(()->carriage.setSetpoint(100)),
+                    new RunCommand(()->carriage.setDegrees(100)).withTimeout(0.9),
+                    new InstantCommand(()-> carriage.stop(), carriage),
                     new RunCommand(()->RobotState.setIntaking())
-                    .withTimeout(0.9).raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(1)),
-                    new InstantCommand(()->carriage.setDegrees(10), carriage),
+                    .withTimeout(0.9).raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(0.9)),
+                    new RunCommand(()->carriage.setDegrees(10), carriage).withTimeout(0.7),
                     new InstantCommand(()-> carriage.stop(), carriage),
                     new InstantCommand(()->RobotState.setIntakeIdle()),
                     getControllerCommand(swerve, "LeftCube2", false, 3, 4).withTimeout(2.5),
-                    new RunCommand(()->RobotState.setEjecting()).withTimeout(0.6)
-                    .withTimeout(0.9).raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(1)),
+                    new RunCommand(()->RobotState.setShooting()).withTimeout(0.5)
+                    .withTimeout(0.9),
                     new InstantCommand(()->RobotState.setIntakeIdle()),
                     getControllerCommand(swerve, "LeftCubeDock", false, chargeStationMaxVel, chargeStationMaxAccel),
                     new RunCommand(()->swerve.stopModules()).withTimeout(1)

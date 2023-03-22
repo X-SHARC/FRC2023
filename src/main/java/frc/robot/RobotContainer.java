@@ -14,19 +14,15 @@ import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.lib.drivers.WS2812Driver;
 
-import java.time.Instant;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
@@ -84,7 +80,7 @@ public class RobotContainer {
       new SequentialCommandGroup(
         new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.5),
         new ConditionalCommand(
-          new RunCommand(()-> elevator.setDistance(68), elevator).withTimeout(0.6),
+          new RunCommand(()-> elevator.setDistance(64), elevator).withTimeout(0.6),
           new RunCommand(()-> elevator.setDistance(70), elevator).withTimeout(0.6),
           RobotState::isCone
           ),
@@ -99,7 +95,7 @@ public class RobotContainer {
         new InstantCommand(()->RobotState.setIntakeIdle()),
         new ElevatorHome(elevator).withTimeout(0.9),
         new InstantCommand(()-> elevator.stop(), elevator),
-        new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(1),
+        new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(0.7),
         new InstantCommand(()-> carriage.stop(), carriage)
       )
     );
@@ -137,24 +133,24 @@ public class RobotContainer {
    JoystickButton thirdLevel = new JoystickButton(driver, 4);
    thirdLevel.onTrue(
     new SequentialCommandGroup(
-      new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.5),
+      new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.6),
       new ConditionalCommand(
-        new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.9),
-        new RunCommand(()-> elevator.setDistance(105), elevator).withTimeout(0.9),
+        new RunCommand(()-> elevator.setDistance(113), elevator).withTimeout(0.8),
+        new RunCommand(()-> elevator.setDistance(105), elevator).withTimeout(0.7),
         RobotState::isCone
         ),
       new InstantCommand(()-> elevator.stop(), elevator),
       new ConditionalCommand(
-        new RunCommand(()-> carriage.setDegrees(28), carriage).withTimeout(0.5),
-        new RunCommand(()-> carriage.setDegrees(38), carriage).withTimeout(0.5),
+        new RunCommand(()-> carriage.setDegrees(40), carriage).withTimeout(0.5),
+        new RunCommand(()-> carriage.setDegrees(40), carriage).withTimeout(0.5),
         RobotState::isCone
       ),
       new InstantCommand(()-> carriage.stop(), carriage),
       new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
       new InstantCommand(()->RobotState.setIntakeIdle()),
-      new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(1),
+      new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.3),
       new InstantCommand(()-> carriage.stop(), carriage),
-      new ElevatorHome(elevator).withTimeout(0.9),
+      new ElevatorHome(elevator).withTimeout(0.8),
       new InstantCommand(()-> elevator.stop(), elevator),
       new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(1),
       new InstantCommand(()-> carriage.stop(), carriage)
@@ -273,7 +269,7 @@ public class RobotContainer {
       new InstantCommand(()-> carriage.stop()),
       new RunCommand(()->RobotState.setIntaking())
     )
-    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 78:100)).withTimeout(0.85))
+    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 80.5:100)).withTimeout(0.85))
     );
 
    intakeButton.whileFalse(

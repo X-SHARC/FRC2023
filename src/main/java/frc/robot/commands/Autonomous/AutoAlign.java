@@ -31,6 +31,7 @@ public class AutoAlign extends CommandBase {
 
   @Override
   public void initialize() {
+    LimelightHelpers.setCameraMode_Processor("limelight");
 
 
   }
@@ -41,14 +42,12 @@ public class AutoAlign extends CommandBase {
     lowerCone.updatePitch(LimelightHelpers.getTY("limelight"));
     double output = Constants.Swerve.kMaxSpeed * 1. * sidewaysController.calculate(LimelightHelpers.getTX("limelight"));
     double distance  = lowerCone.getDistance();
-    System.out.println(" Calculated Distance: " + distance);
     //systematic error is 13 centimeters
     
     if(Math.abs(swerve.getGyroDouble())>=3){
       swerve.drive(0, 0, rotation, false, true);
     }
     else if(Math.abs(LimelightHelpers.getTX("limelight"))>=4){
-      System.out.println("The value of PID Output: "  + output);
       swerve.drive(0, output, rotation, false,true);
     }
     else{
@@ -61,6 +60,7 @@ public class AutoAlign extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     swerve.stopModules();
+    LimelightHelpers.setCameraMode_Driver("limelight");
   }
 
   @Override
