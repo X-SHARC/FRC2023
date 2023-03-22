@@ -74,7 +74,8 @@ public class RobotContainer {
 
     JoystickButton elevatorpid2 = new JoystickButton(operator, 6);
     elevatorpid2.whileTrue(new RunCommand(()-> elevator.setDistance(10), elevator));
-    elevatorpid2.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
+    elevatorpid2.whileFalse(new RunCommand(()->
+    elevator.stop(), elevator));
 
     JoystickButton intakeUp = new JoystickButton(operator, 3);
     intakeUp.whileTrue(new RunCommand(()-> carriage.intakeUp(), carriage));
