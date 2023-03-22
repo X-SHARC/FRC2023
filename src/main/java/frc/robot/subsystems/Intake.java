@@ -9,14 +9,11 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.RobotState;
 
 public class Intake extends SubsystemBase {
-  WPI_TalonSRX intakeMotor = new WPI_TalonSRX(Constants.INTAKE_ID);
+  WPI_TalonSRX intakeMotor = new WPI_TalonSRX(1);
   
   public Intake() {
     intakeMotor.setInverted(true);
@@ -57,11 +54,9 @@ public class Intake extends SubsystemBase {
 
   public void stop(){
     intakeMotor.set(ControlMode.PercentOutput, 0.0);
-    RobotState.setIntakeIdle();
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putString("Current Game Piece:", RobotState.currentGamePiece.toString());
   }
 }

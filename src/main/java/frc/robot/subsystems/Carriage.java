@@ -7,18 +7,15 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.RobotState;
 
 public class Carriage extends SubsystemBase {
-  private WPI_TalonFX carriageMotor = new WPI_TalonFX(Constants.CARRIAGE_ID, "canavar");
+  WPI_TalonFX carriageMotor = new WPI_TalonFX(3, "canavar");
   private DutyCycleEncoder encoder = new DutyCycleEncoder(2);
   
   private double kP = 0.016;
@@ -40,6 +37,7 @@ public class Carriage extends SubsystemBase {
   double GearRatio1 = 1/121.905;
   private double offset = 105.2;
 
+  /** Creates a new Carriage. */
   public Carriage() {
     encoder.setConnectedFrequencyThreshold(200);
     carriageMotor.configFactoryDefault();
@@ -48,37 +46,18 @@ public class Carriage extends SubsystemBase {
     carriagePID.setTolerance(1.5);
   }
 
-  public void resetCarriageEncoder(){
-    carriageMotor.setSelectedSensorPosition(0);
-  }
-
-  public double getIntegratedDegrees(){
-    angle = carriageMotor.getSelectedSensorPosition() * GearRatio1;
-    angle = (angle/2048.0) * 360;
-    return angle;
-  }
-
-  public void setSetpoint(double setpoint){
-    this.setpoint = setpoint;
+  public void resetEncoder(){
+    encoder.reset();
   }
 
   public double getDegrees(){
     return Math.IEEEremainder((encoder.get() * 360. + offset), 360.);
-  }
-
-  public void resetEncoder(){
-    encoder.reset();
   }
   
   public void setDegrees(double setpoint){
     double PIDOutput =  MathUtil.clamp(carriagePID.calculate(getDegrees(), setpoint), -0.6, 0.6);
     carriageMotor.set(ControlMode.PercentOutput, (PIDOutput * 1));
   } 
-
-  public double getRadians(){
-    angle = carriageMotor.getSelectedSensorPosition();
-    angle = (angle/2048.0) * 2 * Math.PI * GearRatio1;
-    return angle;}
 
   public void intakeUp(){
     carriageMotor.set(ControlMode.PercentOutput, 0.4);
@@ -92,40 +71,8 @@ public class Carriage extends SubsystemBase {
     carriageMotor.set(ControlMode.PercentOutput, 0.0);
   }
 
-  public boolean isAtSetpoint(){
-    return carriagePID.atSetpoint();
-  }
-
-  public void carriageHome(double speed){
-    setSetpoint(5);
-  }
-
-  public boolean getCarriageHome(){
-    return (getDegrees()<=5);
-  }
-
-  public boolean isAlive(){
-    return encoder.isConnected();
-  }
-
   @Override
   public void periodic() {
-    boolean isAlive = isAlive();
-    RobotState.setCarriageEncoder(isAlive);
-
-    if(isAlive && RobotState.getCarriage() == RobotState.CarriageState.AUTO){
-      if(setpoint>=3 && setpoint<=115){
-        setDegrees(setpoint);
-      } 
-    }
-    else if(!isAlive && RobotState.getCarriage() == RobotState.CarriageState.AUTO){
-      stop();
-    }
-
-    SmartDashboard.putBoolean("Carriage Is Alive", isAlive());
-    SmartDashboard.putNumber("Carriage Angle", getDegrees());
-    SmartDashboard.putNumber("Carriage PID Position Error", carriagePID.getPositionError());
-    SmartDashboard.putNumber("Carriage Setpoint ", carriagePID.getSetpoint());
+    // This method will be called once per scheduler run
   }
-
 }

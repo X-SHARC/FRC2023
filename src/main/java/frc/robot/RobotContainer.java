@@ -1,243 +1,119 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot;
 
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Autos;
+import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Carriage;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Swerve;
-import frc.robot.RobotState.GamePiece;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.Autonomous.AutoAlign;
-import frc.robot.commands.Elevator.ElevatorCommand;
-import frc.robot.commands.Elevator.ElevatorDownCommand;
-import frc.robot.commands.Elevator.ElevatorHome;
-import frc.robot.commands.Elevator.ElevatorUpCommand;
-import frc.robot.commands.Swerve.SwerveDriveCommand;
-import frc.robot.lib.drivers.WS2812Driver;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+/**
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * subsystems, commands, and trigger mappings) should be declared here.
+ */
 public class RobotContainer {
+  // The robot's subsystems and commands are defined here...
+  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  Elevator elevator = new Elevator();
+  Carriage carriage = new Carriage();
+  Intake intake = new Intake();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final static XboxController driver = new XboxController(0);
-  //private final static Joystick driver = new Joystick(0);
-  private final static Joystick operator = new Joystick(1);
+  private final CommandXboxController m_driverController =
+      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+      private final static Joystick operator = new Joystick(1);
 
-  //Subsystems
-  Swerve swerveDrivetrain = new Swerve(true);
-  Elevator elevator = new Elevator();
-  Intake intake = new Intake();
-  Carriage carriage = new Carriage();
-  WS2812Driver leftLED = new WS2812Driver(0, 44);
-  
-
-  //Commands 
-  SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
-  ElevatorCommand elevatorCommand = new ElevatorCommand(elevator, 75);
-  ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevator);
-  ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevator);
-  ElevatorHome elevatorHome = new ElevatorHome(elevator);
-  IntakeCommand intakeCommand = new IntakeCommand(intake,operator);
-  SharcTrajectory trajectoryGenerator = new SharcTrajectory();
-
-  PowerDistribution pdh = new PowerDistribution();
-  AutoAlign autoAlign = new AutoAlign(swerveDrivetrain);
-
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Configure the trigger bindings
     configureBindings();
-    DriverStation.silenceJoystickConnectionWarning(true);
   }
 
+  /**
+   * Use this method to define your trigger->command mappings. Triggers can be created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * predicate, or via the named factories in {@link
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * joysticks}.
+   */
   private void configureBindings() {
-    swerveDrivetrain.setDefaultCommand(driveCommand);
-    JoystickButton elevator1 = new JoystickButton(operator, 8);
-    elevator1.whileTrue(elevatorUpCommand);
+    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    new Trigger(m_exampleSubsystem::exampleCondition)
+        .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    JoystickButton elevator2 = new JoystickButton(operator,7);
-    elevator2.whileTrue(elevatorDownCommand);
+    JoystickButton elevatorUp = new JoystickButton(operator, 1);
+    elevatorUp.whileTrue(new RunCommand(()-> elevator.elevatorUp(), elevator));
+    elevatorUp.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
 
-    JoystickButton elevatorhome = new JoystickButton(driver,7);
-    elevatorhome.whileTrue(elevatorHome); 
+    JoystickButton elevatorDown = new JoystickButton(operator, 2);
+    elevatorDown.whileTrue
+    (new RunCommand(()-> elevator.elevatorDown(), elevator));
+    elevatorUp.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
 
-    JoystickButton carriagepid = new JoystickButton(operator, 5);
-   carriagepid.onTrue(new InstantCommand(()-> carriage.setSetpoint(30))); 
-  
-   // denenecek + button atama kontrol
-   JoystickButton carriagecommand = new JoystickButton(operator, 3);
-   carriagecommand.onTrue(new InstantCommand(()-> carriage.setSetpoint(5)));
+    JoystickButton elevatorpid = new JoystickButton(operator, 5);
+    elevatorpid.whileTrue(new RunCommand(()-> elevator.setDistance(100), elevator));
+    elevatorpid.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
 
-   JoystickButton secondLevel = new JoystickButton(driver, 2);
-   secondLevel.onTrue(
-    new SequentialCommandGroup(
-      //new RunCommand(()->carriage.setSetpoint(15), carriage).withTimeout(0.5),
-      new ConditionalCommand(
-        new ElevatorCommand(elevator, 60).withTimeout(0.9),
-        new ElevatorCommand(elevator, 62).withTimeout(0.9),
-        RobotState::isCone
-      )
-        .alongWith(
-          new ConditionalCommand(
-            new InstantCommand(()->carriage.setSetpoint(38)),
-            new InstantCommand(()->carriage.setSetpoint(50)),
-            RobotState::isCone
-          )),
-      new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
-      new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
-      new ElevatorHome(elevator).withTimeout(1.8)
-      .alongWith(new InstantCommand(()->carriage.setSetpoint(15)))
-      ).beforeStarting(
-        Commands.parallel(
-        new InstantCommand(()->carriage.setSetpoint(20)),
-        new WaitCommand(0.4)
+    JoystickButton elevatorpid2 = new JoystickButton(operator, 6);
+    elevatorpid2.whileTrue(new RunCommand(()-> elevator.setDistance(10), elevator));
+    elevatorpid2.whileFalse(new RunCommand(()-> elevator.stop(), elevator));
+
+    JoystickButton intakeUp = new JoystickButton(operator, 3);
+    intakeUp.whileTrue(new RunCommand(()-> carriage.intakeUp(), carriage));
+    intakeUp.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
+
+    JoystickButton intakeDown = new JoystickButton(operator, 4);
+    intakeDown.whileTrue(new RunCommand(()-> carriage.intakeDown(), carriage));
+    intakeDown.whileFalse(new RunCommand(()-> carriage.stop(), carriage));
+
+   
+    JoystickButton all = new JoystickButton(operator, 7);
+    all.whileTrue(
+      new SequentialCommandGroup(
+        new RunCommand(()-> elevator.setDistance(100), elevator).withTimeout(1)
+        .alongWith(new RunCommand(()-> carriage.setDegrees(48), carriage).withTimeout(0.5)),
+        new InstantCommand(()-> carriage.stop(), carriage),
+        new RunCommand(()-> intake.ejectCube(), intake).withTimeout(0.3),
+        new InstantCommand(()-> intake.stop(), intake),
+        new RunCommand(()-> elevator.setDistance(20), elevator).withTimeout(1),
+        new RunCommand(()-> elevator.setDistance(100), elevator).withTimeout(1),
+        new RunCommand(()-> elevator.setDistance(20), elevator).withTimeout(1),
+        new InstantCommand(()-> elevator.stop(), elevator)
         )
-        )
-   );
-
-   secondLevel.onFalse(new RunCommand(()->elevator.stop()));
-
-   JoystickButton thirdLevel = new JoystickButton(driver, 4);
-   thirdLevel.onTrue(
-    new SequentialCommandGroup(
-      //new RunCommand(()->carriage.setSetpoint(15), carriage).withTimeout(0.5),
-      new ConditionalCommand(
-        new ElevatorCommand(elevator, 114).withTimeout(0.9),
-        new ElevatorCommand(elevator, 110).withTimeout(0.9),
-        RobotState::isCone 
-      )
-      .alongWith(
-        new ConditionalCommand(
-          new InstantCommand(()->carriage.setSetpoint(48)),
-          new InstantCommand(()->carriage.setSetpoint(38)),
-          RobotState::isCone
-        )),
-      new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
-      new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
-      new ElevatorHome(elevator).withTimeout(1.8)
-      .alongWith(new InstantCommand(()->carriage.setSetpoint(15)))
-    )
-    .beforeStarting(
-      Commands.parallel(
-       new InstantCommand(()->carriage.setSetpoint(20)),
-       new WaitCommand(0.4)
-       )
-      )
-   );
-
-   thirdLevel.onFalse(new RunCommand(()->elevator.stop()));
-
-/* DRIVER AUTOSCORE BUTTONS -- DEPRECATED
-   JoystickButton secondLevelcone = new JoystickButton(driver, 1);
-   secondLevelcone.onTrue(
-    new SequentialCommandGroup(
-      new InstantCommand(()->carriage.setSetpoint(15)),
-      new ElevatorCommand(elevator, 60).withTimeout(1)
-      .alongWith(new InstantCommand(()->carriage.setSetpoint(38))),
-      new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
-      new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
-      new ElevatorHome(elevator).withTimeout(1.8)
-      .alongWith(new InstantCommand(()->carriage.setSetpoint(5)))
-    ).beforeStarting(()->carriage.setSetpoint(15))
-   );
-   secondLevelcone.onFalse(new RunCommand(()->elevator.stop()));
-
-   JoystickButton secondLevelcube = new JoystickButton(driver, 2);
-   secondLevelcube.onTrue(
-    new SequentialCommandGroup(
-      new InstantCommand(()->carriage.setSetpoint(38)),
-      new ElevatorCommand(elevator, 75).withTimeout(1)
-      .alongWith(new InstantCommand(()->carriage.setSetpoint(68))),
-      new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
-      new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
-      new ElevatorHome(elevator).withTimeout(1.8)
-      .alongWith(new InstantCommand(()->carriage.setSetpoint(5)))
-    ).beforeStarting(()->carriage.setSetpoint(15))
-   );
-
-   secondLevelcone.onFalse(new RunCommand(()->elevator.stop()));
-
-   JoystickButton thirdLevelcube = new JoystickButton(driver, 3);
-   thirdLevelcube.onTrue(
-    new SequentialCommandGroup(
-      new InstantCommand(()->carriage.setSetpoint(15)),
-      new ElevatorCommand(elevator, 101).withTimeout(1)
-      .alongWith(new InstantCommand(()->carriage.setSetpoint(32))),
-      new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
-      new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
-      new ElevatorHome(elevator).withTimeout(1.8)
-      .alongWith(new InstantCommand(()->carriage.setSetpoint(5)))
-    ).beforeStarting(()->carriage.setSetpoint(15))
-   );
-
-   thirdLevelcube.onFalse(new RunCommand(()->elevator.stop()));
- 
-   JoystickButton thirdLevelcone = new JoystickButton(driver, 4);
-   thirdLevelcone.onTrue(
-    new SequentialCommandGroup(
-      new InstantCommand(()->carriage.setSetpoint(48)),
-      new ElevatorCommand(elevator, 112).withTimeout(1)
-      .alongWith(new InstantCommand(()->carriage.setSetpoint(36))),
-      new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.3),
-      new InstantCommand(()->RobotState.setIntakeIdle()),
-      new ElevatorHome(elevator).withTimeout(1.8)
-      .alongWith(new InstantCommand(()->carriage.setSetpoint(5)))
-      ).beforeStarting(()->carriage.setSetpoint(15))
-   );
-   thirdLevelcone.onFalse(new RunCommand(()->elevator.stop())); */
-   /*JoystickButton takeFromStation = new JoystickButton(operator, 10);
-   takeFromStation.onTrue(
-    new SequentialCommandGroup(
-      new InstantCommand(()->carriage.setSetpoint(15)),
-      new ElevatorCommand(elevator, 110)
-      .alongWith(new InstantCommand(()->carriage.setSetpoint(60)))
-      .raceWith(new InstantCommand(()->RobotState.setIntaking())).withTimeout(1)
-      .andThen(new InstantCommand(()->carriage.setSetpoint(15)))
-      .andThen(new ElevatorHome(elevator))
-      )
-   );
-   takeFromStation.onFalse(new InstantCommand(()->RobotState.setIntakeIdle()));
-*/
-   JoystickButton turn = new JoystickButton(driver, 5);
-   turn.whileTrue(autoAlign);
-
-   //TODO: Change this button
-   JoystickButton encoderReset = new JoystickButton(operator, 12);
-   encoderReset.onTrue(new RunCommand(() -> elevator.resetEncoder(), elevator));
-
-   JoystickButton intakeButton = new JoystickButton(operator, 2);
-   intakeButton.whileTrue(
-    new RunCommand(()->RobotState.setIntaking())
-    .beforeStarting(new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece()==GamePiece.CONE? 78:100)))
     );
 
-   intakeButton.whileFalse(
-    new RunCommand(()-> RobotState.setIntakeIdle())
-    .beforeStarting(new InstantCommand(()->carriage.setSetpoint(3)))
-    );
-
-   JoystickButton ejectButton = new JoystickButton(operator, 1);
-   ejectButton.whileTrue(new RunCommand(()->RobotState.setEjecting()).beforeStarting(
-    new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece() == GamePiece.CONE ? 50:75 ))
-   ));
-   ejectButton.whileFalse(
-    new RunCommand(()-> RobotState.setIntakeIdle())
-    .beforeStarting(new RunCommand(()->carriage.setSetpoint(3)).withTimeout(0.2))
-    );
-
-   intake.setDefaultCommand(intakeCommand);
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // cancelling on release.
+    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
-  
 
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
   public Command getAutonomousCommand() {
-    return trajectoryGenerator.getLeftTwoCubeWithDock(swerveDrivetrain, elevator, intake, carriage);
+    // An example command will be run in autonomous
+    return Autos.exampleAuto(m_exampleSubsystem);
   }
 }
+
