@@ -85,14 +85,16 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setDistance(double setpoint){
+      double distance = getDistance();
 
       PIDOutput = MathUtil.clamp(
-        elevatorPID.calculate(getDistance(), setpoint),
-        -0.9,
-        0.9
-      );
-      
-      elevatorMasterMotor.set(ControlMode.PercentOutput, ((PIDOutput*12.)/RobotController.getBatteryVoltage()));
+          elevatorPID.calculate(distance, setpoint),
+          -0.9,
+          0.9
+        );
+        elevatorMasterMotor.set(ControlMode.PercentOutput, ((PIDOutput*12.)/RobotController.getBatteryVoltage()));
+        
+        //if(Math.abs(distance-setpoint)<3) stop();
     }
 
     public void elevatorUp(){
@@ -158,6 +160,8 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
 
     SmartDashboard.putNumber("PIDOutput", PIDOutput);
+    SmartDashboard.putNumber("Elevator PID Error", elevatorPID.getPositionError());
+    SmartDashboard.putNumber("Elevator PID Setpoint", elevatorPID.getSetpoint());
     SmartDashboard.putNumber("Elevator Distance:", getDistance());
     SmartDashboard.putData("Bottom Limit Switch", bottomLimitSwitch);
 

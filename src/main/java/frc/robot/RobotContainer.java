@@ -13,6 +13,9 @@ import frc.robot.commands.Elevator.ElevatorHome;
 import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.lib.drivers.WS2812Driver;
+
+import java.time.Instant;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -77,35 +80,87 @@ public class RobotContainer {
    carriagecommand.onTrue(new InstantCommand(()-> carriage.setSetpoint(5)));
 
    JoystickButton secondLevel = new JoystickButton(driver, 2);
+    secondLevel.onTrue(
+      new SequentialCommandGroup(
+        new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.5),
+        new ConditionalCommand(
+          new RunCommand(()-> elevator.setDistance(68), elevator).withTimeout(0.6),
+          new RunCommand(()-> elevator.setDistance(70), elevator).withTimeout(0.6),
+          RobotState::isCone
+          ),
+        new InstantCommand(()-> elevator.stop(), elevator),
+        new ConditionalCommand(
+          new RunCommand(()-> carriage.setDegrees(38), carriage).withTimeout(0.5),
+          new RunCommand(()-> carriage.setDegrees(48), carriage).withTimeout(0.5),
+          RobotState::isCone
+        ),
+        new InstantCommand(()-> carriage.stop(), carriage),
+        new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
+        new InstantCommand(()->RobotState.setIntakeIdle()),
+        new ElevatorHome(elevator).withTimeout(0.9),
+        new InstantCommand(()-> elevator.stop(), elevator),
+        new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(1),
+        new InstantCommand(()-> carriage.stop(), carriage)
+      )
+    );
+
+   /* 
    secondLevel.onTrue(
     new SequentialCommandGroup(
       //new RunCommand(()->carriage.setSetpoint(15), carriage).withTimeout(0.5),
       new ConditionalCommand(
-        new ElevatorCommand(elevator, 60).withTimeout(0.9),
-        new ElevatorCommand(elevator, 62).withTimeout(0.9),
+        new RunCommand(()-> elevator.setDistance(60), elevator).withTimeout(1),
+        new RunCommand(()-> elevator.setDistance(62), elevator).withTimeout(1),
         RobotState::isCone
       )
         .alongWith(
           new ConditionalCommand(
-            new InstantCommand(()->carriage.setSetpoint(38)),
-            new InstantCommand(()->carriage.setSetpoint(50)),
+            new RunCommand(()-> carriage.setDegrees(38), carriage).withTimeout(0.5),
+            new RunCommand(()-> carriage.setDegrees(48), carriage).withTimeout(0.5),
             RobotState::isCone
           )),
       new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
       new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
       new ElevatorHome(elevator).withTimeout(1.8)
-      .alongWith(new InstantCommand(()->carriage.setSetpoint(15)))
+      .alongWith(new RunCommand(()-> carriage.setDegrees(10), carriage).withTimeout(0.5))
       ).beforeStarting(
-        Commands.parallel(
-        new InstantCommand(()->carriage.setSetpoint(20)),
-        new WaitCommand(0.4)
+        new SequentialCommandGroup(
+          new RunCommand(()-> carriage.setDegrees(20), carriage).withTimeout(0.5),
+          new InstantCommand(()-> carriage.stop(), carriage),
+          new WaitCommand(0.4)
         )
         )
-   );
+   ); */
 
-   secondLevel.onFalse(new RunCommand(()->elevator.stop()));
+   // secondLevel.onFalse(new RunCommand(()->elevator.stop()));
 
    JoystickButton thirdLevel = new JoystickButton(driver, 4);
+   thirdLevel.onTrue(
+    new SequentialCommandGroup(
+      new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.5),
+      new ConditionalCommand(
+        new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.9),
+        new RunCommand(()-> elevator.setDistance(105), elevator).withTimeout(0.9),
+        RobotState::isCone
+        ),
+      new InstantCommand(()-> elevator.stop(), elevator),
+      new ConditionalCommand(
+        new RunCommand(()-> carriage.setDegrees(28), carriage).withTimeout(0.5),
+        new RunCommand(()-> carriage.setDegrees(38), carriage).withTimeout(0.5),
+        RobotState::isCone
+      ),
+      new InstantCommand(()-> carriage.stop(), carriage),
+      new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
+      new InstantCommand(()->RobotState.setIntakeIdle()),
+      new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(1),
+      new InstantCommand(()-> carriage.stop(), carriage),
+      new ElevatorHome(elevator).withTimeout(0.9),
+      new InstantCommand(()-> elevator.stop(), elevator),
+      new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(1),
+      new InstantCommand(()-> carriage.stop(), carriage)
+    )
+   );
+   /*
    thirdLevel.onTrue(
     new SequentialCommandGroup(
       //new RunCommand(()->carriage.setSetpoint(15), carriage).withTimeout(0.5),
@@ -132,8 +187,7 @@ public class RobotContainer {
        )
       )
    );
-
-   thirdLevel.onFalse(new RunCommand(()->elevator.stop()));
+    */
 
 /* DRIVER AUTOSCORE BUTTONS -- DEPRECATED
    JoystickButton secondLevelcone = new JoystickButton(driver, 1);
@@ -215,23 +269,44 @@ public class RobotContainer {
 
    JoystickButton intakeButton = new JoystickButton(operator, 2);
    intakeButton.whileTrue(
-    new RunCommand(()->RobotState.setIntaking())
-    .beforeStarting(new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece()==GamePiece.CONE? 78:100)))
+    new SequentialCommandGroup(
+      new InstantCommand(()-> carriage.stop()),
+      new RunCommand(()->RobotState.setIntaking())
+    )
+    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 78:100)).withTimeout(0.85))
     );
 
    intakeButton.whileFalse(
-    new RunCommand(()-> RobotState.setIntakeIdle())
-    .beforeStarting(new InstantCommand(()->carriage.setSetpoint(3)))
+    new SequentialCommandGroup(
+      new InstantCommand(()-> RobotState.setIntakeIdle()),
+      new RunCommand(()->carriage.setDegrees(3), carriage).withTimeout(0.5),
+      new InstantCommand(()-> carriage.stop(), carriage)
+    )
     );
 
    JoystickButton ejectButton = new JoystickButton(operator, 1);
-   ejectButton.whileTrue(new RunCommand(()->RobotState.setEjecting()).beforeStarting(
-    new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece() == GamePiece.CONE ? 50:75 ))
+   ejectButton.whileTrue(
+    new SequentialCommandGroup(
+      new InstantCommand(()-> carriage.stop()),
+      new RunCommand(()->RobotState.setEjecting())
+    )
+   .beforeStarting(
+    new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece() == GamePiece.CONE ? 50:75 )).withTimeout(0.85)
    ));
+
    ejectButton.whileFalse(
-    new RunCommand(()-> RobotState.setIntakeIdle())
-    .beforeStarting(new RunCommand(()->carriage.setSetpoint(3)).withTimeout(0.2))
+    new SequentialCommandGroup(
+      new InstantCommand(()-> RobotState.setIntakeIdle()),
+      new InstantCommand(()-> carriage.stop()),
+      new RunCommand(()->carriage.setDegrees(3)).withTimeout(0.5))
+
     );
+
+    JoystickButton shootButton = new JoystickButton(operator, 6);
+    shootButton.whileTrue(new InstantCommand(()->RobotState.setShooting()));
+    shootButton.whileFalse(
+      new RunCommand(()-> RobotState.setIntakeIdle()));
+    
 
    intake.setDefaultCommand(intakeCommand);
   }

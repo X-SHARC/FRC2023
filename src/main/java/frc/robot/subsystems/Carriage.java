@@ -21,7 +21,7 @@ public class Carriage extends SubsystemBase {
   private WPI_TalonFX carriageMotor = new WPI_TalonFX(Constants.CARRIAGE_ID, "canavar");
   private DutyCycleEncoder encoder = new DutyCycleEncoder(2);
   
-  private double kP = 0.016;
+  private double kP = 0.018;
   private double kI = 0.0;
   private double kD = 0.0;
 
@@ -71,9 +71,21 @@ public class Carriage extends SubsystemBase {
   }
   
   public void setDegrees(double setpoint){
-    double PIDOutput =  MathUtil.clamp(carriagePID.calculate(getDegrees(), setpoint), -0.6, 0.6);
-    carriageMotor.set(ControlMode.PercentOutput, (PIDOutput * 1));
-  } 
+    
+    if(isAlive() && RobotState.getCarriage() == RobotState.CarriageState.AUTO){ 
+        double currAngle = getDegrees();
+        if(currAngle<=115){
+          double PIDOutput =  MathUtil.clamp(carriagePID.calculate(currAngle, setpoint), -0.6, 0.6);
+          carriageMotor.set(ControlMode.PercentOutput, (PIDOutput * 1));
+        } 
+        else if(currAngle>115) carriageMotor.set(ControlMode.PercentOutput, -0.1);
+        else stop();
+      
+    }
+    else stop();
+
+    }
+    
 
   public double getRadians(){
     angle = carriageMotor.getSelectedSensorPosition();
@@ -113,14 +125,7 @@ public class Carriage extends SubsystemBase {
     boolean isAlive = isAlive();
     RobotState.setCarriageEncoder(isAlive);
 
-    if(isAlive && RobotState.getCarriage() == RobotState.CarriageState.AUTO){
-      if(setpoint>=3 && setpoint<=115){
-        setDegrees(setpoint);
-      } 
-    }
-    else if(!isAlive && RobotState.getCarriage() == RobotState.CarriageState.AUTO){
-      stop();
-    }
+  
 
     SmartDashboard.putBoolean("Carriage Is Alive", isAlive());
     SmartDashboard.putNumber("Carriage Angle", getDegrees());
