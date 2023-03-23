@@ -105,7 +105,7 @@ public class RobotContainer {
     );
 
    JoystickButton secondLevel = new JoystickButton(driver, 2);
-    secondLevel.onTrue(
+    secondLevel.whileTrue(
       new SequentialCommandGroup(
         new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.5),
         new ConditionalCommand(
@@ -120,6 +120,17 @@ public class RobotContainer {
           RobotState::isCone
         ),
         new InstantCommand(()-> carriage.stop(), carriage),
+        new ConditionalCommand(
+          new RunCommand(()-> elevator.setDistance(64), elevator).withTimeout(0.6),
+          new RunCommand(()-> elevator.setDistance(70), elevator).withTimeout(0.6),
+          RobotState::isCone
+          )
+        )
+    );
+    secondLevel.onFalse(
+      new SequentialCommandGroup(
+        new InstantCommand(()-> carriage.stop(), carriage),
+        new InstantCommand(()-> elevator.stop(), elevator),
         new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
         new InstantCommand(()->RobotState.setIntakeIdle()),
         new ElevatorHome(elevator).withTimeout(0.9),
@@ -160,7 +171,7 @@ public class RobotContainer {
    // secondLevel.onFalse(new RunCommand(()->elevator.stop()));
 
    JoystickButton thirdLevel = new JoystickButton(driver, 4);
-   thirdLevel.onTrue(
+   thirdLevel.whileTrue(
     new SequentialCommandGroup(
       new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.6),
       new ConditionalCommand(
@@ -175,6 +186,17 @@ public class RobotContainer {
         RobotState::isCone
       ),
       new InstantCommand(()-> carriage.stop(), carriage),
+      new ConditionalCommand(
+        new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
+        new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.7),
+        RobotState::isCone
+        )
+    )
+   );
+
+   thirdLevel.onFalse(
+    new SequentialCommandGroup(
+      new InstantCommand(()-> elevator.stop(), elevator),
       new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
       new InstantCommand(()->RobotState.setIntakeIdle()),
       new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.3),
