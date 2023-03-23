@@ -4,9 +4,9 @@
 
 package frc.robot.commands.Swerve;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -15,9 +15,8 @@ import frc.robot.RobotState;
 import frc.robot.subsystems.Swerve;
 
 public class SwerveDriveCommand extends CommandBase {
-  XboxController joystick;
+  PS4Controller joystick;
   Swerve swerveSubsystem;
-  Joystick driver;
 
   private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(10);
   private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(10);
@@ -25,16 +24,9 @@ public class SwerveDriveCommand extends CommandBase {
 
   double scale = 1;
 
-    public SwerveDriveCommand(Swerve sw, XboxController joystick) {
+    public SwerveDriveCommand(Swerve sw, PS4Controller driver){
       this.swerveSubsystem = sw;
-      this.joystick = joystick;
-      addRequirements(swerveSubsystem);
-    }
-
-
-    public SwerveDriveCommand(Swerve sw, Joystick driver){
-      this.swerveSubsystem = sw;
-      this.driver = driver;
+      this.joystick = driver;
 
       addRequirements(swerveSubsystem);
     }
@@ -46,7 +38,7 @@ public class SwerveDriveCommand extends CommandBase {
   @Override
   public void execute() {
     if(RobotState.isElevated() || joystick.getRawButton(6)){
-      scale = 0.38;
+      scale = 0.15;
     }
     else scale = 1;
 
@@ -71,7 +63,7 @@ public class SwerveDriveCommand extends CommandBase {
       * Constants.Swerve.kMaxSpeed * scale;
      
     double rot = -rotLimiter.calculate(
-      (Math.abs(joystick.getRawAxis(4)) < 0.1) ? 0 : joystick.getRawAxis(4))
+      (Math.abs(joystick.getRawAxis(2)) < 0.1) ? 0 : joystick.getRawAxis(2))
       * Constants.Swerve.kMaxAngularSpeed * scale;
     
     if(!RobotState.isBlueAlliance()){

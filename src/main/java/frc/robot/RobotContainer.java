@@ -16,6 +16,7 @@ import frc.robot.lib.drivers.WS2812Driver;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,11 +25,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final static XboxController driver = new XboxController(0);
+  private final static PS4Controller driver = new PS4Controller(0);
   //private final static Joystick driver = new Joystick(0);
   private final static Joystick operator = new Joystick(1);
 
@@ -75,6 +77,33 @@ public class RobotContainer {
    JoystickButton carriagecommand = new JoystickButton(operator, 3);
    carriagecommand.onTrue(new InstantCommand(()-> carriage.setSetpoint(5)));
 
+   Trigger hpStationTrigger = new Trigger(
+    ()-> driver.getR2Axis()>0.5
+   );
+
+    hpStationTrigger.whileTrue(
+      new SequentialCommandGroup(
+        new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.5),
+        new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
+        new InstantCommand(()-> elevator.stop(), elevator),
+        new RunCommand(()-> carriage.setDegrees(81.5), carriage).withTimeout(0.6),
+        new InstantCommand(()-> carriage.stop(), carriage),
+        new RunCommand(()-> RobotState.setIntaking())
+      )
+    );
+
+    hpStationTrigger.onFalse(
+      new SequentialCommandGroup(
+        new InstantCommand(()->RobotState.setIntakeIdle()),
+        new RunCommand(()-> carriage.setDegrees(45), carriage).withTimeout(0.6),
+        new InstantCommand(()-> carriage.stop(), carriage),
+        new ElevatorHome(elevator).withTimeout(0.9),
+        new InstantCommand(()-> elevator.stop(), elevator),
+        new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(0.7),
+        new InstantCommand(()-> carriage.stop(), carriage)
+      )
+    );
+
    JoystickButton secondLevel = new JoystickButton(driver, 2);
     secondLevel.onTrue(
       new SequentialCommandGroup(
@@ -86,7 +115,7 @@ public class RobotContainer {
           ),
         new InstantCommand(()-> elevator.stop(), elevator),
         new ConditionalCommand(
-          new RunCommand(()-> carriage.setDegrees(38), carriage).withTimeout(0.5),
+          new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.5),
           new RunCommand(()-> carriage.setDegrees(48), carriage).withTimeout(0.5),
           RobotState::isCone
         ),
@@ -135,14 +164,14 @@ public class RobotContainer {
     new SequentialCommandGroup(
       new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.6),
       new ConditionalCommand(
-        new RunCommand(()-> elevator.setDistance(113), elevator).withTimeout(0.8),
-        new RunCommand(()-> elevator.setDistance(105), elevator).withTimeout(0.7),
+        new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
+        new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.7),
         RobotState::isCone
         ),
       new InstantCommand(()-> elevator.stop(), elevator),
       new ConditionalCommand(
         new RunCommand(()-> carriage.setDegrees(40), carriage).withTimeout(0.5),
-        new RunCommand(()-> carriage.setDegrees(40), carriage).withTimeout(0.5),
+        new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.5),
         RobotState::isCone
       ),
       new InstantCommand(()-> carriage.stop(), carriage),
@@ -261,7 +290,7 @@ public class RobotContainer {
 
    //TODO: Change this button
    JoystickButton encoderReset = new JoystickButton(operator, 12);
-   encoderReset.onTrue(new RunCommand(() -> elevator.resetEncoder(), elevator));
+   //encoderReset.onTrue(new RunCommand(() -> elevator.resetEncoder(), elevator));
 
    JoystickButton intakeButton = new JoystickButton(operator, 2);
    intakeButton.whileTrue(
@@ -269,7 +298,7 @@ public class RobotContainer {
       new InstantCommand(()-> carriage.stop()),
       new RunCommand(()->RobotState.setIntaking())
     )
-    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 80.5:100)).withTimeout(0.85))
+    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 80.5:100)).withTimeout(0.78))
     );
 
    intakeButton.whileFalse(
@@ -287,14 +316,14 @@ public class RobotContainer {
       new RunCommand(()->RobotState.setEjecting())
     )
    .beforeStarting(
-    new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece() == GamePiece.CONE ? 50:75 )).withTimeout(0.85)
+    new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece() == GamePiece.CONE ? 50:75 )).withTimeout(0.8)
    ));
 
    ejectButton.whileFalse(
     new SequentialCommandGroup(
       new InstantCommand(()-> RobotState.setIntakeIdle()),
       new InstantCommand(()-> carriage.stop()),
-      new RunCommand(()->carriage.setDegrees(3)).withTimeout(0.5))
+      new RunCommand(()->carriage.setDegrees(5)).withTimeout(0.5))
 
     );
 

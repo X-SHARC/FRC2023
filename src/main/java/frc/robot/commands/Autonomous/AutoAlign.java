@@ -50,8 +50,8 @@ public class AutoAlign extends CommandBase {
     else if(Math.abs(LimelightHelpers.getTX("limelight"))>=4){
       swerve.drive(0, output, rotation, false,true);
     }
-    else{
-      double distanceOutput = -distanceController.calculate(distance, 70)*Constants.Swerve.kMaxSpeed;
+    else{ //Changed the setpoint
+      double distanceOutput = -distanceController.calculate(distance, 60)*Constants.Swerve.kMaxSpeed;
       swerve.drive(distanceOutput, output, rotation, false,true);
 
     }
