@@ -135,7 +135,7 @@ public class RobotContainer {
         new InstantCommand(()-> elevator.stop(), elevator),
         new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
         new InstantCommand(()->RobotState.setIntakeIdle()),
-        new ElevatorHome(elevator).withTimeout(0.9),
+        new ElevatorHome(elevator).withTimeout(0.71),
         new InstantCommand(()-> elevator.stop(), elevator),
         new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(0.7),
         new InstantCommand(()-> carriage.stop(), carriage)
