@@ -86,7 +86,8 @@ public class SharcTrajectory {
         RobotState.setGamePiece(RobotState.GamePiece.CUBE);
         return new SequentialCommandGroup(
             new SequentialCommandGroup(
-                new RunCommand(()-> carriage.setDegrees(20), carriage).withTimeout(0.3),
+                new RunCommand(()-> carriage.setDegrees(28), carriage).withTimeout(0.5),
+                new InstantCommand(()-> carriage.stop(), carriage), 
                 new ConditionalCommand(
                   new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.8),
                   new RunCommand(()-> elevator.setDistance(104), elevator).withTimeout(0.7),
