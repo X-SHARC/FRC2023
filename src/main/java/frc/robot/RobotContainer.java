@@ -124,7 +124,9 @@ public class RobotContainer {
           new RunCommand(()-> elevator.setDistance(64), elevator).withTimeout(0.6),
           new RunCommand(()-> elevator.setDistance(70), elevator).withTimeout(0.6),
           RobotState::isCone
-          )
+          ),
+          new InstantCommand(()-> carriage.stop(), carriage),
+          new InstantCommand(()-> elevator.stop(), elevator)
         )
     );
     secondLevel.onFalse(
@@ -320,7 +322,7 @@ public class RobotContainer {
       new InstantCommand(()-> carriage.stop()),
       new RunCommand(()->RobotState.setIntaking())
     )
-    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 80.5:100)).withTimeout(0.78))
+    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 82:100)).withTimeout(0.78))
     );
 
    intakeButton.whileFalse(
