@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState.GamePiece;
 import frc.robot.commands.Elevator.ElevatorCommand;
 import frc.robot.commands.Elevator.ElevatorHome;
@@ -66,7 +67,7 @@ public class SharcTrajectory {
             new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(1),
             new InstantCommand(()-> carriage.stop(), carriage)
             ),
-            getControllerCommand(swerve, "LeftCube1", true, 3, 4).withTimeout(2.5),
+            getControllerCommand(swerve, "LeftCube1", true, 4, 3).withTimeout(2.67),
             new RunCommand(()->carriage.setDegrees(100)).withTimeout(0.6),
             new InstantCommand(()-> carriage.stop(), carriage),
             new RunCommand(()->RobotState.setIntaking())
@@ -75,7 +76,7 @@ public class SharcTrajectory {
             new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(1),
             new InstantCommand(()-> carriage.stop(), carriage),
             new InstantCommand(()->RobotState.setIntakeIdle()),
-            getControllerCommand(swerve, "LeftCube2", false, 3, 4).withTimeout(2.5),
+            getControllerCommand(swerve, "LeftCube2", false, 4, 3).withTimeout(2.5),
             new RunCommand(()->RobotState.setEjecting())
             .withTimeout(0.9),
             //.raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(1)),
@@ -112,13 +113,13 @@ public class SharcTrajectory {
               ),
             Commands.parallel(
                 new SequentialCommandGroup(
-                    getControllerCommand(swerve, "LeftCube1", true, 3, 4).withTimeout(2.5),
+                    getControllerCommand(swerve, "LeftCube1", true, 4, 3).withTimeout(2.67),
                     new RunCommand(()->carriage.setDegrees(100)).withTimeout(0.9),
                     new InstantCommand(()-> carriage.stop(), carriage),
                     new RunCommand(()->RobotState.setIntaking())
                     .withTimeout(0.5)
                     .alongWith(new RunCommand(()->swerve.stopModules()).withTimeout(0.1)),
-                    getControllerCommand(swerve, "LeftCube2", false, 3, 4).withTimeout(2.5)
+                    getControllerCommand(swerve, "LeftCube2", false, 4, 3).withTimeout(2.5)
                     .alongWith(
                         new SequentialCommandGroup(
                             new RunCommand(()->carriage.setDegrees(10), carriage).withTimeout(0.7),
@@ -160,7 +161,8 @@ public class SharcTrajectory {
 
         return new SequentialCommandGroup(
             new SequentialCommandGroup(
-            new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.5),
+            new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.55),
+            new InstantCommand(()-> carriage.stop(), carriage), 
             new ConditionalCommand(
                 new RunCommand(()-> elevator.setDistance(64), elevator).withTimeout(0.6),
                 new RunCommand(()-> elevator.setDistance(70), elevator).withTimeout(0.6),
@@ -177,39 +179,42 @@ public class SharcTrajectory {
             new InstantCommand(()->RobotState.setIntakeIdle()),
             new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(1),
             new InstantCommand(()-> carriage.stop(), carriage),
-            new ElevatorHome(elevator).withTimeout(0.9),
+            new ElevatorHome(elevator).withTimeout(0.71),
             new InstantCommand(()-> elevator.stop(), elevator),
             new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(1),
             new InstantCommand(()-> carriage.stop(), carriage)
             ),
             
             new SequentialCommandGroup(
-            getControllerCommand(swerve, "LeftCube1", true, 3, 4).withTimeout(2.5),
+            getControllerCommand(swerve, "LeftCube1", true, 4, 3).withTimeout(2.67),
             new RunCommand(()->carriage.setDegrees(100)).withTimeout(0.6),
             new InstantCommand(()-> carriage.stop(), carriage),
-            new RunCommand(()->RobotState.setIntaking())
-            .withTimeout(0.6),
-            //.raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(1)),
-            new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(1),
-            new InstantCommand(()-> carriage.stop(), carriage)
-            .withTimeout(0.6),
-            //.raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(1)),
+            new RunCommand(()->RobotState.setIntaking()).withTimeout(0.6),
+            new RunCommand(()-> carriage.setDegrees(10), carriage).withTimeout(1),
+            new InstantCommand(()-> carriage.stop(), carriage).withTimeout(0.6),
             new InstantCommand(()->RobotState.setIntakeIdle()),
-
-            getControllerCommand(swerve, "LeftShoot2", false, 3, 4).withTimeout(2.8),
+            getControllerCommand(swerve, "LeftShoot1", false, 4, 3).withTimeout(2.45)
+            .raceWith(
+                new SequentialCommandGroup(
+                    new WaitCommand(2),
+                    new RunCommand(()->RobotState.setShooting()).withTimeout(1)        
+                )),
+            new InstantCommand(()->RobotState.setIntakeIdle()),
+            getControllerCommand(swerve, "LeftShoot2", false, 4, 3).withTimeout(2.9),
             new RunCommand(()->carriage.setDegrees(100)).withTimeout(0.6),
             new InstantCommand(()-> carriage.stop(), carriage),
-            new RunCommand(()->RobotState.setIntaking())
-            .withTimeout(0.6),
-            //.raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(1)),
-            new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(1),
+            new RunCommand(()->RobotState.setIntaking()).withTimeout(0.6),
+            new RunCommand(()-> carriage.setDegrees(10), carriage).withTimeout(1),
             new InstantCommand(()-> carriage.stop(), carriage),
             new InstantCommand(()->RobotState.setIntakeIdle()),
 
-            getControllerCommand(swerve, "LeftShoot3", false, 3, 4).withTimeout(2.5),
-            new RunCommand(()->RobotState.setShooting())
-            .withTimeout(0.6),
-            //.raceWith(new RunCommand(()->swerve.stopModules()).withTimeout(1)),
+            getControllerCommand(swerve, "LeftShoot3", false, 4, 3).withTimeout(2.55)
+            .raceWith(
+                new SequentialCommandGroup(
+                    new WaitCommand(2.25),
+                    new RunCommand(()->RobotState.setShooting()).withTimeout(1)
+                    )
+                    ),
             new InstantCommand(()->RobotState.setIntakeIdle())
         ));
     }
@@ -217,7 +222,7 @@ public class SharcTrajectory {
     public Command getControllerCommand(Swerve swerve, String trajName, boolean isFirstTrajectory, double maxVel, double maxAccel) {
         
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, maxVel, maxAccel);
-        swerve.addTrajectoryToField2d(trajectory);
+        //swerve.addTrajectoryToField2d(trajectory);
 
         if(isFirstTrajectory) swerve.resetPoseEstimator(trajectory.getInitialHolonomicPose());
 

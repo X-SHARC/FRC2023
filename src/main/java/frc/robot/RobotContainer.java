@@ -346,10 +346,9 @@ public class RobotContainer {
    ejectButton.whileFalse(
     new SequentialCommandGroup(
       new InstantCommand(()-> RobotState.setIntakeIdle()),
-      new RunCommand(()->carriage.setDegrees(5)).withTimeout(0.5)),
+      new RunCommand(()->carriage.setDegrees(5)).withTimeout(0.5),
       new InstantCommand(()-> carriage.stop())
-
-    );
+   ));
 
     JoystickButton shootButton = new JoystickButton(operator, 6);
     shootButton.whileTrue(new InstantCommand(()->RobotState.setShooting()));
@@ -362,6 +361,6 @@ public class RobotContainer {
   
 
   public Command getAutonomousCommand() {
-    return trajectoryGenerator.getLeftTwoCubeWithDock(swerveDrivetrain, elevator, intake, carriage);
+    return trajectoryGenerator.getLeft3Cube(swerveDrivetrain, elevator, carriage, intake);
   }
 }
