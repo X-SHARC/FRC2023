@@ -16,6 +16,6 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-    tx = LimelightHelpers.getTX(getName());
+    //tx = LimelightHelpers.getTX(getName());
   }
 }

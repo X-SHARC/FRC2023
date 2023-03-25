@@ -346,8 +346,8 @@ public class RobotContainer {
    ejectButton.whileFalse(
     new SequentialCommandGroup(
       new InstantCommand(()-> RobotState.setIntakeIdle()),
-      new InstantCommand(()-> carriage.stop()),
-      new RunCommand(()->carriage.setDegrees(5)).withTimeout(0.5))
+      new RunCommand(()->carriage.setDegrees(5)).withTimeout(0.5)),
+      new InstantCommand(()-> carriage.stop())
 
     );
 

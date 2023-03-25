@@ -29,7 +29,7 @@ public class SharcTrajectory {
 
     PIDController xSpeedController = new PIDController(5.7, 0, 0);
     PIDController ySpeedController = new PIDController(5.7, 0, 0);
-    PIDController rotController = new PIDController(1.131, 0, 0);
+    PIDController rotController = new PIDController(1.431, 0, 0);
     //1.27 pid
     
     public SharcTrajectory(){
