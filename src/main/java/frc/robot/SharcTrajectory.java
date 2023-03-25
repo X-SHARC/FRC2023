@@ -35,9 +35,6 @@ public class SharcTrajectory {
     
     public SharcTrajectory(){
         rotController.enableContinuousInput(-Math.PI, Math.PI);
-        //trajectory = PathPlanner.loadPath("Cube&Dock", 3, 4);
-        //pathState = (PathPlannerState) trajectory.sample(1);
-        //rotController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     public Command getLeftTwoCube(Swerve swerve, Elevator elevator, Intake intake, Carriage carriage){
@@ -138,6 +135,8 @@ public class SharcTrajectory {
         );
     }
 
+    
+
     public Command getOneCubeAndBack(Swerve swerve, Elevator elevator, Carriage carriage){
         RobotState.setGamePiece(RobotState.GamePiece.CUBE);
         return new SequentialCommandGroup(
@@ -156,7 +155,7 @@ public class SharcTrajectory {
     }
 
 
-    public Command getLeft3Cube(Swerve swerve, Elevator elevator, Carriage carriage, Intake intake){
+    public Command getLeft3Cube(Swerve swerve, Elevator elevator, Intake intake, Carriage carriage){
         RobotState.setGamePiece(RobotState.GamePiece.CUBE);
 
         return new SequentialCommandGroup(
@@ -187,32 +186,32 @@ public class SharcTrajectory {
             
             new SequentialCommandGroup(
             getControllerCommand(swerve, "LeftCube1", true, 4, 3).withTimeout(2.67),
-            new RunCommand(()->carriage.setDegrees(100)).withTimeout(0.6),
+            new RunCommand(()->carriage.setDegrees(100)).withTimeout(0.9),
             new InstantCommand(()-> carriage.stop(), carriage),
             new RunCommand(()->RobotState.setIntaking()).withTimeout(0.6),
             new RunCommand(()-> carriage.setDegrees(10), carriage).withTimeout(1),
             new InstantCommand(()-> carriage.stop(), carriage).withTimeout(0.6),
             new InstantCommand(()->RobotState.setIntakeIdle()),
-            getControllerCommand(swerve, "LeftShoot1", false, 4, 3).withTimeout(2.45)
-            .raceWith(
+            getControllerCommand(swerve, "a", false, 4, 3).withTimeout(2.45)
+            .alongWith(
                 new SequentialCommandGroup(
-                    new WaitCommand(2),
-                    new RunCommand(()->RobotState.setShooting()).withTimeout(1)        
+                    new WaitCommand(1.8),
+                    new RunCommand(()->RobotState.setShooting()).withTimeout(1.2)        
                 )),
             new InstantCommand(()->RobotState.setIntakeIdle()),
-            getControllerCommand(swerve, "LeftShoot2", false, 4, 3).withTimeout(2.9),
-            new RunCommand(()->carriage.setDegrees(100)).withTimeout(0.6),
+            getControllerCommand(swerve, "b", false, 4, 3).withTimeout(2.9),
+            new RunCommand(()->carriage.setDegrees(100)).withTimeout(0.9),
             new InstantCommand(()-> carriage.stop(), carriage),
             new RunCommand(()->RobotState.setIntaking()).withTimeout(0.6),
             new RunCommand(()-> carriage.setDegrees(10), carriage).withTimeout(1),
             new InstantCommand(()-> carriage.stop(), carriage),
             new InstantCommand(()->RobotState.setIntakeIdle()),
 
-            getControllerCommand(swerve, "LeftShoot3", false, 4, 3).withTimeout(2.55)
-            .raceWith(
+            getControllerCommand(swerve, "c", false, 4, 3).withTimeout(2.55)
+            .alongWith(
                 new SequentialCommandGroup(
-                    new WaitCommand(2.25),
-                    new RunCommand(()->RobotState.setShooting()).withTimeout(1)
+                    new WaitCommand(2),
+                    new RunCommand(()->RobotState.setShooting()).withTimeout(1.2)
                     )
                     ),
             new InstantCommand(()->RobotState.setIntakeIdle())
@@ -236,7 +235,7 @@ public class SharcTrajectory {
                 ySpeedController,
                 rotController,
                 swerve::setClosedLoopStates,
-                false,
+                true,
                 swerve)
                 .andThen(
                     new RunCommand(()->swerve.stopModules(), swerve).withTimeout(0.1)
