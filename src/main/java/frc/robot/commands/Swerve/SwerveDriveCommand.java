@@ -65,11 +65,6 @@ public class SwerveDriveCommand extends CommandBase {
     double rot = -rotLimiter.calculate(
       (Math.abs(joystick.getRawAxis(2)) < 0.1) ? 0 : joystick.getRawAxis(2))
       * Constants.Swerve.kMaxAngularSpeed * scale;
-    
-    if(!RobotState.isBlueAlliance()){
-      xSpeed = -xSpeed;
-      ySpeed = -ySpeed;
-    }
 
     swerveSubsystem.drive(xSpeed, ySpeed, rot, true, true);
   }

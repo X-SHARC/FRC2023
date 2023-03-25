@@ -141,17 +141,31 @@ public class SharcTrajectory {
         RobotState.setGamePiece(RobotState.GamePiece.CUBE);
         return new SequentialCommandGroup(
             new SequentialCommandGroup(
-                new ElevatorCommand(elevator, RobotState.getGamePiece() == GamePiece.CONE ? 112: 101).withTimeout(0.9)
-                    .alongWith(new InstantCommand(()->carriage.setSetpoint(RobotState.getGamePiece() == GamePiece.CUBE ? 32:48))),
-                new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
-                new RunCommand(()->RobotState.setIntakeIdle()).withTimeout(0.01),
-                new ElevatorHome(elevator).withTimeout(0.8)
-                    .alongWith(new InstantCommand(()->carriage.setSetpoint(15))),
-                new InstantCommand(()->elevator.stop())
-            ),
-            getControllerCommand(swerve, "1Cube&Back", true, chargeStationMaxVel, chargeStationMaxAccel),
-            new RunCommand(()->swerve.stopModules()).withTimeout(1)
-        );
+                new RunCommand(()-> carriage.setDegrees(30), carriage).withTimeout(0.55),
+                new InstantCommand(()-> carriage.stop(), carriage), 
+                new ConditionalCommand(
+                  new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.8),
+                  new RunCommand(()-> elevator.setDistance(104), elevator).withTimeout(0.7),
+                  RobotState::isCone
+                  ),
+                new InstantCommand(()-> elevator.stop(), elevator),
+                new ConditionalCommand(
+                  new RunCommand(()-> carriage.setDegrees(48), carriage).withTimeout(0.4),
+                  new RunCommand(()-> carriage.setDegrees(32), carriage).withTimeout(0.33),
+                  RobotState::isCone
+                ),
+                new InstantCommand(()-> carriage.stop(), carriage),
+                new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.3),
+                new InstantCommand(()->RobotState.setIntakeIdle()),
+                new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.5),
+                new InstantCommand(()-> carriage.stop(), carriage),
+                new ElevatorHome(elevator).withTimeout(0.7),
+                new InstantCommand(()-> elevator.stop(), elevator),
+                new RunCommand(()-> carriage.setDegrees(15), carriage).withTimeout(0.5),
+                new InstantCommand(()-> carriage.stop(), carriage)
+              ),
+              new RunCommand(()-> swerve.drive(-0.2*Constants.Swerve.kMaxSpeed, 0,0, true, false), swerve).withTimeout(1.8)
+              );
     }
 
 
@@ -192,14 +206,14 @@ public class SharcTrajectory {
             new RunCommand(()-> carriage.setDegrees(10), carriage).withTimeout(1),
             new InstantCommand(()-> carriage.stop(), carriage).withTimeout(0.6),
             new InstantCommand(()->RobotState.setIntakeIdle()),
-            getControllerCommand(swerve, "a", false, 4, 3).withTimeout(2.45)
+            getControllerCommand(swerve, "a", false, 4, 3).withTimeout(2.7)
             .alongWith(
                 new SequentialCommandGroup(
                     new WaitCommand(1.8),
                     new RunCommand(()->RobotState.setShooting()).withTimeout(1.2)        
                 )),
             new InstantCommand(()->RobotState.setIntakeIdle()),
-            getControllerCommand(swerve, "b", false, 4, 3).withTimeout(2.9),
+            getControllerCommand(swerve, "b", false, 4, 3).withTimeout(2.99),
             new RunCommand(()->carriage.setDegrees(100)).withTimeout(0.9),
             new InstantCommand(()-> carriage.stop(), carriage),
             new RunCommand(()->RobotState.setIntaking()).withTimeout(0.6),
@@ -207,7 +221,7 @@ public class SharcTrajectory {
             new InstantCommand(()-> carriage.stop(), carriage),
             new InstantCommand(()->RobotState.setIntakeIdle()),
 
-            getControllerCommand(swerve, "c", false, 4, 3).withTimeout(2.55)
+            getControllerCommand(swerve, "c", false, 4, 3).withTimeout(2.9)
             .alongWith(
                 new SequentialCommandGroup(
                     new WaitCommand(2),

@@ -361,6 +361,6 @@ public class RobotContainer {
   
 
   public Command getAutonomousCommand() {
-    return trajectoryGenerator.getLeft3Cube(swerveDrivetrain, elevator, intake, carriage);
+    return trajectoryGenerator.getOneCubeAndBack(swerveDrivetrain, elevator, carriage);
   }
 } 
