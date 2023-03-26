@@ -124,12 +124,13 @@ public class Carriage extends SubsystemBase {
   public void periodic() {
     boolean isAlive = isAlive();
     RobotState.setCarriageEncoder(isAlive);
-    if(getDegrees()>=100 || getDegrees()<=5){
+    if(getDegrees()>=100){
       stop();
       RobotState.setCarriageLimit(true);
     }
     else RobotState.setCarriageLimit(false);
 
+    if(getDegrees()<14) RobotState.setCarriage(true);
     /*SmartDashboard.putBoolean("Carriage Is Alive", isAlive());
     SmartDashboard.putNumber("Carriage PID Position Error", carriagePID.getPositionError());
     SmartDashboard.putNumber("Carriage Setpoint ", carriagePID.getSetpoint());*/

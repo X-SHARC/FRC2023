@@ -7,6 +7,7 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.RobotState.GamePiece;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.Autonomous.AutoAlign;
+import frc.robot.commands.Autonomous.DockEngage;
 import frc.robot.commands.Elevator.ElevatorCommand;
 import frc.robot.commands.Elevator.ElevatorDownCommand;
 import frc.robot.commands.Elevator.ElevatorHome;
@@ -52,6 +53,8 @@ public class RobotContainer {
 
   PowerDistribution pdh = new PowerDistribution();
   AutoAlign autoAlign = new AutoAlign(swerveDrivetrain);
+
+  DockEngage dock = new DockEngage(swerveDrivetrain);
 
   public RobotContainer() {
     configureBindings();
@@ -368,6 +371,7 @@ public class RobotContainer {
   
 
   public Command getAutonomousCommand() {
-    return trajectoryGenerator.getOneCubeAndBack(swerveDrivetrain, elevator, carriage);
+    //return trajectoryGenerator.getLeftTwoCubeWithDock(swerveDrivetrain, elevator, intake, carriage);
+    return dock;
   }
 } 
