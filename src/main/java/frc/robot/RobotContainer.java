@@ -7,7 +7,6 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.RobotState.GamePiece;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.Autonomous.AutoAlign;
-import frc.robot.commands.Autonomous.DockEngage;
 import frc.robot.commands.Elevator.ElevatorCommand;
 import frc.robot.commands.Elevator.ElevatorDownCommand;
 import frc.robot.commands.Elevator.ElevatorHome;
@@ -92,17 +91,17 @@ public class RobotContainer {
     elevatorhome.onTrue(elevatorHome); 
 
     JoystickButton carriageUp = new JoystickButton(operator, 3);
-    carriageUp.whileTrue(new InstantCommand(()-> carriage.intakeUp())); 
+    carriageUp.whileTrue(new RunCommand(()-> carriage.intakeUp())); 
     carriageUp.onFalse(new InstantCommand(()->carriage.stop()));
   
    // denenecek + button atama kontrol
    JoystickButton carriageDown = new JoystickButton(operator, 5);
    carriageDown.whileTrue(new RunCommand(()-> carriage.intakeDown()));
-   carriageDown.onFalse(new InstantCommand(()->carriage.stop()));
+   carriageDown.whileFalse(new RunCommand(()->carriage.stop()));
 
    JoystickButton carriageHome = new JoystickButton(operator, 4);
-   carriageHome.onTrue(new RunCommand(()->carriage.setDegrees(15)));
-   carriageHome.onFalse(new RunCommand(()->carriage.stop()));
+   carriageHome.whileTrue(new RunCommand(()->carriage.setDegrees(15)));
+   carriageHome.whileFalse(new RunCommand(()->carriage.stop()));
 
 
    Trigger hpStationTrigger = new Trigger(
@@ -390,6 +389,6 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     //return trajectoryGenerator.getOneCubeAndBack(swerveDrivetrain, elevator, carriage);
-    return m_chooser.getSelected();
+    return getLeft2CubeWithDock;
   }
 } 

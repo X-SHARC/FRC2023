@@ -93,11 +93,13 @@ public class Carriage extends SubsystemBase {
     return angle;}
 
   public void intakeUp(){
-    carriageMotor.set(ControlMode.PercentOutput, 0.6);
+    if(getDegrees()<25) stop();
+    if (getDegrees()>15)carriageMotor.set(ControlMode.PercentOutput, -0.6);
   }
 
   public void intakeDown(){
-    carriageMotor.set(ControlMode.PercentOutput, -0.6);
+    if(getDegrees()>100) stop();
+    if(getDegrees()<100)carriageMotor.set(ControlMode.PercentOutput, 0.6);
   }
 
   public void stop(){
@@ -124,7 +126,7 @@ public class Carriage extends SubsystemBase {
   public void periodic() {
     boolean isAlive = isAlive();
     RobotState.setCarriageEncoder(isAlive);
-    if(getDegrees()>=100){
+    if(getDegrees()>100){
       stop();
       RobotState.setCarriageLimit(true);
     }
