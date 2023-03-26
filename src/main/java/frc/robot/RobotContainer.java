@@ -13,12 +13,10 @@ import frc.robot.commands.Elevator.ElevatorHome;
 import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.lib.drivers.WS2812Driver;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -33,6 +31,7 @@ public class RobotContainer {
   private final static PS4Controller driver = new PS4Controller(0);
   //private final static Joystick driver = new Joystick(0);
   private final static Joystick operator = new Joystick(1);
+  private final static PS4Controller operatorYedek = new PS4Controller(2);
 
   //Subsystems
   Swerve swerveDrivetrain = new Swerve(true);
@@ -61,6 +60,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     swerveDrivetrain.setDefaultCommand(driveCommand);
+
     JoystickButton elevator1 = new JoystickButton(operator, 8);
     elevator1.whileTrue(elevatorUpCommand);
 
@@ -68,14 +68,21 @@ public class RobotContainer {
     elevator2.whileTrue(elevatorDownCommand);
 
     JoystickButton elevatorhome = new JoystickButton(driver,7);
-    elevatorhome.whileTrue(elevatorHome); 
+    elevatorhome.onTrue(elevatorHome); 
 
-    JoystickButton carriagepid = new JoystickButton(operator, 5);
-   carriagepid.onTrue(new InstantCommand(()-> carriage.setSetpoint(30))); 
+    JoystickButton carriageUp = new JoystickButton(operator, 3);
+    carriageUp.whileTrue(new InstantCommand(()-> carriage.intakeUp())); 
+    carriageUp.onFalse(new InstantCommand(()->carriage.stop()));
   
    // denenecek + button atama kontrol
-   JoystickButton carriagecommand = new JoystickButton(operator, 3);
-   carriagecommand.onTrue(new InstantCommand(()-> carriage.setSetpoint(5)));
+   JoystickButton carriageDown = new JoystickButton(operator, 5);
+   carriageDown.whileTrue(new RunCommand(()-> carriage.intakeDown()));
+   carriageDown.onFalse(new InstantCommand(()->carriage.stop()));
+
+   JoystickButton carriageHome = new JoystickButton(operator, 4);
+   carriageHome.onTrue(new RunCommand(()->carriage.setDegrees(15)));
+   carriageHome.onFalse(new RunCommand(()->carriage.stop()));
+
 
    Trigger hpStationTrigger = new Trigger(
     ()-> driver.getR2Axis()>0.5

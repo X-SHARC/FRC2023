@@ -93,11 +93,11 @@ public class Carriage extends SubsystemBase {
     return angle;}
 
   public void intakeUp(){
-    carriageMotor.set(ControlMode.PercentOutput, 0.4);
+    carriageMotor.set(ControlMode.PercentOutput, 0.6);
   }
 
   public void intakeDown(){
-    carriageMotor.set(ControlMode.PercentOutput, -0.4);
+    carriageMotor.set(ControlMode.PercentOutput, -0.6);
   }
 
   public void stop(){
@@ -124,8 +124,11 @@ public class Carriage extends SubsystemBase {
   public void periodic() {
     boolean isAlive = isAlive();
     RobotState.setCarriageEncoder(isAlive);
-
-  
+    if(getDegrees()>=100 || getDegrees()<=5){
+      stop();
+      RobotState.setCarriageLimit(true);
+    }
+    else RobotState.setCarriageLimit(false);
 
     /*SmartDashboard.putBoolean("Carriage Is Alive", isAlive());
     SmartDashboard.putNumber("Carriage PID Position Error", carriagePID.getPositionError());

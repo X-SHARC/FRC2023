@@ -48,6 +48,7 @@ public class RobotState {
     public static boolean isTripping = false;
     public static boolean isCarriageHome = false;
     public static boolean isCarriageEncoderAlive = false;
+    public static boolean isCarriageLimited = false;
     
     private RobotState(){
         //reset(); 
@@ -99,6 +100,10 @@ public class RobotState {
     
     public static void setCarriageManual(){
         currentCarriageState = CarriageState.MANUAL;
+    }
+
+    public static void setCarriageLimit(boolean isLimited){
+        isCarriageLimited = isLimited; 
     }
 
     public static CarriageState getCarriage(){
