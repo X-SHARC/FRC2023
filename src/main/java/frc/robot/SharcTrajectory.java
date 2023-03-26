@@ -31,11 +31,8 @@ public class SharcTrajectory {
     PIDController xSpeedController = new PIDController(5.7, 0, 0);
     PIDController ySpeedController = new PIDController(5.7, 0, 0);
     PIDController rotController = new PIDController(1.431, 0, 0);
-    //1.27 pid
 
-    /*HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("marker1", new PrintCommand("Passed marker 1"));
-    eventMap.put("intakeDown", new IntakeDown());*/
+    //1.27 pid
     
     public SharcTrajectory(){
         rotController.enableContinuousInput(-Math.PI, Math.PI);
@@ -237,12 +234,9 @@ public class SharcTrajectory {
     }
 
     public Command getControllerCommand(Swerve swerve, String trajName, boolean isFirstTrajectory, double maxVel, double maxAccel) {
-        
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, maxVel, maxAccel);
         //swerve.addTrajectoryToField2d(trajectory);
-
         if(isFirstTrajectory) swerve.resetPoseEstimator(trajectory.getInitialHolonomicPose());
-
         return 
             new SequentialCommandGroup(
                 new PPSwerveControllerCommand(
