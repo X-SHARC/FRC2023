@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.HashMap;
+
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
@@ -30,6 +32,10 @@ public class SharcTrajectory {
     PIDController ySpeedController = new PIDController(5.7, 0, 0);
     PIDController rotController = new PIDController(1.431, 0, 0);
     //1.27 pid
+
+    /*HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+    eventMap.put("intakeDown", new IntakeDown());*/
     
     public SharcTrajectory(){
         rotController.enableContinuousInput(-Math.PI, Math.PI);
