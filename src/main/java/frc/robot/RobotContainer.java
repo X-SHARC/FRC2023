@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -73,6 +74,8 @@ public class RobotContainer {
     m_chooser.addOption("2 Cube Dock", getLeft2CubeWithDock);
     m_chooser.addOption("3 Cube", getLeft3Cube);
     m_chooser.setDefaultOption("1 Cube Basic Auto", oneCubeTaxi);
+
+    SmartDashboard.putData(m_chooser);
   }
 
   private void configureBindings() {
