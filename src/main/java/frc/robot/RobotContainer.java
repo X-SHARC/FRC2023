@@ -7,6 +7,7 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.RobotState.GamePiece;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.Autonomous.AutoAlign;
+import frc.robot.commands.Autonomous.DockEngage;
 import frc.robot.commands.Elevator.ElevatorCommand;
 import frc.robot.commands.Elevator.ElevatorDownCommand;
 import frc.robot.commands.Elevator.ElevatorHome;
