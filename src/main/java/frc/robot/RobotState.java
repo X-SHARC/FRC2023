@@ -106,6 +106,10 @@ public class RobotState {
         isCarriageLimited = isLimited; 
     }
 
+    public static boolean getCarriageLimited(){
+        return isCarriageLimited;
+    }
+
     public static CarriageState getCarriage(){
         return currentCarriageState;
     }

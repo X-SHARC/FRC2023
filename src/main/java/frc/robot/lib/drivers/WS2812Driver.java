@@ -36,6 +36,7 @@ public class WS2812Driver extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if(RobotState.getCarriageLimited()) setColor(0, 0, 255);
     if(!RobotState.isCarriageEncoderAlive()) emergency(8);
     else if(RobotState.currentGamePiece==GamePiece.CONE) coneLED();
     else if (RobotState.currentGamePiece == GamePiece.CUBE) cubeLED();
