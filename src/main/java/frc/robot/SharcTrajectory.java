@@ -244,12 +244,9 @@ public class SharcTrajectory {
     }
 
     public Command getControllerCommand(Swerve swerve, String trajName, boolean isFirstTrajectory, double maxVel, double maxAccel) {
-        
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, maxVel, maxAccel);
         //swerve.addTrajectoryToField2d(trajectory);
-
         if(isFirstTrajectory) swerve.resetPoseEstimator(trajectory.getInitialHolonomicPose());
-
         return 
             new SequentialCommandGroup(
                 new PPSwerveControllerCommand(

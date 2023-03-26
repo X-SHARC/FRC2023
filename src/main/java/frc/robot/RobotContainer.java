@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -54,11 +55,25 @@ public class RobotContainer {
   PowerDistribution pdh = new PowerDistribution();
   AutoAlign autoAlign = new AutoAlign(swerveDrivetrain);
 
-  DockEngage dock = new DockEngage(swerveDrivetrain);
+  SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+  SharcTrajectory trajCommands = new SharcTrajectory();
+
+  //Autonomous Commands
+  Command getLeft2Cube = trajCommands.getLeftTwoCube(swerveDrivetrain, elevator, intake, carriage);
+  Command getLeft2CubeWithDock = trajCommands.getLeftTwoCubeWithDock(swerveDrivetrain,elevator,intake,carriage);
+  Command getLeft3Cube = trajCommands.getLeft3Cube(swerveDrivetrain, elevator, intake, carriage);
+  Command oneCubeTaxi = trajCommands.getOneCubeAndBack(swerveDrivetrain, elevator, carriage);
+
 
   public RobotContainer() {
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
+
+    m_chooser.addOption("2 Cube Auto", getLeft2Cube);
+    m_chooser.addOption("2 Cube Dock", getLeft2CubeWithDock);
+    m_chooser.addOption("3 Cube", getLeft3Cube);
+    m_chooser.setDefaultOption("1 Cube Basic Auto", oneCubeTaxi);
   }
 
   private void configureBindings() {
@@ -371,7 +386,7 @@ public class RobotContainer {
   
 
   public Command getAutonomousCommand() {
-    //return trajectoryGenerator.getLeftTwoCubeWithDock(swerveDrivetrain, elevator, intake, carriage);
-    return dock;
+    //return trajectoryGenerator.getOneCubeAndBack(swerveDrivetrain, elevator, carriage);
+    return m_chooser.getSelected();
   }
 } 
