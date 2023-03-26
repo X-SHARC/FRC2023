@@ -82,7 +82,7 @@ public class SwerveModule {
   }
 
   public void calibrate(String Name, boolean offsetCalibration, boolean driveCalibration){
-    if(offsetCalibration){
+    /*if(offsetCalibration){
       SmartDashboard.putNumber("Swerve Rot Debug" + Name +  "Encoder Value", getAngle().getDegrees());
       SmartDashboard.putNumber("Swerve Rot Debug" + Name + " PID Setpoint", rotPID.getSetpoint());
       SmartDashboard.putNumber("Swerve Rot Debug" + Name + " PID Error", rotPID.getPositionError());
@@ -91,7 +91,7 @@ public class SwerveModule {
       SmartDashboard.putNumber("Swerve Drive Debug " + name + " Vel Actual", getDriveMotorRate() );
       SmartDashboard.putNumber("Swerve Drive Debug" + Name + " PID Error", drivePID.getVelocityError());
       SmartDashboard.putNumber("Swerve Drive Debug " + name + " Vel Setpoint ", drivePID.getSetpoint() );
-    }
+    }*/
   }
 
   public void resetRotationEncoder(){

@@ -61,7 +61,5 @@ public class Intake extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    SmartDashboard.putString("Current Game Piece:", RobotState.currentGamePiece.toString());
-  }
+  public void periodic() { }
 }

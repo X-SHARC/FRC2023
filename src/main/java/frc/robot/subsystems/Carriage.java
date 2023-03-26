@@ -127,10 +127,10 @@ public class Carriage extends SubsystemBase {
 
   
 
-    SmartDashboard.putBoolean("Carriage Is Alive", isAlive());
-    SmartDashboard.putNumber("Carriage Angle", getDegrees());
+    /*SmartDashboard.putBoolean("Carriage Is Alive", isAlive());
     SmartDashboard.putNumber("Carriage PID Position Error", carriagePID.getPositionError());
-    SmartDashboard.putNumber("Carriage Setpoint ", carriagePID.getSetpoint());
+    SmartDashboard.putNumber("Carriage Setpoint ", carriagePID.getSetpoint());*/
+    SmartDashboard.putNumber("Carriage Angle", getDegrees());
   }
 
 }

@@ -107,7 +107,7 @@ public class Swerve extends SubsystemBase {
     this.isCalibrating = isCalibrating;
     resetAllEncoders();
     
-    SmartDashboard.putData("Field", field2D);
+    //SmartDashboard.putData("Field", field2D);
   }
   
   public Rotation2d getGyro(){
@@ -233,12 +233,12 @@ public class Swerve extends SubsystemBase {
 
     field2D.setRobotPose(getPose());
 
-    SmartDashboard.putNumber("Swerve Gyro Angle", getGyroDouble());
+    /*SmartDashboard.putNumber("Swerve Gyro Angle", getGyroDouble());
     SmartDashboard.putNumber("Swerve Field Offset", fieldAngle.getDegrees());
     
     SmartDashboard.putNumber("Pose Estimator Pose X", getPose().getX());
     SmartDashboard.putNumber("Pose Estimator Y", getPose().getY());
-    SmartDashboard.putNumber("Pose Estimator Rot", getPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("Pose Estimator Rot", getPose().getRotation().getDegrees());*/
 
     if(isCalibrating){
       modules[0].outputDistance();

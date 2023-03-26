@@ -159,11 +159,11 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     double distance = getDistance();
-    SmartDashboard.putNumber("PIDOutput", PIDOutput);
+    /*SmartDashboard.putNumber("PIDOutput", PIDOutput);
     SmartDashboard.putNumber("Elevator PID Error", elevatorPID.getPositionError());
     SmartDashboard.putNumber("Elevator PID Setpoint", elevatorPID.getSetpoint());
     SmartDashboard.putNumber("Elevator Distance:", distance);
-    SmartDashboard.putData("Bottom Limit Switch", bottomLimitSwitch);
+    SmartDashboard.putData("Bottom Limit Switch", bottomLimitSwitch);*/
 
     if(bottomLimitSwitch.get() == false){
       resetEncoder();
