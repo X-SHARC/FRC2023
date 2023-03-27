@@ -18,6 +18,9 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class SharcTrajectory {
     //private PathPlannerTrajectory trajectory;
@@ -84,7 +87,7 @@ public class SharcTrajectory {
                             new InstantCommand(()->RobotState.setIntakeIdle())
                         )
                     ),
-                    new RunCommand(()->RobotState.setShooting()).withTimeout(0.35),
+                    new RunCommand(()->RobotState.setEjecting()).withTimeout(0.35),
                     new InstantCommand(()->RobotState.setIntakeIdle())
         );
     }
@@ -132,7 +135,7 @@ public class SharcTrajectory {
                             new InstantCommand(()->RobotState.setIntakeIdle())
                         )
                     ),
-                    new RunCommand(()->RobotState.setShooting()).withTimeout(0.35)
+                    new RunCommand(()->RobotState.setEjecting()).withTimeout(0.35)
                     .alongWith(new RunCommand(()->swerve.stopModules())).withTimeout(0.35),
                     new InstantCommand(()->RobotState.setIntakeIdle()),
                     getControllerCommand(swerve, "LeftCubeDock", false, chargeStationMaxVel, chargeStationMaxAccel),
@@ -245,7 +248,21 @@ public class SharcTrajectory {
     public Command getControllerCommand(Swerve swerve, String trajName, boolean isFirstTrajectory, double maxVel, double maxAccel) {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, maxVel, maxAccel);
         //swerve.addTrajectoryToField2d(trajectory);
-        if(isFirstTrajectory) swerve.resetPoseEstimator(trajectory.getInitialHolonomicPose());
+        PathPlannerState initstate = trajectory.getInitialState();
+        initstate = PathPlannerTrajectory.transformStateForAlliance(initstate, DriverStation.getAlliance());
+
+        if(isFirstTrajectory){
+         swerve.resetPoseEstimator(
+            new Pose2d(
+                new Translation2d(
+                    initstate.poseMeters.getX(),
+                    initstate.poseMeters.getY()
+                ),
+                initstate.holonomicRotation
+            )
+            //trajectory.getInitialHolonomicPosPe()
+            );
+        }
 
         return 
             new SequentialCommandGroup(
