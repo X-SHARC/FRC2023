@@ -61,6 +61,9 @@ public class IntakeCommand extends CommandBase {
         if(RobotState.getGamePiece() == RobotState.GamePiece.CUBE){
           intake.shootCube();
         }
+        else if(RobotState.getGamePiece() == RobotState.GamePiece.CONE){
+          intake.shootCone();
+        }
         else intake.stop();
       }
     }

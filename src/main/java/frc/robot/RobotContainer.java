@@ -386,7 +386,6 @@ public class RobotContainer {
     shootButton.whileTrue(new InstantCommand(()->RobotState.setShooting()));
     shootButton.whileFalse(
       new RunCommand(()-> RobotState.setIntakeIdle()));
-    
 
    intake.setDefaultCommand(intakeCommand);
   }

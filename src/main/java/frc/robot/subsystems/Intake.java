@@ -42,6 +42,10 @@ public class Intake extends SubsystemBase {
     intakeMotor.set(ControlMode.PercentOutput, 1);
   }
 
+  public void shootCone(){
+    intakeMotor.set(ControlMode.PercentOutput, -1);
+  }
+
   public void grabCone(){
     intakeMotor.set(ControlMode.PercentOutput, 0.9);
   }
