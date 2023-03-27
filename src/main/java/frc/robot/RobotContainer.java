@@ -13,6 +13,7 @@ import frc.robot.commands.Elevator.ElevatorHome;
 import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.lib.drivers.WS2812Driver;
+import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
@@ -58,7 +59,6 @@ public class RobotContainer {
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   SharcTrajectory trajCommands = new SharcTrajectory();
-
   
 
   //Autonomous Commands
@@ -81,6 +81,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+    
     swerveDrivetrain.setDefaultCommand(driveCommand);
 
     JoystickButton elevator1 = new JoystickButton(operator, 8);
@@ -139,10 +140,10 @@ public class RobotContainer {
    JoystickButton secondLevel = new JoystickButton(driver, 2);
     secondLevel.whileTrue(
       new SequentialCommandGroup(
-        new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.5),
+        new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.5),
         new ConditionalCommand(
-          new RunCommand(()-> elevator.setDistance(66), elevator).withTimeout(0.6),
-          new RunCommand(()-> elevator.setDistance(72), elevator).withTimeout(0.6),
+          new RunCommand(()-> elevator.setDistance(64), elevator).withTimeout(0.6),
+          new RunCommand(()-> elevator.setDistance(70), elevator).withTimeout(0.6),
           RobotState::isCone
           ),
         new InstantCommand(()-> elevator.stop(), elevator),
@@ -210,7 +211,7 @@ public class RobotContainer {
       new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.6),
       new ConditionalCommand(
         new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
-        new RunCommand(()-> elevator.setDistance(110), elevator).withTimeout(0.7),
+        new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.7),
         RobotState::isCone
         ),
       new InstantCommand(()-> elevator.stop(), elevator),
@@ -222,7 +223,7 @@ public class RobotContainer {
       new InstantCommand(()-> carriage.stop(), carriage),
       new ConditionalCommand(
         new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
-        new RunCommand(()-> elevator.setDistance(110), elevator).withTimeout(0.7),
+        new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.7),
         RobotState::isCone
         )
     )
