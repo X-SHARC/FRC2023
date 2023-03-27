@@ -47,14 +47,14 @@ public class SharcTrajectory {
             new SequentialCommandGroup(
             new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.4),
             new ConditionalCommand(
-                new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.8),
-                new RunCommand(()-> elevator.setDistance(104), elevator).withTimeout(0.7),
+                new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
+                new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.7),
                 RobotState::isCone
                 ),
             new InstantCommand(()-> elevator.stop(), elevator),
             new ConditionalCommand(
-                new RunCommand(()-> carriage.setDegrees(48), carriage).withTimeout(0.4),
-                new RunCommand(()-> carriage.setDegrees(38), carriage).withTimeout(0.33),
+                new RunCommand(()-> carriage.setDegrees(40), carriage).withTimeout(0.3),
+                new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.2),
                 RobotState::isCone
             ),
             new InstantCommand(()-> carriage.stop(), carriage),
@@ -68,7 +68,7 @@ public class SharcTrajectory {
             new InstantCommand(()-> carriage.stop(), carriage)
             ),
             getControllerCommand(swerve, "LeftCube1", true, 4, 3).withTimeout(2.67),
-            new RunCommand(()->carriage.setDegrees(100)).withTimeout(0.6),
+            new RunCommand(()->carriage.setDegrees(105)).withTimeout(0.931),
             new InstantCommand(()-> carriage.stop(), carriage),
             new RunCommand(()->RobotState.setIntaking())
             .withTimeout(0.5),
@@ -96,14 +96,14 @@ public class SharcTrajectory {
                 new RunCommand(()-> carriage.setDegrees(30), carriage).withTimeout(0.35),
                 new InstantCommand(()-> carriage.stop(), carriage), 
                 new ConditionalCommand(
-                  new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.7),
-                  new RunCommand(()-> elevator.setDistance(104), elevator).withTimeout(0.6),
+                  new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
+                  new RunCommand(()-> elevator.setDistance(110), elevator).withTimeout(0.72),
                   RobotState::isCone
                   ),
                 new InstantCommand(()-> elevator.stop(), elevator),
                 new ConditionalCommand(
-                  new RunCommand(()-> carriage.setDegrees(48), carriage).withTimeout(0.4),
-                  new RunCommand(()-> carriage.setDegrees(32), carriage).withTimeout(0.1),
+                  new RunCommand(()-> carriage.setDegrees(40), carriage).withTimeout(0.4),
+                  new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.21),
                   RobotState::isCone
                 ),
                 new InstantCommand(()-> carriage.stop(), carriage),
@@ -119,7 +119,7 @@ public class SharcTrajectory {
             Commands.parallel(
                 new SequentialCommandGroup(
                     getControllerCommand(swerve, "LeftCube1", true, 4, 3).withTimeout(2.67),
-                    new RunCommand(()->carriage.setDegrees(100)).withTimeout(0.8),
+                    new RunCommand(()->carriage.setDegrees(105)).withTimeout(0.931),
                     new InstantCommand(()-> carriage.stop(), carriage),
                     new RunCommand(()->RobotState.setIntaking())
                     .withTimeout(0.5)
@@ -176,6 +176,7 @@ public class SharcTrajectory {
               new RunCommand(()-> swerve.drive(-0.2*Constants.Swerve.kMaxSpeed, 0,0, true, false), swerve).withTimeout(1.8)
               );
     }
+
 
 
     public Command getLeft3Cube(Swerve swerve, Elevator elevator, Intake intake, Carriage carriage){
