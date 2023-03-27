@@ -59,6 +59,8 @@ public class RobotContainer {
 
   SharcTrajectory trajCommands = new SharcTrajectory();
 
+  
+
   //Autonomous Commands
   Command getLeft2Cube = trajCommands.getLeftTwoCube(swerveDrivetrain, elevator, intake, carriage);
   Command getLeft2CubeWithDock = trajCommands.getLeftTwoCubeWithDock(swerveDrivetrain,elevator,intake,carriage);
@@ -75,7 +77,7 @@ public class RobotContainer {
     m_chooser.addOption("3 Cube", getLeft3Cube);
     m_chooser.setDefaultOption("1 Cube Basic Auto", oneCubeTaxi);
 
-    SmartDashboard.putData(m_chooser);
+    //SmartDashboard.putData(m_chooser);
   }
 
   private void configureBindings() {
@@ -102,6 +104,9 @@ public class RobotContainer {
    JoystickButton carriageHome = new JoystickButton(operator, 4);
    carriageHome.whileTrue(new RunCommand(()->carriage.setDegrees(15)));
    carriageHome.whileFalse(new RunCommand(()->carriage.stop()));
+
+   Trigger gyroReset = new Trigger(()->driver.getR3ButtonPressed());
+   gyroReset.onTrue(new InstantCommand(()->swerveDrivetrain.resetPigeon()));
 
 
    Trigger hpStationTrigger = new Trigger(
@@ -136,8 +141,8 @@ public class RobotContainer {
       new SequentialCommandGroup(
         new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.5),
         new ConditionalCommand(
-          new RunCommand(()-> elevator.setDistance(64), elevator).withTimeout(0.6),
-          new RunCommand(()-> elevator.setDistance(70), elevator).withTimeout(0.6),
+          new RunCommand(()-> elevator.setDistance(66), elevator).withTimeout(0.6),
+          new RunCommand(()-> elevator.setDistance(72), elevator).withTimeout(0.6),
           RobotState::isCone
           ),
         new InstantCommand(()-> elevator.stop(), elevator),
@@ -162,7 +167,7 @@ public class RobotContainer {
         new InstantCommand(()-> elevator.stop(), elevator),
         new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
         new InstantCommand(()->RobotState.setIntakeIdle()),
-        new ElevatorHome(elevator).withTimeout(0.71),
+        new ElevatorHome(elevator).withTimeout(0.75),
         new InstantCommand(()-> elevator.stop(), elevator),
         new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(0.7),
         new InstantCommand(()-> carriage.stop(), carriage)
@@ -205,7 +210,7 @@ public class RobotContainer {
       new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.6),
       new ConditionalCommand(
         new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
-        new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.7),
+        new RunCommand(()-> elevator.setDistance(110), elevator).withTimeout(0.7),
         RobotState::isCone
         ),
       new InstantCommand(()-> elevator.stop(), elevator),
@@ -217,7 +222,7 @@ public class RobotContainer {
       new InstantCommand(()-> carriage.stop(), carriage),
       new ConditionalCommand(
         new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
-        new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.7),
+        new RunCommand(()-> elevator.setDistance(110), elevator).withTimeout(0.7),
         RobotState::isCone
         )
     )

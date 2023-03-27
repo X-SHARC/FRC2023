@@ -19,7 +19,7 @@ public class AutoAlign extends CommandBase {
   PIDController rotationController = new PIDController(0.035, 0, 0);
   PIDController distanceController = new PIDController(0.0165, 0, 0);
 
-  VisionTarget lowerCone = new VisionTarget(59, 12, 20);
+  VisionTarget lowerCone = new VisionTarget(61, 12, 20);
 
   public AutoAlign(Swerve swerve) {
     this.swerve = swerve;
