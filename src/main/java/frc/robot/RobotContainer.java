@@ -116,10 +116,10 @@ public class RobotContainer {
 
     hpStationTrigger.whileTrue(
       new SequentialCommandGroup(
-        new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.5),
+        new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.65),
         new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
         new InstantCommand(()-> elevator.stop(), elevator),
-        new RunCommand(()-> carriage.setDegrees(81.5), carriage).withTimeout(0.6),
+        new RunCommand(()-> carriage.setDegrees(81.5), carriage).withTimeout(0.77),
         new InstantCommand(()-> carriage.stop(), carriage),
         new RunCommand(()-> RobotState.setIntaking())
       )
@@ -128,11 +128,11 @@ public class RobotContainer {
     hpStationTrigger.onFalse(
       new SequentialCommandGroup(
         new InstantCommand(()->RobotState.setIntakeIdle()),
-        new RunCommand(()-> carriage.setDegrees(45), carriage).withTimeout(0.6),
+        new RunCommand(()-> carriage.setDegrees(45), carriage).withTimeout(0.75),
         new InstantCommand(()-> carriage.stop(), carriage),
         new ElevatorHome(elevator).withTimeout(0.9),
         new InstantCommand(()-> elevator.stop(), elevator),
-        new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(0.7),
+        new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(0.85),
         new InstantCommand(()-> carriage.stop(), carriage)
       )
     );
@@ -140,7 +140,7 @@ public class RobotContainer {
    JoystickButton secondLevel = new JoystickButton(driver, 2);
     secondLevel.whileTrue(
       new SequentialCommandGroup(
-        new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.5),
+        new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.65),
         new ConditionalCommand(
           new RunCommand(()-> elevator.setDistance(64), elevator).withTimeout(0.6),
           new RunCommand(()-> elevator.setDistance(70), elevator).withTimeout(0.6),
@@ -148,8 +148,8 @@ public class RobotContainer {
           ),
         new InstantCommand(()-> elevator.stop(), elevator),
         new ConditionalCommand(
-          new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.5),
-          new RunCommand(()-> carriage.setDegrees(48), carriage).withTimeout(0.5),
+          new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.65),
+          new RunCommand(()-> carriage.setDegrees(48), carriage).withTimeout(0.65),
           RobotState::isCone
         ),
         new InstantCommand(()-> carriage.stop(), carriage),
@@ -170,7 +170,7 @@ public class RobotContainer {
         new InstantCommand(()->RobotState.setIntakeIdle()),
         new ElevatorHome(elevator).withTimeout(0.75),
         new InstantCommand(()-> elevator.stop(), elevator),
-        new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(0.7),
+        new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(0.85),
         new InstantCommand(()-> carriage.stop(), carriage)
       )
     );
@@ -208,7 +208,7 @@ public class RobotContainer {
    JoystickButton thirdLevel = new JoystickButton(driver, 4);
    thirdLevel.whileTrue(
     new SequentialCommandGroup(
-      new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.6),
+      new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.5),
       new ConditionalCommand(
         new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
         new RunCommand(()-> elevator.setDistance(108), elevator).withTimeout(0.7),
@@ -216,8 +216,8 @@ public class RobotContainer {
         ),
       new InstantCommand(()-> elevator.stop(), elevator),
       new ConditionalCommand(
-        new RunCommand(()-> carriage.setDegrees(40), carriage).withTimeout(0.5),
-        new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.5),
+        new RunCommand(()-> carriage.setDegrees(40), carriage).withTimeout(0.45),
+        new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.4),
         RobotState::isCone
       ),
       new InstantCommand(()-> carriage.stop(), carriage),
@@ -234,11 +234,11 @@ public class RobotContainer {
       new InstantCommand(()-> elevator.stop(), elevator),
       new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
       new InstantCommand(()->RobotState.setIntakeIdle()),
-      new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.3),
+      new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.37),
       new InstantCommand(()-> carriage.stop(), carriage),
       new ElevatorHome(elevator).withTimeout(0.8),
       new InstantCommand(()-> elevator.stop(), elevator),
-      new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(1),
+      new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(1.15),
       new InstantCommand(()-> carriage.stop(), carriage)
     )
    );
@@ -355,7 +355,7 @@ public class RobotContainer {
       new InstantCommand(()-> carriage.stop()),
       new RunCommand(()->RobotState.setIntaking())
     )
-    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 82:100)).withTimeout(0.78))
+    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 82:100)).withTimeout(0.8))
     );
 
    intakeButton.whileFalse(
