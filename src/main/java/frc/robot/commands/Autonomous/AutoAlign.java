@@ -25,7 +25,6 @@ public class AutoAlign extends CommandBase {
     this.swerve = swerve;
     addRequirements(swerve);
     sidewaysController.setTolerance(1);
-    rotationController.setTolerance(1);
     rotationController.setTolerance(2);
   }
 
@@ -51,7 +50,7 @@ public class AutoAlign extends CommandBase {
       swerve.drive(0, output, rotation, false,true);
     }
     else{ //Changed the setpoint
-      double distanceOutput = -distanceController.calculate(distance, 60)*Constants.Swerve.kMaxSpeed;
+      double distanceOutput = -distanceController.calculate(distance, 63)*Constants.Swerve.kMaxSpeed;
       swerve.drive(distanceOutput, output, rotation, false,true);
 
     }

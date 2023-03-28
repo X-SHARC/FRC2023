@@ -250,10 +250,27 @@ public class SharcTrajectory {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, maxVel, maxAccel);
 
         if(isFirstTrajectory){
+      
+            PathPlannerState initstate = trajectory.getInitialState();
+            initstate = PathPlannerTrajectory.transformStateForAlliance(initstate, DriverStation.getAlliance());
             swerve.resetPoseEstimator(
-                trajectory.getInitialHolonomicPose()
-            );
+                new Pose2d(
+                    new Translation2d(
+                        initstate.poseMeters.getX(),
+                        initstate.poseMeters.getY()
+                    ),
+                    initstate.holonomicRotation
+                )
+        );
         }
+
+        /*
+        if(isFirstTrajectory){
+            swerve.resetPoseEstimator(
+                       trajectory.getInitialHolonomicPose()
+                   );
+        }
+         */
 
         return 
             new SequentialCommandGroup(
@@ -265,7 +282,7 @@ public class SharcTrajectory {
                 ySpeedController,
                 rotController,
                 swerve::setClosedLoopStates,
-                false,
+                true,
                 swerve)
                 .andThen(
                     new RunCommand(()->swerve.stopModules(), swerve).withTimeout(0.5)

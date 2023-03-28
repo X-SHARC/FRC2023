@@ -34,7 +34,7 @@ public final class Constants {
 	  
 		public static final double kAngleP = 0.00884888;
 
-		public static final double wheelCircumference = 2 * Math.PI  * Units.inchesToMeters(1.916678);
+		public static final double wheelCircumference = 2 * Math.PI  * Units.inchesToMeters(1.88);
 
         public static final double kMaxSpeed = Units.feetToMeters(15.2); // 16.2 feet per second
 		public static final double kMaxAngularSpeed = 2*Math.PI; // 1/2 rotation per second
