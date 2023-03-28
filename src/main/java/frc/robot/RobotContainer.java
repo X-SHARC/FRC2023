@@ -62,22 +62,15 @@ public class RobotContainer {
   
 
   //Autonomous Commands
-  Command getLeft2Cube = trajCommands.getLeftTwoCube(swerveDrivetrain, elevator, intake, carriage);
+  /*Command getLeft2Cube = trajCommands.getLeftTwoCube(swerveDrivetrain, elevator, intake, carriage);
   Command getLeft2CubeWithDock = trajCommands.getLeftTwoCubeWithDock(swerveDrivetrain,elevator,intake,carriage);
   Command getLeft3Cube = trajCommands.getLeft3Cube(swerveDrivetrain, elevator, intake, carriage);
   Command oneCubeTaxi = trajCommands.getOneCubeAndBack(swerveDrivetrain, elevator, carriage);
-
+*/
 
   public RobotContainer() {
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-
-    m_chooser.addOption("2 Cube Auto", getLeft2Cube);
-    m_chooser.addOption("2 Cube Dock", getLeft2CubeWithDock);
-    m_chooser.addOption("3 Cube", getLeft3Cube);
-    m_chooser.setDefaultOption("1 Cube Basic Auto", oneCubeTaxi);
-
-    //SmartDashboard.putData(m_chooser);
   }
 
   private void configureBindings() {
@@ -393,7 +386,6 @@ public class RobotContainer {
   
 
   public Command getAutonomousCommand() {
-    //return trajectoryGenerator.getOneCubeAndBack(swerveDrivetrain, elevator, carriage);
-    return getLeft2CubeWithDock;
+    return trajectoryGenerator.getLeftTwoCube(swerveDrivetrain, elevator, intake, carriage);
   }
 } 
