@@ -250,7 +250,7 @@ public class SharcTrajectory {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, maxVel, maxAccel);
 
         if(isFirstTrajectory){
-      
+
             PathPlannerState initstate = trajectory.getInitialState();
             initstate = PathPlannerTrajectory.transformStateForAlliance(initstate, DriverStation.getAlliance());
             swerve.resetPoseEstimator(
