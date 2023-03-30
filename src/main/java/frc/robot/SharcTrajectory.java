@@ -251,7 +251,8 @@ public class SharcTrajectory {
 
         
         if(isFirstTrajectory){
-
+            
+           if(DriverStation.getAlliance() == Alliance.Red){ 
             PathPlannerState initstate = trajectory.getInitialState();
             initstate = PathPlannerTrajectory.transformStateForAlliance(initstate, DriverStation.getAlliance());
             swerve.resetPoseEstimator(
@@ -262,16 +263,21 @@ public class SharcTrajectory {
                     ),
                     initstate.holonomicRotation
                 )
-        );
-        }
-         
-        /* 
-        if(isFirstTrajectory){
-            swerve.resetPoseEstimator(
+            );
+            } 
+    
+            else if(DriverStation.getAlliance() == Alliance.Blue){
+                swerve.resetPoseEstimator(
                        trajectory.getInitialHolonomicPose()
                    );
-        }
-        */
+            }
+
+            else {
+                swerve.resetPoseEstimator(
+                    trajectory.getInitialHolonomicPose()
+                );
+            }
+    }
 
         return 
             new SequentialCommandGroup(
