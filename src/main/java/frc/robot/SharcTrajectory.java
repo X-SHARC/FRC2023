@@ -33,7 +33,7 @@ public class SharcTrajectory {
     PIDController xSpeedController = new PIDController(5.31, 0, 0);
     //y: 5.7
     PIDController ySpeedController = new PIDController(5.7, 0, 0);
-    PIDController rotController = new PIDController(1.15, 0, 0);
+    PIDController rotController = new PIDController(1.27, 0, 0);
     //1.27 pid, 1.431
 
     /*HashMap<String, Command> eventMap = new HashMap<>();
@@ -87,8 +87,8 @@ public class SharcTrajectory {
                             new InstantCommand(()->RobotState.setIntakeIdle())
                         )
                     ),
-                    new RunCommand(()->RobotState.setEjecting()).withTimeout(0.35)
-                    .alongWith(new RunCommand(()->swerve.stopModules())).withTimeout(0.35),
+                    new RunCommand(()->RobotState.setShooting()).withTimeout(3)
+                    .alongWith(new RunCommand(()->swerve.stopModules())).withTimeout(3.5),
                     new InstantCommand(()->RobotState.setIntakeIdle())
                     )));
     }
@@ -249,6 +249,7 @@ public class SharcTrajectory {
     public Command getControllerCommand(Swerve swerve, String trajName, boolean isFirstTrajectory, double maxVel, double maxAccel) {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, maxVel, maxAccel);
 
+        
         if(isFirstTrajectory){
 
             PathPlannerState initstate = trajectory.getInitialState();
@@ -263,14 +264,14 @@ public class SharcTrajectory {
                 )
         );
         }
-
-        /*
+         
+        /* 
         if(isFirstTrajectory){
             swerve.resetPoseEstimator(
                        trajectory.getInitialHolonomicPose()
                    );
         }
-         */
+        */
 
         return 
             new SequentialCommandGroup(

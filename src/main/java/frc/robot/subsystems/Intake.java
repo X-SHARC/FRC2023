@@ -34,7 +34,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void ejectCube(){
-    intakeMotor.set(ControlMode.PercentOutput, 0.6);
+    intakeMotor.set(ControlMode.PercentOutput, 0.7);
   }
 
   public void shootCube(){
