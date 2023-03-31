@@ -36,6 +36,8 @@ public class RobotContainer {
   private final static Joystick operator = new Joystick(1);
   private final static PS4Controller operatorYedek = new PS4Controller(2);
 
+  PortForwarder vis;
+
   //Subsystems
   Swerve swerveDrivetrain = new Swerve(true);
   Elevator elevator = new Elevator();
@@ -74,6 +76,7 @@ public class RobotContainer {
     m_chooser.addOption("1 Cube and taxi", trajectoryGenerator.getOneCubeAndBack(swerveDrivetrain, elevator, carriage));
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
+    PortForwarder.add(5801, "limelight.local", 5801);
   }
 
   private void configureBindings() {
