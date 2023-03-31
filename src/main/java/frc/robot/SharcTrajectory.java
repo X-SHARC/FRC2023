@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
@@ -30,6 +32,8 @@ public class SharcTrajectory {
     double chargeStationMaxVel = 1.5;
     double chargeStationMaxAccel = 2;
 
+    BooleanSupplier isPitchBalanced;
+
     PIDController xSpeedController = new PIDController(5.31, 0, 0);
     //y: 5.7
     PIDController ySpeedController = new PIDController(5.7, 0, 0);
@@ -42,6 +46,33 @@ public class SharcTrajectory {
     
     public SharcTrajectory(){
         rotController.enableContinuousInput(-Math.PI, Math.PI);
+    }
+
+    public Command dockEngageCommand(Swerve swerve){
+        isPitchBalanced = ()->{
+            if(swerve.getPitch()>1){
+                return false;
+            }
+            else if(swerve.getPitch()<-1){
+                return false;
+            }
+            else if(swerve.getPitch() == 0){
+                return true;
+            }
+            return false;
+          };
+        
+        BooleanSupplier isPitchInversed = ()->{
+            return true;
+        };
+        return new SequentialCommandGroup(
+            new ConditionalCommand(
+            //belki bi range içinde diye eklenebilir
+            new RunCommand(()->swerve.drive(0.15 * Constants.Swerve.kMaxSpeed, 0.0, 0.0, true, false), swerve).until(isPitchBalanced),
+            new RunCommand(()->swerve.drive(-0.15 * Constants.Swerve.kMaxSpeed, 0.0, 0.0, true, false), swerve).until(isPitchBalanced), 
+            isPitchInversed),
+            new RunCommand(()->swerve.stopModules(), swerve)
+        );
     }
 
     public Command getLeftTwoCube(Swerve swerve, Elevator elevator, Intake intake, Carriage carriage){
@@ -249,7 +280,6 @@ public class SharcTrajectory {
     public Command getControllerCommand(Swerve swerve, String trajName, boolean isFirstTrajectory, double maxVel, double maxAccel) {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, maxVel, maxAccel);
 
-        
         if(isFirstTrajectory){
            if(DriverStation.getAlliance() == Alliance.Red){ 
             PathPlannerState initstate = trajectory.getInitialState();

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
@@ -28,6 +30,8 @@ public class Swerve extends SubsystemBase {
   private boolean isCalibrating;
   private boolean offsetCalibration = false;
   private boolean driveCalibration = true;
+
+  
 
   private Rotation2d fieldAngle = new Rotation2d();
 
@@ -87,7 +91,6 @@ public class Swerve extends SubsystemBase {
       true,
       -11)  //! Back Right
   };
-
 
   SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[] {
     modules[0].getModulePosition(),
@@ -216,6 +219,8 @@ public class Swerve extends SubsystemBase {
     modules[3].setClosedLoop(desiredStates[3]);
   }
 
+
+
   @Override
   public void periodic() {
     swerveModulePositions = new SwerveModulePosition[] {
@@ -238,6 +243,8 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Pose Estimator Pose X", getPose().getX());
     SmartDashboard.putNumber("Pose Estimator Y", getPose().getY());
     SmartDashboard.putNumber("Pose Estimator Rot", getPose().getRotation().getDegrees());*/
+
+    SmartDashboard.putNumber("Pigeon Pitch value:", pigeon.getPitch());
 
     if(isCalibrating){
       modules[0].outputDistance();
