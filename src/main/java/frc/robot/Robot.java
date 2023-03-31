@@ -15,6 +15,9 @@ public class Robot extends TimedRobot {
 
 
   private RobotContainer m_robotContainer;
+  public SendableChooser <Command> m_chooser = new SendableChooser<>();
+
+
 
   @Override
   public void robotInit() {

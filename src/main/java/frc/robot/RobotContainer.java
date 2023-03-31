@@ -69,6 +69,9 @@ public class RobotContainer {
 */
 
   public RobotContainer() {
+    m_chooser.addOption("2 Cubes + Dock", trajectoryGenerator.getLeftTwoCubeWithDock(swerveDrivetrain, elevator, intake, carriage));
+    m_chooser.addOption("2 Cubes", trajectoryGenerator.getLeftTwoCube(swerveDrivetrain, elevator, intake, carriage));
+    m_chooser.addOption("1 Cube and taxi", trajectoryGenerator.getOneCubeAndBack(swerveDrivetrain, elevator, carriage));
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
   }
@@ -348,13 +351,13 @@ public class RobotContainer {
       new InstantCommand(()-> carriage.stop()),
       new RunCommand(()->RobotState.setIntaking())
     )
-    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 82:100)).withTimeout(0.8))
+    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 82:100)).withTimeout(0.55))
     );
 
    intakeButton.whileFalse(
     new SequentialCommandGroup(
       new InstantCommand(()-> RobotState.setIntakeIdle()),
-      new RunCommand(()->carriage.setDegrees(3), carriage).withTimeout(0.5),
+      new RunCommand(()->carriage.setDegrees(12), carriage).withTimeout(0.5),
       new InstantCommand(()-> carriage.stop(), carriage)
     )
     );
@@ -366,13 +369,13 @@ public class RobotContainer {
       new RunCommand(()->RobotState.setEjecting())
     )
    .beforeStarting(
-    new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece() == GamePiece.CONE ? 50:75 )).withTimeout(0.8)
+    new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece() == GamePiece.CONE ? 50:75 )).withTimeout(0.5)
    ));
 
    ejectButton.whileFalse(
     new SequentialCommandGroup(
       new InstantCommand(()-> RobotState.setIntakeIdle()),
-      new RunCommand(()->carriage.setDegrees(5)).withTimeout(0.5),
+      new RunCommand(()->carriage.setDegrees(12)).withTimeout(0.5),
       new InstantCommand(()-> carriage.stop())
    ));
 
@@ -386,6 +389,7 @@ public class RobotContainer {
   
 
   public Command getAutonomousCommand() {
-    return trajectoryGenerator.getLeftTwoCube(swerveDrivetrain, elevator, intake, carriage);
+    //return trajectoryGenerator.getLeftTwoCube(swerveDrivetrain, elevator, intake, carriage);
+    return m_chooser.getSelected();
   }
 } 
