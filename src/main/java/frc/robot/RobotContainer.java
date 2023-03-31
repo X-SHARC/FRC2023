@@ -58,7 +58,7 @@ public class RobotContainer {
   PowerDistribution pdh = new PowerDistribution();
   AutoAlign autoAlign = new AutoAlign(swerveDrivetrain);
 
-  SendableChooser<Command> m_chooser = new SendableChooser<>();
+  SendableChooser<String> m_chooser = new SendableChooser<>();
 
   SharcTrajectory trajCommands = new SharcTrajectory();
   
@@ -71,9 +71,23 @@ public class RobotContainer {
 */
 
   public RobotContainer() {
+    /*
     m_chooser.addOption("2 Cubes + Dock", trajectoryGenerator.getLeftTwoCubeWithDock(swerveDrivetrain, elevator, intake, carriage));
-    m_chooser.addOption("2 Cubes", trajectoryGenerator.getLeftTwoCube(swerveDrivetrain, elevator, intake, carriage));
+    m_chooser.setDefaultOption("2 Cubes", trajectoryGenerator.getLeftTwoCube(swerveDrivetrain, elevator, intake, carriage));
     m_chooser.addOption("1 Cube and taxi", trajectoryGenerator.getOneCubeAndBack(swerveDrivetrain, elevator, carriage));
+    m_chooser.addOption("Null Auto", null);
+    m_chooser.addOption("Deneysel Auto Engage", trajectoryGenerator.deneyselEngage(swerveDrivetrain, elevator, intake, carriage));
+    m_chooser.addOption("Pit Engage Deneme", trajectoryGenerator.engageCommand(swerveDrivetrain));
+    SmartDashboard.putData(m_chooser);
+     */
+    m_chooser.addOption("2 Cubes + Dock", "2cubedock");
+    m_chooser.setDefaultOption("2 Cubes", "2cube");
+    m_chooser.addOption("1 Cube and taxi", "1cubetaxi");
+    m_chooser.addOption("Null Auto", "null");
+    m_chooser.addOption("Deneysel Auto Engage", "experimentalengage");
+    m_chooser.addOption("Pit Engage Deneme", "pitengage");
+    SmartDashboard.putData(m_chooser);
+
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
     PortForwarder.add(5801, "limelight.local", 5801);
@@ -393,6 +407,22 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     //return trajectoryGenerator.getLeftTwoCube(swerveDrivetrain, elevator, intake, carriage);
-    return m_chooser.getSelected();
+    switch(m_chooser.getSelected()){
+      case "2cubedock":
+        trajCommands.getLeftTwoCubeWithDock(swerveDrivetrain, elevator, intake, carriage);
+      case "2cube":
+        trajCommands.getLeft3Cube(swerveDrivetrain, elevator, intake, carriage);
+      case "1cubetaxi":
+        trajCommands.getOneCubeAndBack(swerveDrivetrain, elevator, carriage);
+      case "null":
+        return null;
+      case "experimentalengage":
+        return trajCommands.deneyselEngage(swerveDrivetrain, elevator, intake, carriage);
+      case "pitengage":
+        return trajCommands.engageCommand(swerveDrivetrain);
+      default:
+        return null;
+
+    }
   }
 } 

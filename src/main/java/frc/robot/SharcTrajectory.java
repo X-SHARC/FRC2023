@@ -179,6 +179,35 @@ public class SharcTrajectory {
         );
     }
 
+    public Command engageCommand(Swerve swerve){
+        isPitchBalanced = ()->{
+            if(swerve.getPitch()-3.8>1){
+                return false;
+            }
+            else if(swerve.getPitch()-3.8<-1){
+                return false;
+            }
+            else if(swerve.getPitch()-3.8 == 0){
+                return true;
+            }
+            else {
+                return true;
+            }
+          };
+        return new SequentialCommandGroup(
+            new RunCommand(()-> swerve.drive(-0.15*Constants.Swerve.kMaxSpeed, 0,0, true, false), swerve)
+            .until(isPitchBalanced),
+            new RunCommand(()->swerve.stopModules(), swerve)
+            );
+    }
+
+    public Command deneyselEngage(Swerve swerve, Elevator elevator, Intake intake, Carriage carriage){
+        return new SequentialCommandGroup(
+            getLeftTwoCubeWithDock( swerve, elevator, intake, carriage),
+            engageCommand(swerve)
+        );
+    }
+
     
 
     public Command getOneCubeAndBack(Swerve swerve, Elevator elevator, Carriage carriage){
@@ -208,7 +237,7 @@ public class SharcTrajectory {
                 new RunCommand(()-> carriage.setDegrees(15), carriage).withTimeout(0.15),
                 new InstantCommand(()-> carriage.stop(), carriage)
               ),
-              new RunCommand(()-> swerve.drive(-0.2*Constants.Swerve.kMaxSpeed, 0,0, true, false), swerve).withTimeout(1.8)
+              new RunCommand(()-> swerve.drive(-0.2*Constants.Swerve.kMaxSpeed, 0,0, true, false), swerve).withTimeout(3.6)
               );
     }
 
@@ -281,29 +310,32 @@ public class SharcTrajectory {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, maxVel, maxAccel);
 
         if(isFirstTrajectory){
-           if(DriverStation.getAlliance() == Alliance.Red){ 
-            PathPlannerState initstate = trajectory.getInitialState();
-            initstate = PathPlannerTrajectory.transformStateForAlliance(initstate, DriverStation.getAlliance());
-            swerve.resetPoseEstimator(
-                new Pose2d(
-                    new Translation2d(
-                        initstate.poseMeters.getX(),
-                        initstate.poseMeters.getY()
-                    ),
-                    initstate.holonomicRotation
-                )
-            );
-            } 
-            else if(DriverStation.getAlliance() == Alliance.Blue){
-                swerve.resetPoseEstimator(
-                       trajectory.getInitialHolonomicPose()
-                   );
-            }
-            else {
-                swerve.resetPoseEstimator(
-                    trajectory.getInitialHolonomicPose()
-                );
-            }
+            
+            
+                   if(DriverStation.getAlliance() == Alliance.Red){ 
+                    PathPlannerState initstate = trajectory.getInitialState();
+                    initstate = PathPlannerTrajectory.transformStateForAlliance(initstate, DriverStation.getAlliance());
+                    swerve.resetPoseEstimator(
+                        new Pose2d(
+                            new Translation2d(
+                                initstate.poseMeters.getX(),
+                                initstate.poseMeters.getY()
+                            ),
+                            initstate.holonomicRotation
+                        )
+                    );
+                    } 
+                    else if(DriverStation.getAlliance() == Alliance.Blue){
+                        swerve.resetPoseEstimator(
+                               trajectory.getInitialHolonomicPose()
+                           );
+                    }
+                    else {
+                        swerve.resetPoseEstimator(
+                            trajectory.getInitialHolonomicPose()
+                        );
+                    }
+                    
     }
 
         return 
