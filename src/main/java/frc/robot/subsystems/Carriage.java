@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -36,6 +38,8 @@ public class Carriage extends SubsystemBase {
   ArmFeedforward carriageFeedforward = new ArmFeedforward(kS, kG, kV, kA);
 
   private double angle = 0;
+
+  public BooleanSupplier isCarriageAtAngle;
 
   double setpoint = 5;
 
@@ -124,11 +128,19 @@ public class Carriage extends SubsystemBase {
     return encoder.isConnected();
   }
 
+  public BooleanSupplier isCarriageAtAngleSupplier(double angle ){
+    isCarriageAtAngle = ()->{
+      return (angle == getDegrees());
+    };
+
+    return isCarriageAtAngle;
+  }
+
   @Override
   public void periodic() {
     boolean isAlive = isAlive();
     RobotState.setCarriageEncoder(isAlive);
-    if(getDegrees()>100){
+    if(getDegrees()>110){
       stop();
       RobotState.setCarriageLimit(true);
     }
