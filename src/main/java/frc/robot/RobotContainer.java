@@ -368,9 +368,8 @@ public class RobotContainer {
       new InstantCommand(()-> carriage.stop()),
       new RunCommand(()->RobotState.setIntaking())
     )
-    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 82:100)).until(carriage.isCarriageAtAngleSupplier(
-      RobotState.getGamePiece()==GamePiece.CONE? 82:100
-    )))
+    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 82:100))).withTimeout(0.6)
+    //.until(carriage.isCarriageAtAngleSupplier(RobotState.getGamePiece()==GamePiece.CONE? 82:100)))
     );
 
    intakeButton.whileFalse(
@@ -389,7 +388,8 @@ public class RobotContainer {
     )
    .beforeStarting(
     new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece() == GamePiece.CONE ? 50:75 ))
-    .until(carriage.isCarriageAtAngleSupplier(RobotState.getGamePiece() == GamePiece.CONE ? 50:75))
+    //.until(carriage.isCarriageAtAngleSupplier(RobotState.getGamePiece() == GamePiece.CONE ? 50:75))
+    .withTimeout(0.6)
    ));
 
    ejectButton.whileFalse(
