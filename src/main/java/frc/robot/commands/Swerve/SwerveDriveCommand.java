@@ -38,7 +38,7 @@ public class SwerveDriveCommand extends CommandBase {
   @Override
   public void execute() {
     if(RobotState.isElevated() || joystick.getRawButton(6)){
-      scale = 0.15;
+      scale = 0.19;
     }
     else scale = 1;
 

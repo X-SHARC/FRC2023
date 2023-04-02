@@ -86,6 +86,8 @@ public class RobotContainer {
     m_chooser.addOption("Null Auto", "null");
     m_chooser.addOption("Deneysel Auto Engage", "experimentalengage");
     m_chooser.addOption("Pit Engage Deneme", "pitengage");
+    m_chooser.addOption("Mid+Low 2 Cube + Auto Engage", "rpotonom");
+    m_chooser.addOption("Cable Protector", "cableS");
     SmartDashboard.putData(m_chooser);
 
     configureBindings();
@@ -181,7 +183,7 @@ public class RobotContainer {
         new InstantCommand(()-> elevator.stop(), elevator),
         new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.6),
         new InstantCommand(()->RobotState.setIntakeIdle()),
-        new ElevatorHome(elevator).withTimeout(0.75),
+        new ElevatorHome(elevator).withTimeout(0.65),
         new InstantCommand(()-> elevator.stop(), elevator),
         new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(0.85),
         new InstantCommand(()-> carriage.stop(), carriage)
@@ -229,8 +231,8 @@ public class RobotContainer {
         ),
       new InstantCommand(()-> elevator.stop(), elevator),
       new ConditionalCommand(
-        new RunCommand(()-> carriage.setDegrees(40), carriage).withTimeout(0.45),
-        new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.4),
+        new RunCommand(()-> carriage.setDegrees(40), carriage).withTimeout(0.4),
+        new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.35),
         RobotState::isCone
       ),
       new InstantCommand(()-> carriage.stop(), carriage),
@@ -368,14 +370,14 @@ public class RobotContainer {
       new InstantCommand(()-> carriage.stop()),
       new RunCommand(()->RobotState.setIntaking())
     )
-    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 82:100))).withTimeout(0.6)
-    //.until(carriage.isCarriageAtAngleSupplier(RobotState.getGamePiece()==GamePiece.CONE? 82:100)))
+    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 80:100))
+    .withTimeout(RobotState.getGamePiece()==GamePiece.CONE? 0.5:0.85))
     );
 
    intakeButton.whileFalse(
     new SequentialCommandGroup(
       new InstantCommand(()-> RobotState.setIntakeIdle()),
-      new RunCommand(()->carriage.setDegrees(12), carriage).until(carriage.isCarriageAtAngleSupplier(12)),
+      new RunCommand(()->carriage.setDegrees(12), carriage).withTimeout(0.5),
       new InstantCommand(()-> carriage.stop(), carriage)
     )
     );
@@ -387,15 +389,13 @@ public class RobotContainer {
       new RunCommand(()->RobotState.setEjecting())
     )
    .beforeStarting(
-    new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece() == GamePiece.CONE ? 50:75 ))
-    //.until(carriage.isCarriageAtAngleSupplier(RobotState.getGamePiece() == GamePiece.CONE ? 50:75))
-    .withTimeout(0.6)
+    new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece() == GamePiece.CONE ? 50:75 )).withTimeout(0.5)
    ));
 
    ejectButton.whileFalse(
     new SequentialCommandGroup(
       new InstantCommand(()-> RobotState.setIntakeIdle()),
-      new RunCommand(()->carriage.setDegrees(12)).until(carriage.isCarriageAtAngleSupplier(12)),
+      new RunCommand(()->carriage.setDegrees(12)).withTimeout(0.5),
       new InstantCommand(()-> carriage.stop())
    ));
 
@@ -412,17 +412,21 @@ public class RobotContainer {
     //return trajectoryGenerator.getLeftTwoCube(swerveDrivetrain, elevator, intake, carriage);
     switch(m_chooser.getSelected()){
       case "2cubedock":
-        trajCommands.getLeftTwoCubeWithDock(swerveDrivetrain, elevator, intake, carriage);
+        return trajCommands.getLeftTwoCubeWithDock(swerveDrivetrain, elevator, intake, carriage);
+      case "cableS":
+        return trajCommands.getCableProtector(swerveDrivetrain, elevator, intake, carriage);
       case "2cube":
-        trajCommands.getLeft3Cube(swerveDrivetrain, elevator, intake, carriage);
+        return trajCommands.getLeft3Cube(swerveDrivetrain, elevator, intake, carriage);
       case "1cubetaxi":
-        trajCommands.getOneCubeAndBack(swerveDrivetrain, elevator, carriage);
+        return trajCommands.getOneCubeAndBack(swerveDrivetrain, elevator, carriage);
       case "null":
         return null;
       case "experimentalengage":
         return trajCommands.deneyselEngage(swerveDrivetrain, elevator, intake, carriage);
       case "pitengage":
         return trajCommands.engageCommand(swerveDrivetrain);
+      case "rpotonom":
+        return trajCommands.RPALMAOTONOMU(swerveDrivetrain, elevator, intake, carriage);
       default:
         return null;
 

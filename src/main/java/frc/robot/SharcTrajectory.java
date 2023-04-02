@@ -124,6 +124,97 @@ public class SharcTrajectory {
                     )));
     }
 
+    public Command getCableProtector(Swerve swerve, Elevator elevator, Intake intake, Carriage carriage){
+        RobotState.setGamePiece(RobotState.GamePiece.CUBE);
+        return new SequentialCommandGroup(
+             new SequentialCommandGroup(
+                new RunCommand(()-> carriage.setDegrees(30), carriage).withTimeout(0.35),
+                new InstantCommand(()-> carriage.stop(), carriage), 
+                new ConditionalCommand(
+                  new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
+                  new RunCommand(()-> elevator.setDistance(110), elevator).withTimeout(0.72),
+                  RobotState::isCone
+                  ),
+                new InstantCommand(()-> elevator.stop(), elevator),
+                new ConditionalCommand(
+                  new RunCommand(()-> carriage.setDegrees(40), carriage).withTimeout(0.4),
+                  new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.21),
+                  RobotState::isCone
+                ),
+                new InstantCommand(()-> carriage.stop(), carriage),
+                new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.3),
+                new InstantCommand(()->RobotState.setIntakeIdle()),
+                new RunCommand(()-> carriage.setDegrees(23), carriage).withTimeout(0.2),
+                new InstantCommand(()-> carriage.stop(), carriage),
+                new ElevatorHome(elevator).withTimeout(0.75),
+                new InstantCommand(()-> elevator.stop(), elevator),
+                new RunCommand(()-> carriage.setDegrees(15), carriage).withTimeout(0.15),
+                new InstantCommand(()-> carriage.stop(), carriage)
+              ), 
+            Commands.parallel(
+                new SequentialCommandGroup(
+                    getControllerCommand(swerve, "cableS", true, 1.75, 1.5)
+                ),
+                new RunCommand(()->elevator.stop())
+            )
+            
+        );
+    }
+    public Command RPALMAOTONOMU(Swerve swerve, Elevator elevator, Intake intake, Carriage carriage){
+        RobotState.setGamePiece(RobotState.GamePiece.CUBE);
+        return new SequentialCommandGroup(
+             new SequentialCommandGroup(
+                new RunCommand(()-> carriage.setDegrees(30), carriage).withTimeout(0.45),
+                new InstantCommand(()-> carriage.stop(), carriage), 
+                new ConditionalCommand(
+                  new RunCommand(()-> elevator.setDistance(64), elevator).withTimeout(0.6),
+                  new RunCommand(()-> elevator.setDistance(70), elevator).withTimeout(0.6),
+                  RobotState::isCone
+                  ),
+                new InstantCommand(()-> elevator.stop(), elevator),
+                new ConditionalCommand(
+                  new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.3),
+                  new RunCommand(()-> carriage.setDegrees(48), carriage).withTimeout(0.21),
+                  RobotState::isCone
+                ),
+                new InstantCommand(()-> carriage.stop(), carriage),
+                new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.3),
+                new InstantCommand(()->RobotState.setIntakeIdle()),
+                new RunCommand(()-> carriage.setDegrees(23), carriage).withTimeout(0.2),
+                new InstantCommand(()-> carriage.stop(), carriage),
+                new ElevatorHome(elevator).withTimeout(0.6),
+                new InstantCommand(()-> elevator.stop(), elevator),
+                new RunCommand(()-> carriage.setDegrees(15), carriage).withTimeout(0.15),
+                new InstantCommand(()-> carriage.stop(), carriage)
+              ), 
+            Commands.parallel(
+                new SequentialCommandGroup(
+                    getControllerCommand(swerve, "LeftCube1", true, 4, 3).withTimeout(2.67),
+                    new RunCommand(()->carriage.setDegrees(108)).withTimeout(0.9),
+                    new InstantCommand(()-> carriage.stop(), carriage),
+                    new RunCommand(()->RobotState.setIntaking())
+                    .withTimeout(0.65)
+                    .alongWith(new RunCommand(()->swerve.stopModules()).withTimeout(0.4)),
+                    getControllerCommand(swerve, "LeftCube2", false, 4, 3).withTimeout(2.5)
+                    .alongWith(
+                        new SequentialCommandGroup(
+                            new RunCommand(()->carriage.setDegrees(10), carriage).withTimeout(0.7),
+                            new InstantCommand(()-> carriage.stop(), carriage),
+                            new InstantCommand(()->RobotState.setIntakeIdle())
+                        )
+                    ),
+                    new RunCommand(()->RobotState.setEjecting()).withTimeout(0.35)
+                    .alongWith(new RunCommand(()->swerve.stopModules())).withTimeout(0.35),
+                    new InstantCommand(()->RobotState.setIntakeIdle()),
+                    getControllerCommand(swerve, "LeftCubeDock", false, chargeStationMaxVel, chargeStationMaxAccel),
+                    new RunCommand(()->swerve.stopModules()).withTimeout(1)
+                ),
+                new RunCommand(()->elevator.stop())
+            )
+            
+        );
+    }
+
     public Command getLeftTwoCubeWithDock(Swerve swerve, Elevator elevator, Intake intake, Carriage carriage){
         RobotState.setGamePiece(RobotState.GamePiece.CUBE);
         return new SequentialCommandGroup(
@@ -310,8 +401,6 @@ public class SharcTrajectory {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, maxVel, maxAccel);
 
         if(isFirstTrajectory){
-            
-            
                    if(DriverStation.getAlliance() == Alliance.Red){ 
                     PathPlannerState initstate = trajectory.getInitialState();
                     initstate = PathPlannerTrajectory.transformStateForAlliance(initstate, DriverStation.getAlliance());

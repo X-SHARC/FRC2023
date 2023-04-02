@@ -162,14 +162,15 @@ public class Elevator extends SubsystemBase {
     /*SmartDashboard.putNumber("PIDOutput", PIDOutput);
     SmartDashboard.putNumber("Elevator PID Error", elevatorPID.getPositionError());
     SmartDashboard.putNumber("Elevator PID Setpoint", elevatorPID.getSetpoint());
-    SmartDashboard.putNumber("Elevator Distance:", distance);
+    
     SmartDashboard.putData("Bottom Limit Switch", bottomLimitSwitch);*/
+    SmartDashboard.putNumber("Elevator Distance:", distance);
 
     if(bottomLimitSwitch.get() == false){
       resetEncoder();
       RobotState.setElevated(false);
     }
-    else if(distance>= 20) RobotState.setElevated(true);
+    else if(distance>= 28) RobotState.setElevated(true);
     else RobotState.setElevated(false);
 
     } 
