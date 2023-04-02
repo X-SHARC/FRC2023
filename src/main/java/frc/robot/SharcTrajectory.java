@@ -153,7 +153,7 @@ public class SharcTrajectory {
               ), 
             Commands.parallel(
                 new SequentialCommandGroup(
-                    getControllerCommand(swerve, "cableS", true, 1.75, 1.5)
+                    getControllerCommand(swerve, "playff", true, 1.75, 1.5)
                 ),
                 new RunCommand(()->elevator.stop())
             )

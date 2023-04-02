@@ -126,7 +126,7 @@ public class RobotContainer {
 
 
    Trigger hpStationTrigger = new Trigger(
-    ()-> driver.getR2Axis()>0.5
+    ()-> driver.getR2Axis()>0.35
    );
 
     hpStationTrigger.whileTrue(
