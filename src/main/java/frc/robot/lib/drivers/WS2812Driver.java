@@ -41,6 +41,18 @@ public class WS2812Driver extends SubsystemBase {
     else if(RobotState.currentGamePiece==GamePiece.CONE) coneLED();
     else if (RobotState.currentGamePiece == GamePiece.CUBE) cubeLED();
     else sliding(new Color(0, 255, 0));
+    /*else{
+      lightOneSide(Side.LEFT, 0);
+      turnOff();
+      lightOneSide(Side.LEFT, 0);
+      turnOff();
+      lightOneSide(Side.LEFT, 0);
+      lightOneSide(Side.RIGHT, 130);
+      turnOff();
+      lightOneSide(Side.RIGHT, 130);
+      turnOff();
+      lightOneSide(Side.RIGHT, 130);
+    }*/
   }
 
   public static void setColor(int r, int g, int b) {

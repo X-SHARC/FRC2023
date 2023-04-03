@@ -13,6 +13,9 @@ import frc.robot.commands.Elevator.ElevatorHome;
 import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.lib.drivers.WS2812Driver;
+
+import java.time.Instant;
+
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -25,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -136,7 +140,14 @@ public class RobotContainer {
         new InstantCommand(()-> elevator.stop(), elevator),
         new RunCommand(()-> carriage.setDegrees(81.5), carriage).withTimeout(0.77),
         new InstantCommand(()-> carriage.stop(), carriage),
-        new RunCommand(()-> RobotState.setIntaking())
+        new RunCommand(()-> RobotState.setIntaking()).alongWith(
+          new  SequentialCommandGroup(
+            new WaitCommand(0.5),
+            new InstantCommand(()-> elevator.setDistance(115)),
+            new InstantCommand(()-> elevator.stop())
+          )
+        )
+       
       )
     );
 
