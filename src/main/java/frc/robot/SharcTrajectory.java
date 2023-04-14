@@ -397,6 +397,78 @@ public class SharcTrajectory {
         ));
     }
 
+    public Command getTaxiandEngageWithTimeoutCommand(Swerve swerve, Elevator elevator, Intake intake, Carriage carriage){
+        RobotState.setGamePiece(RobotState.GamePiece.CUBE);
+        return new SequentialCommandGroup(
+             new SequentialCommandGroup(
+                new RunCommand(()-> carriage.setDegrees(30), carriage).withTimeout(0.35),
+                new InstantCommand(()-> carriage.stop(), carriage), 
+                new ConditionalCommand(
+                  new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
+                  new RunCommand(()-> elevator.setDistance(110), elevator).withTimeout(0.72),
+                  RobotState::isCone
+                  ),
+                new InstantCommand(()-> elevator.stop(), elevator),
+                new ConditionalCommand(
+                  new RunCommand(()-> carriage.setDegrees(40), carriage).withTimeout(0.4),
+                  new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.21),
+                  RobotState::isCone
+                ),
+                new InstantCommand(()-> carriage.stop(), carriage),
+                new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.3),
+                new InstantCommand(()->RobotState.setIntakeIdle()),
+                new RunCommand(()-> carriage.setDegrees(23), carriage).withTimeout(0.2),
+                new InstantCommand(()-> carriage.stop(), carriage),
+                new ElevatorHome(elevator).withTimeout(0.75),
+                new InstantCommand(()-> elevator.stop(), elevator),
+                new RunCommand(()-> carriage.setDegrees(15), carriage).withTimeout(0.15),
+                new InstantCommand(()-> carriage.stop(), carriage)
+              ),
+
+              new SequentialCommandGroup(
+                new RunCommand(()-> swerve.drive(-0.2*Constants.Swerve.kMaxSpeed, 0,0, true, false), swerve).withTimeout(2.05),
+                new RunCommand(()-> swerve.drive(-0.2*Constants.Swerve.kMaxSpeed, 0,0, true, false), swerve).withTimeout(1.83),
+                new RunCommand(()-> swerve.drive(0.2*Constants.Swerve.kMaxSpeed, 0,0, true, false), swerve).withTimeout(1.87)
+              ));
+            }
+
+
+            public Command getTaxiandEngageCommand(Swerve swerve, Elevator elevator, Intake intake, Carriage carriage){
+                RobotState.setGamePiece(RobotState.GamePiece.CUBE);
+                return new SequentialCommandGroup(
+                     new SequentialCommandGroup(
+                        new RunCommand(()-> carriage.setDegrees(30), carriage).withTimeout(0.35),
+                        new InstantCommand(()-> carriage.stop(), carriage), 
+                        new ConditionalCommand(
+                          new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
+                          new RunCommand(()-> elevator.setDistance(110), elevator).withTimeout(0.72),
+                          RobotState::isCone
+                          ),
+                        new InstantCommand(()-> elevator.stop(), elevator),
+                        new ConditionalCommand(
+                          new RunCommand(()-> carriage.setDegrees(40), carriage).withTimeout(0.4),
+                          new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.21),
+                          RobotState::isCone
+                        ),
+                        new InstantCommand(()-> carriage.stop(), carriage),
+                        new RunCommand(()-> RobotState.setEjecting()).withTimeout(0.3),
+                        new InstantCommand(()->RobotState.setIntakeIdle()),
+                        new RunCommand(()-> carriage.setDegrees(23), carriage).withTimeout(0.2),
+                        new InstantCommand(()-> carriage.stop(), carriage),
+                        new ElevatorHome(elevator).withTimeout(0.75),
+                        new InstantCommand(()-> elevator.stop(), elevator),
+                        new RunCommand(()-> carriage.setDegrees(15), carriage).withTimeout(0.15),
+                        new InstantCommand(()-> carriage.stop(), carriage)
+                      ),
+                      
+                      new SequentialCommandGroup(
+                        getControllerCommand(swerve, "Houston1", true, 4, 3).withTimeout(2.1),
+                        getControllerCommand(swerve, "Houston2", true, 4, 3).withTimeout(1.9),
+                        getControllerCommand(swerve, "Houston3", false, 4, 3).withTimeout(1.95)
+                      ));
+                    }
+
+                    
     public Command getControllerCommand(Swerve swerve, String trajName, boolean isFirstTrajectory, double maxVel, double maxAccel) {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, maxVel, maxAccel);
 
