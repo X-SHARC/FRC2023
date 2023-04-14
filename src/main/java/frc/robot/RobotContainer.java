@@ -92,6 +92,7 @@ public class RobotContainer {
     m_chooser.addOption("Pit Engage Deneme", "pitengage");
     m_chooser.addOption("Mid+Low 2 Cube + Auto Engage", "rpotonom");
     m_chooser.addOption("Cable Protector", "cableS");
+    m_chooser.addOption("Taxi + Engage", "taxiEngage");
     SmartDashboard.putData(m_chooser);
 
     configureBindings();
@@ -438,6 +439,8 @@ public class RobotContainer {
         return trajCommands.engageCommand(swerveDrivetrain);
       case "rpotonom":
         return trajCommands.RPALMAOTONOMU(swerveDrivetrain, elevator, intake, carriage);
+      case "taxiEngage":
+        return trajCommands.getTaxiandEngageCommand(swerveDrivetrain, elevator, intake, carriage);
       default:
         return null;
 
