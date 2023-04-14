@@ -1,7 +1,5 @@
 package frc.robot;
 
-import java.util.function.BooleanSupplier;
-
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
@@ -32,8 +30,6 @@ public class SharcTrajectory {
     double chargeStationMaxVel = 1.5;
     double chargeStationMaxAccel = 2;
 
-    BooleanSupplier isPitchBalanced;
-
     PIDController xSpeedController = new PIDController(5.31, 0, 0);
     //y: 5.7
     PIDController ySpeedController = new PIDController(5.7, 0, 0);
@@ -46,33 +42,6 @@ public class SharcTrajectory {
     
     public SharcTrajectory(){
         rotController.enableContinuousInput(-Math.PI, Math.PI);
-    }
-
-    public Command dockEngageCommand(Swerve swerve){
-        isPitchBalanced = ()->{
-            if(swerve.getPitch()>1){
-                return false;
-            }
-            else if(swerve.getPitch()<-1){
-                return false;
-            }
-            else if(swerve.getPitch() == 0){
-                return true;
-            }
-            return false;
-          };
-        
-        BooleanSupplier isPitchInversed = ()->{
-            return true;
-        };
-        return new SequentialCommandGroup(
-            new ConditionalCommand(
-            //belki bi range içinde diye eklenebilir
-            new RunCommand(()->swerve.drive(0.15 * Constants.Swerve.kMaxSpeed, 0.0, 0.0, true, false), swerve).until(isPitchBalanced),
-            new RunCommand(()->swerve.drive(-0.15 * Constants.Swerve.kMaxSpeed, 0.0, 0.0, true, false), swerve).until(isPitchBalanced), 
-            isPitchInversed),
-            new RunCommand(()->swerve.stopModules(), swerve)
-        );
     }
 
     public Command getLeftTwoCube(Swerve swerve, Elevator elevator, Intake intake, Carriage carriage){
@@ -179,35 +148,6 @@ public class SharcTrajectory {
         );
     }
 
-    public Command engageCommand(Swerve swerve){
-        isPitchBalanced = ()->{
-            if(swerve.getPitch()-3.8>1){
-                return false;
-            }
-            else if(swerve.getPitch()-3.8<-1){
-                return false;
-            }
-            else if(swerve.getPitch()-3.8 == 0){
-                return true;
-            }
-            else {
-                return true;
-            }
-          };
-        return new SequentialCommandGroup(
-            new RunCommand(()-> swerve.drive(-0.15*Constants.Swerve.kMaxSpeed, 0,0, true, false), swerve)
-            .until(isPitchBalanced),
-            new RunCommand(()->swerve.stopModules(), swerve)
-            );
-    }
-
-    public Command deneyselEngage(Swerve swerve, Elevator elevator, Intake intake, Carriage carriage){
-        return new SequentialCommandGroup(
-            getLeftTwoCubeWithDock( swerve, elevator, intake, carriage),
-            engageCommand(swerve)
-        );
-    }
-
     
 
     public Command getOneCubeAndBack(Swerve swerve, Elevator elevator, Carriage carriage){
@@ -237,7 +177,7 @@ public class SharcTrajectory {
                 new RunCommand(()-> carriage.setDegrees(15), carriage).withTimeout(0.15),
                 new InstantCommand(()-> carriage.stop(), carriage)
               ),
-              new RunCommand(()-> swerve.drive(-0.2*Constants.Swerve.kMaxSpeed, 0,0, true, false), swerve).withTimeout(3.6)
+              new RunCommand(()-> swerve.drive(-0.2*Constants.Swerve.kMaxSpeed, 0,0, true, false), swerve).withTimeout(1.8)
               );
     }
 
@@ -308,35 +248,37 @@ public class SharcTrajectory {
 
     public Command getControllerCommand(Swerve swerve, String trajName, boolean isFirstTrajectory, double maxVel, double maxAccel) {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajName, maxVel, maxAccel);
-
+       
         if(isFirstTrajectory){
-            
-            
-                   if(DriverStation.getAlliance() == Alliance.Red){ 
-                    PathPlannerState initstate = trajectory.getInitialState();
-                    initstate = PathPlannerTrajectory.transformStateForAlliance(initstate, DriverStation.getAlliance());
-                    swerve.resetPoseEstimator(
-                        new Pose2d(
-                            new Translation2d(
-                                initstate.poseMeters.getX(),
-                                initstate.poseMeters.getY()
-                            ),
-                            initstate.holonomicRotation
-                        )
-                    );
-                    } 
-                    else if(DriverStation.getAlliance() == Alliance.Blue){
-                        swerve.resetPoseEstimator(
-                               trajectory.getInitialHolonomicPose()
-                           );
-                    }
-                    else {
-                        swerve.resetPoseEstimator(
-                            trajectory.getInitialHolonomicPose()
-                        );
-                    }
-                    
-    }
+
+
+            if(DriverStation.getAlliance() == Alliance.Red){
+                PathPlannerState initstate = trajectory.getInitialState();
+                initstate = PathPlannerTrajectory.transformStateForAlliance(initstate, DriverStation.getAlliance());
+                swerve.resetPoseEstimator(
+                    new Pose2d(
+                        new Translation2d(
+                            initstate.poseMeters.getX(),
+                            initstate.poseMeters.getY()
+                        ),
+                        initstate.holonomicRotation
+                    ));
+            swerve.resetPoseEstimator(
+                trajectory.getInitialHolonomicPose()
+            );
+            }
+            else if(DriverStation.getAlliance() == Alliance.Blue){
+                swerve.resetPoseEstimator(
+                    trajectory.getInitialHolonomicPose()
+                );
+            }
+            else {
+                swerve.resetPoseEstimator(
+                    trajectory.getInitialHolonomicPose()
+                );
+            } 
+        }
+
 
         return 
             new SequentialCommandGroup(
@@ -354,6 +296,14 @@ public class SharcTrajectory {
                     new RunCommand(()->swerve.stopModules(), swerve).withTimeout(0.5)
                 )
                 );
+    }
+
+    public Command deneyselEngage(Swerve swerveDrivetrain, Elevator elevator, Intake intake, Carriage carriage) {
+        return null;
+    }
+
+    public Command engageCommand(Swerve swerveDrivetrain) {
+        return null;
     }
 
     
