@@ -89,8 +89,8 @@ public class Elevator extends SubsystemBase {
 
       PIDOutput = MathUtil.clamp(
           elevatorPID.calculate(distance, setpoint),
-          -0.9,
-          0.9
+          -1,
+          1
         );
         elevatorMasterMotor.set(ControlMode.PercentOutput, ((PIDOutput*12.)/RobotController.getBatteryVoltage()));
         

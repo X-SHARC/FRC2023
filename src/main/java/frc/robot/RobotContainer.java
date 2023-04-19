@@ -142,7 +142,7 @@ public class RobotContainer {
         new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.65),
         new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
         new InstantCommand(()-> elevator.stop(), elevator),
-        new RunCommand(()-> carriage.setDegrees(81.5), carriage).withTimeout(0.77),
+        new RunCommand(()-> carriage.setDegrees(75), carriage).withTimeout(0.77),
         new InstantCommand(()-> carriage.stop(), carriage),
         new RunCommand(()-> RobotState.setIntaking()).alongWith(
           new  SequentialCommandGroup(
@@ -385,7 +385,7 @@ public class RobotContainer {
       new InstantCommand(()-> carriage.stop()),
       new RunCommand(()->RobotState.setIntaking())
     )
-    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 80:100))
+    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 70:78))
     .withTimeout(RobotState.getGamePiece()==GamePiece.CONE? 0.5:0.85))
     );
 
@@ -436,10 +436,6 @@ public class RobotContainer {
         return trajCommands.getOneCubeAndBack(swerveDrivetrain, elevator, carriage);
       case "null":
         return null;
-      case "experimentalengage":
-        return trajCommands.deneyselEngage(swerveDrivetrain, elevator, intake, carriage);
-      case "pitengage":
-        return trajCommands.engageCommand(swerveDrivetrain);
       case "rpotonom":
         return trajCommands.RPALMAOTONOMU(swerveDrivetrain, elevator, intake, carriage);
       case "taxiEngage":

@@ -352,7 +352,7 @@ public class SharcTrajectory {
     return new SequentialCommandGroup(
         getLv3Place(elevator, intake, carriage),
             new RunCommand(() -> swerve.drive(-0.2 * Constants.Swerve.kMaxSpeed, 0, 0, true, false), swerve)
-                .withTimeout(2.05));
+                .withTimeout(4));
   }
 
   public Command getEngageCommand(Swerve swerve, Elevator elevator, Intake intake, Carriage carriage) {

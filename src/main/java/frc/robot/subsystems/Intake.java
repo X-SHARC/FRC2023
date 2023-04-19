@@ -22,13 +22,12 @@ public class Intake extends SubsystemBase {
   }
 
   public void cubeidle(){
-    intakeMotor.set(ControlMode.PercentOutput,-3.0/RobotController.getBatteryVoltage());
+    intakeMotor.set(ControlMode.PercentOutput,-1.0/RobotController.getBatteryVoltage());
   }
 
   public void coneidle(){
-    intakeMotor.set(ControlMode.PercentOutput,1.2/RobotController.getBatteryVoltage());
+    intakeMotor.set(ControlMode.PercentOutput,1.6/RobotController.getBatteryVoltage());
   }
-
   public void grabCube(){
     intakeMotor.set(ControlMode.PercentOutput, -0.82);
   }
@@ -46,7 +45,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void grabCone(){
-    intakeMotor.set(ControlMode.PercentOutput, 0.9);
+    intakeMotor.set(ControlMode.PercentOutput, 1);
   }
 
   public void ejectCone(){

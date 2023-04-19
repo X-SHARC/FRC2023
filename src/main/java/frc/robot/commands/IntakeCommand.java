@@ -34,6 +34,9 @@ public class IntakeCommand extends CommandBase {
       if(RobotState.getGamePiece() == RobotState.GamePiece.CONE){
         intake.coneidle();
       }
+      else if(RobotState.getGamePiece() == RobotState.GamePiece.CUBE){
+        intake.cubeidle();
+      }
       else intake.stop();
     }
     

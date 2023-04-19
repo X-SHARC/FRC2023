@@ -44,7 +44,7 @@ public class Carriage extends SubsystemBase {
   double setpoint = 5;
 
   double GearRatio1 = 1/121.905;
-  private double offset = 105.2;
+  private double offset = 105.2 - 53;
 
   public Carriage() {
     encoder.setConnectedFrequencyThreshold(200);
