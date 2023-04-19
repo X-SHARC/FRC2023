@@ -14,8 +14,6 @@ import frc.robot.commands.Elevator.ElevatorUpCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.lib.drivers.WS2812Driver;
 
-import java.time.Instant;
-
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -92,7 +90,12 @@ public class RobotContainer {
     m_chooser.addOption("Pit Engage Deneme", "pitengage");
     m_chooser.addOption("Mid+Low 2 Cube + Auto Engage", "rpotonom");
     m_chooser.addOption("Cable Protector", "cableS");
-    m_chooser.addOption("Taxi + Engage", "taxiEngage");
+    m_chooser.addOption("Taxi + Engage NEW", "taxiEngage");
+    m_chooser.addOption("1 Cube and Engage NEW", "1cubeengage");
+    m_chooser.addOption("1 Cube and Taxi NEW", "1cubeandtaxi");
+    m_chooser.addOption("Level 3 Cube NEW", "1cubetolevel3");
+    m_chooser.addOption("Level 2 Cube NEW", "1cubetolevel2");
+    
     SmartDashboard.putData(m_chooser);
 
     configureBindings();
@@ -441,6 +444,14 @@ public class RobotContainer {
         return trajCommands.RPALMAOTONOMU(swerveDrivetrain, elevator, intake, carriage);
       case "taxiEngage":
         return trajCommands.getTaxiandEngageCommand(swerveDrivetrain, elevator, intake, carriage);
+      case "1cubeengage":
+        return trajCommands.getEngageCommand(swerveDrivetrain, elevator, intake, carriage);
+      case "1cubeandtaxi":
+        return trajCommands.getTaxiCommand(swerveDrivetrain, elevator, intake, carriage);
+      case "1cubetolevel2":
+        return trajCommands.getCubeCommandLv2(elevator, intake, carriage);
+      case "1cubetolevel3":
+        return trajCommands.getCubeCommandLv3(elevator, intake, carriage);
       default:
         return null;
 

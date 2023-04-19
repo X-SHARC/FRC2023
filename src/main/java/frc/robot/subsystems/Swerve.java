@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
-
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
@@ -54,7 +52,7 @@ public class Swerve extends SubsystemBase {
   
 
   final boolean invertAllModules = true;
-  private double kP = 0.00156;
+  //private double kP = 0.00156;
   private SwerveModule[] modules = new SwerveModule[] {
 
     new SwerveModule(
