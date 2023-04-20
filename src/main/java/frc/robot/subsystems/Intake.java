@@ -26,7 +26,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void coneidle(){
-    intakeMotor.set(ControlMode.PercentOutput,1.6/RobotController.getBatteryVoltage());
+    intakeMotor.set(ControlMode.PercentOutput,2.8/RobotController.getBatteryVoltage());
   }
   public void grabCube(){
     intakeMotor.set(ControlMode.PercentOutput, -0.82);

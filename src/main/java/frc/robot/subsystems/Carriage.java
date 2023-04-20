@@ -140,8 +140,7 @@ public class Carriage extends SubsystemBase {
   public void periodic() {
     boolean isAlive = isAlive();
     RobotState.setCarriageEncoder(isAlive);
-    if(getDegrees()>110){
-      stop();
+    if(getDegrees()>95){
       RobotState.setCarriageLimit(true);
     }
     else RobotState.setCarriageLimit(false);

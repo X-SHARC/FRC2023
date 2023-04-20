@@ -139,10 +139,10 @@ public class RobotContainer {
 
     hpStationTrigger.whileTrue(
       new SequentialCommandGroup(
-        new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.65),
+        new RunCommand(()-> carriage.setDegrees(25), carriage).withTimeout(0.45),
         new RunCommand(()-> elevator.setDistance(115), elevator).withTimeout(0.8),
         new InstantCommand(()-> elevator.stop(), elevator),
-        new RunCommand(()-> carriage.setDegrees(75), carriage).withTimeout(0.77),
+        new RunCommand(()-> carriage.setDegrees(78), carriage).withTimeout(0.77),
         new InstantCommand(()-> carriage.stop(), carriage),
         new RunCommand(()-> RobotState.setIntaking()).alongWith(
           new  SequentialCommandGroup(
@@ -158,9 +158,14 @@ public class RobotContainer {
     hpStationTrigger.onFalse(
       new SequentialCommandGroup(
         new InstantCommand(()->RobotState.setIntakeIdle()),
-        new RunCommand(()-> carriage.setDegrees(45), carriage).withTimeout(0.75),
-        new InstantCommand(()-> carriage.stop(), carriage),
-        new ElevatorHome(elevator).withTimeout(0.9),
+
+        new ElevatorHome(elevator).withTimeout(0.9)
+        .alongWith(
+          new SequentialCommandGroup(
+            new RunCommand(()-> carriage.setDegrees(12), carriage).withTimeout(0.75),
+            new InstantCommand(()-> carriage.stop(), carriage)
+          )
+        ),
         new InstantCommand(()-> elevator.stop(), elevator),
         new RunCommand(()-> carriage.setDegrees(7), carriage).withTimeout(0.85),
         new InstantCommand(()-> carriage.stop(), carriage)
@@ -172,13 +177,13 @@ public class RobotContainer {
       new SequentialCommandGroup(
         new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.65),
         new ConditionalCommand(
-          new RunCommand(()-> elevator.setDistance(64), elevator).withTimeout(0.6),
+          new RunCommand(()-> elevator.setDistance(72), elevator).withTimeout(0.6),
           new RunCommand(()-> elevator.setDistance(70), elevator).withTimeout(0.6),
           RobotState::isCone
           ),
         new InstantCommand(()-> elevator.stop(), elevator),
         new ConditionalCommand(
-          new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.65),
+          new RunCommand(()-> carriage.setDegrees(42), carriage).withTimeout(0.65),
           new RunCommand(()-> carriage.setDegrees(48), carriage).withTimeout(0.65),
           RobotState::isCone
         ),
@@ -246,7 +251,7 @@ public class RobotContainer {
         ),
       new InstantCommand(()-> elevator.stop(), elevator),
       new ConditionalCommand(
-        new RunCommand(()-> carriage.setDegrees(40), carriage).withTimeout(0.4),
+        new RunCommand(()-> carriage.setDegrees(45), carriage).withTimeout(0.4),
         new RunCommand(()-> carriage.setDegrees(35), carriage).withTimeout(0.35),
         RobotState::isCone
       ),
@@ -385,7 +390,7 @@ public class RobotContainer {
       new InstantCommand(()-> carriage.stop()),
       new RunCommand(()->RobotState.setIntaking())
     )
-    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 70:78))
+    .beforeStarting(new RunCommand(()->carriage.setDegrees(RobotState.getGamePiece()==GamePiece.CONE? 72:78))
     .withTimeout(RobotState.getGamePiece()==GamePiece.CONE? 0.5:0.85))
     );
 

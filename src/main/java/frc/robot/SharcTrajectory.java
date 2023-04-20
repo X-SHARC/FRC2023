@@ -35,6 +35,7 @@ public class SharcTrajectory {
   PIDController ySpeedController = new PIDController(5.7, 0, 0);
   PIDController rotController = new PIDController(1.27, 0, 0);
   // 1.27 pid, 1.431
+  private double cubeGroundAngle = 78.0;
 
   /*
    * HashMap<String, Command> eventMap = new HashMap<>();
@@ -73,7 +74,7 @@ public class SharcTrajectory {
         Commands.parallel(
             new SequentialCommandGroup(
                 getControllerCommand(swerve, "LeftCube1", true, 4, 3).withTimeout(2.67),
-                new RunCommand(() -> carriage.setDegrees(108)).withTimeout(0.941),
+                new RunCommand(() -> carriage.setDegrees(cubeGroundAngle)).withTimeout(0.941),
                 new InstantCommand(() -> carriage.stop(), carriage),
                 new RunCommand(() -> RobotState.setIntaking())
                     .withTimeout(0.65)
@@ -196,7 +197,7 @@ public class SharcTrajectory {
         Commands.parallel(
             new SequentialCommandGroup(
                 getControllerCommand(swerve, "LeftCube1", true, 4, 3).withTimeout(2.67),
-                new RunCommand(() -> carriage.setDegrees(108)).withTimeout(0.941),
+                new RunCommand(() -> carriage.setDegrees(cubeGroundAngle)).withTimeout(0.941),
                 new InstantCommand(() -> carriage.stop(), carriage),
                 new RunCommand(() -> RobotState.setIntaking())
                     .withTimeout(0.65)
@@ -273,7 +274,7 @@ public class SharcTrajectory {
 
         new SequentialCommandGroup(
             getControllerCommand(swerve, "LeftCube1", true, 4, 3).withTimeout(2.67),
-            new RunCommand(() -> carriage.setDegrees(100)).withTimeout(0.8),
+            new RunCommand(() -> carriage.setDegrees(cubeGroundAngle)).withTimeout(0.8),
             new InstantCommand(() -> carriage.stop(), carriage),
             new RunCommand(() -> RobotState.setIntaking()).withTimeout(0.6),
             new RunCommand(() -> carriage.setDegrees(10), carriage).withTimeout(0.75),
@@ -342,9 +343,8 @@ public class SharcTrajectory {
     return new SequentialCommandGroup(
         getLv3Place(elevator, intake, carriage),
         new SequentialCommandGroup(
-            getControllerCommand(swerve, "Houston1", true, 4, 3).withTimeout(2.1),
-            getControllerCommand(swerve, "Houston2", true, 4, 3).withTimeout(1.9),
-            getControllerCommand(swerve, "Houston3", false, 4, 3).withTimeout(1.95)));
+            getControllerCommand(swerve, "ha", true, chargeStationMaxVel, chargeStationMaxAccel).withTimeout(2.5),
+            getControllerCommand(swerve, "hc", false, chargeStationMaxVel, chargeStationMaxAccel).withTimeout(3.95)));
   }
 
   public Command getTaxiCommand(Swerve swerve, Elevator elevator, Intake intake, Carriage carriage) {
@@ -359,7 +359,7 @@ public class SharcTrajectory {
     RobotState.setGamePiece(RobotState.GamePiece.CUBE);
     return new SequentialCommandGroup(
             getLv3Place(elevator, intake, carriage),
-            getControllerCommand(swerve, "Houston1", true, 4, 3));
+            getControllerCommand(swerve, "ha", true, 4, 3));
   }
 
   public Command getCubeCommandLv3(Elevator elevator, Intake intake, Carriage carriage) {
