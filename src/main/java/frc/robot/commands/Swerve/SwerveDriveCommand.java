@@ -7,9 +7,6 @@ package frc.robot.commands.Swerve;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.event.EventLoop;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -27,7 +24,7 @@ public class SwerveDriveCommand extends CommandBase {
   private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(2.5);
   private final SlewRateLimiter rotLimiter = new SlewRateLimiter(4.5);
 
-  double scale = 1;
+  double scale = 0.6;
   double scale2= 0.5;
   
     /** Creates a new SwerveDriveCommand. */
@@ -56,18 +53,6 @@ public class SwerveDriveCommand extends CommandBase {
   @Override
   public void execute() {
     scale = Math.abs(joystick.getRightTriggerAxis()) < 0.4 ? 1: scale2;
-    //scale = Math.abs(joystick.getRightTriggerAxis()) > 0.4 ? 0.8 : scale2;
-    //132 ve 15
-    if(scale == scale2){
-      joystick.setRumble(RumbleType.kRightRumble, 0.55);
-      joystick.setRumble(RumbleType.kLeftRumble, 0.55);
-    } 
-      
-    else{
-      joystick.setRumble(RumbleType.kRightRumble, 0);
-      joystick.setRumble(RumbleType.kLeftRumble, 0);
-    } 
-      
 
     final var xSpeed = xSpeedLimiter.calculate(
       (Math.abs(joystick.getLeftY()) < 0.1) ? 0 : joystick.getLeftY())

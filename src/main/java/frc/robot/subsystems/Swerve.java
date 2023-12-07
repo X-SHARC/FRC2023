@@ -57,27 +57,30 @@ public class Swerve extends SubsystemBase {
   //private final CKIMU gyro;
   private AHRS gyroAhrs = new AHRS();
 
-  TalonFX driveMotorBL = new TalonFX(11);
+  TalonFX driveMotorBL = new TalonFX(10);
   TalonFX angleMotorBL = new TalonFX(16);
 
   // TODO: Update these CAN device IDs to match your TalonFX + CANCoder device IDs | Done
   // TODO: Update module offsets to match your CANCoder offsets | Done
 
+  private double pidTestmk4 = 0.09698;
+
+  //private double normalPID = 0.09698;
+
   private double[] pidValues = {
-    0.09698,
-    0.09698,
-    0.09698,
-    0.09698
+    pidTestmk4,
+    pidTestmk4,
+    pidTestmk4,
+    pidTestmk4
   };
 
 
   final boolean invertAllModules = true;
   private SwerveModule[] modules = new SwerveModule[] {
-    new SwerveModule("FL", new TalonFX(17), new TalonFX(13), new CANCoder(4),false, new PIDController(pidValues[0], 0, 0),-298), //! Front Left
-    new SwerveModule("FR", new TalonFX(14), new TalonFX(15), new CANCoder(3), false, new PIDController(pidValues[1], 0, 0),-40), //! Front Right
-    new SwerveModule("RL", driveMotorBL, angleMotorBL, new CANCoder(2), 
-    true, new PIDController(pidValues[2], 0, 0),-35), //! Back Left
-    new SwerveModule("RR", new TalonFX(10), new TalonFX(12), new CANCoder(1), false, new PIDController(pidValues[3], 0, 0),-11)  //! Back Right
+    new SwerveModule("FL", new TalonFX(13), new TalonFX(12), new CANCoder(2),false, new PIDController(pidValues[0], 0, 0),0), //! Front Left
+    new SwerveModule("FR", new TalonFX(11), new TalonFX(14), new CANCoder(4), false, new PIDController(pidValues[1], 0, 0),0), //! Front Right
+    new SwerveModule("RL", driveMotorBL, angleMotorBL, new CANCoder(1), true, new PIDController(pidValues[2], 0, 0),0), //! Back Left
+    new SwerveModule("RR", new TalonFX(18), new TalonFX(17), new CANCoder(3), false, new PIDController(pidValues[3], 0, 0),0)  //! Back Right
   };
 
 
@@ -98,11 +101,9 @@ public class Swerve extends SubsystemBase {
         Thread.sleep(1000);
         gyroAhrs.reset();
       } catch (Exception e) {
-        //TODO: handle exception
       }
     }).start();
   
-    SmartDashboard.putData("Field", field2D);
   }
   
   public Rotation2d getGyro(){
@@ -178,7 +179,6 @@ public class Swerve extends SubsystemBase {
     for (int i = 0; i < states.length; i++) {
       SwerveModule module = modules[i];
       SwerveModuleState state = states[i];
-      module.setDesiredState(state);
     }
 
     
@@ -223,22 +223,20 @@ public class Swerve extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("swerve groAngle", getGyroDouble());
-    SmartDashboard.putNumber("swerve field offset", fieldAngle.getDegrees());
-    SmartDashboard.putNumber("bozukModuk", modules[2].getAngle().getDegrees());
+    //SmartDashboard.putNumber("swerve field offset", fieldAngle.getDegrees());
 
-    SmartDashboard.putNumber("bozukdegil", modules[3].getAngle().getDegrees());
 
-    // SmartDashboard.putNumber("0. SETPOINT", modules[0].drivePID.getSetpoint());
-    // /SmartDashboard.putNumber("0. Velocity", modules[0].getDriveMotorRate());
+     SmartDashboard.putNumber("0. SETPOINT", modules[0].drivePID.getSetpoint());
+     SmartDashboard.putNumber("0. Velocity", modules[0].getDriveMotorRate());
 
-    // SmartDashboard.putNumber("1. SETPOINT", modules[1].drivePID.getSetpoint());
-    // SmartDashboard.putNumber("1. Velocity", modules[1].getDriveMotorRate());
+     SmartDashboard.putNumber("1. SETPOINT", modules[1].drivePID.getSetpoint());
+     SmartDashboard.putNumber("1. Velocity", modules[1].getDriveMotorRate());
 
-    // SmartDashboard.putNumber("2. SETPOINT", modules[2].drivePID.getSetpoint());
-    // SmartDashboard.putNumber("2. Velocity", modules[2].getDriveMotorRate());
+     SmartDashboard.putNumber("2. SETPOINT", modules[2].drivePID.getSetpoint());
+     SmartDashboard.putNumber("2. Velocity", modules[2].getDriveMotorRate());
 
-    // SmartDashboard.putNumber("3. SETPOINT", modules[3].drivePID.getSetpoint());
-    // SmartDashboard.putNumber("3. Velocity", modules[3].getDriveMotorRate());
+     SmartDashboard.putNumber("3. SETPOINT", modules[3].drivePID.getSetpoint());
+     SmartDashboard.putNumber("3. Velocity", modules[3].getDriveMotorRate());
     
     /*
     SmartDashboard.putNumber("1. modül", modules[1].getDriveMotorRate());
@@ -246,14 +244,15 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("3. modül", modules[3].getDriveMotorRate());
     SmartDashboard.putNumber("average Distance", getAverageDistance());
     */
-    SmartDashboard.putNumber("Posex", getPose().getX());
+    /*SmartDashboard.putNumber("Posex", getPose().getX());
     SmartDashboard.putNumber("Posey", getPose().getY());
-    SmartDashboard.putNumber("Rot", getPose().getRotation().getRadians());
+    SmartDashboard.putNumber("Rot", getPose().getRotation().getRadians());*/
 
-    SmartDashboard.putNumber("1 FL",modules[0].getDegrees());
-    SmartDashboard.putNumber("2 FR",modules[1].getDegrees());
-    SmartDashboard.putNumber("3 BL",modules[2].getDegrees());
-    SmartDashboard.putNumber("4 BR",modules[3].getDegrees());
+    SmartDashboard.putNumber("1 FL CANCoder",modules[0].getDegrees());
+    SmartDashboard.putNumber("2 FR CANCoder",modules[1].getDegrees());
+    SmartDashboard.putNumber("3 BL CANCoder",modules[2].getDegrees());
+    SmartDashboard.putNumber("4 BR CANCoder",modules[3].getDegrees());
+
 
 
     

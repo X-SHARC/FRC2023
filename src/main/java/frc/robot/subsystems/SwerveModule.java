@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -30,13 +29,18 @@ public class SwerveModule {
 //CANCoder being used as absoulute encoder
   // Using absolute has the advantage of zeroing the modules autonomously.
   // If using relative, find a way to mechanically zero out wheel headings before starting the robot.
-  Gearbox driveRatio = new Gearbox(6.86, 2);
+  Gearbox driveRatio = new Gearbox(6.75, 1);
   
-  private PIDController rotPID = new PIDController(Constants.Swerve.kAngleP, 0, 0);
+  private PIDController rotPID = new PIDController(0.007, 0, 0);
+  //private PIDController rotPID = new PIDController(Constants.Swerve.kAngleP, 0, 0);
+  //eski 0.007
 
-  public PIDController drivePID;
+  //public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.1543, 1.1543, 0.23523);
+  public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.1543, 1.1543, 0.3523);
 
-  public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.1543, 1.1543, 0.23523);
+  public PIDController drivePID = new PIDController(0.0031, 0, 0);
+  //0.31
+
 
   private int resetOffset = 0;
   private boolean driveEncoderInverted;
@@ -95,10 +99,10 @@ public class SwerveModule {
     }
     // ? all the values below should be tunable in Glass
     if(rotCalibration){
-      // SmartDashboard.putData(Name + " Rotation PID", rotPID);     
+       SmartDashboard.putData(Name + " Rotation PID", rotPID);     
     }
     if(driveCalibration){
-      // SmartDashboard.putData(Name + " Drive PID", drivePID);
+       SmartDashboard.putData(Name + " Drive PID", drivePID);
     }
   }
 
@@ -135,8 +139,6 @@ public class SwerveModule {
     // Find the difference between our current rotational position + our new rotational position
     Rotation2d rotationDelta = state.angle.minus(currentRotation);
     double desiredRotation = currentRotation.getDegrees() + rotationDelta.getDegrees();
-      // TODO: desiredRotation = (state - currentRotation) + currentRotation
-      // ????
     angleMotor.set(TalonFXControlMode.PercentOutput, 
         MathUtil.clamp( 
           ( rotPID.calculate(
