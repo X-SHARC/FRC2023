@@ -21,14 +21,15 @@ public class SwerveModule {
   private TalonFX driveMotor;
   private TalonFX angleMotor;
   private CANCoder rotEncoder;
-  Gearbox driveRatio = new Gearbox(6.86, 1);
+  Gearbox driveRatio = new Gearbox(6.75, 1);
   
-  private PIDController rotPID = new PIDController(0.0084888, 0, 0.00008);
+  public PIDController rotPID = new PIDController(0.003, 0, 0);
+  //0084888
 
 
   private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.899, 1.899, 5.23523);
   //private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(2.5145, 1.5143, 0.128523);
-  private final PIDController drivePID = new PIDController(0.31, 0, 0);
+  private final PIDController drivePID = new PIDController(0.0031, 0, 0);
 
   private boolean driveEncoderInverted = false; 
 
@@ -54,6 +55,7 @@ public class SwerveModule {
   public double getDegrees(){
     return rotEncoder.getAbsolutePosition();
   }
+
 
   public SwerveModulePosition getModulePosition(){
     return new SwerveModulePosition(getPosition(), getAngle());
@@ -124,7 +126,7 @@ public class SwerveModule {
     double desiredRotation = currentRotation.getDegrees() + rotationDelta.getDegrees();
 
     angleMotor.set(TalonFXControlMode.PercentOutput, 
-        MathUtil.clamp( 
+        MathUtil.clamp(
           ( rotPID.calculate(
                 currentRotation.getDegrees(),
                 desiredRotation 
@@ -135,13 +137,13 @@ public class SwerveModule {
      
     double driveOutput = driveFeedforward.calculate(state.speedMetersPerSecond)/ RobotController.getBatteryVoltage();
     driveOutput += drivePID.calculate(getDriveMotorRate(), state.speedMetersPerSecond);
-
     driveMotor.set(TalonFXControlMode.PercentOutput, driveOutput);
     
   }
 
   // ! Open loop drive
   public void setDesiredState(SwerveModuleState desiredState) {
+    
     if(Math.abs(desiredState.speedMetersPerSecond)<0.001){
       stopMotors();
       return;
@@ -153,17 +155,26 @@ public class SwerveModule {
     Rotation2d rotationDelta = state.angle.minus(currentRotation);
     double desiredRotation = currentRotation.getDegrees() + rotationDelta.getDegrees();
 
+    double outputP = rotPID.calculate(
+      currentRotation.getDegrees(),
+      desiredRotation 
+      );
+
     angleMotor.set(TalonFXControlMode.PercentOutput, 
         MathUtil.clamp( 
-          ( rotPID.calculate(
-                currentRotation.getDegrees(),
-                desiredRotation 
-                )), 
+          outputP, 
             -1.0, 
             1.0)
     );
 
+    SmartDashboard.putNumber("1- Current Rotation: ", currentRotation.getDegrees());
+    SmartDashboard.putNumber("2- Desired Rotation", desiredRotation);
+
     driveMotor.set(TalonFXControlMode.PercentOutput, state.speedMetersPerSecond / Constants.Swerve.kMaxSpeed);
+  }
+
+  public double getSet(){
+    return rotPID.getSetpoint();
   }
 
 }
