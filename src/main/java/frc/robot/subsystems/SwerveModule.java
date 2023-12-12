@@ -23,7 +23,7 @@ public class SwerveModule {
   private CANCoder rotEncoder;
   Gearbox driveRatio = new Gearbox(6.75, 1);
   
-  public PIDController rotPID = new PIDController(0.003, 0, 0);
+  public PIDController rotPID = new PIDController(0.0005, 0, 0);
   //0084888
 
 
@@ -168,7 +168,8 @@ public class SwerveModule {
     );
 
     SmartDashboard.putNumber("1- Current Rotation: ", currentRotation.getDegrees());
-    SmartDashboard.putNumber("2- Desired Rotation", desiredRotation);
+    SmartDashboard.putNumber("2- Desired Rotation", desiredRotation); 
+    SmartDashboard.putNumber("PID OUT", outputP);     
 
     driveMotor.set(TalonFXControlMode.PercentOutput, state.speedMetersPerSecond / Constants.Swerve.kMaxSpeed);
   }
