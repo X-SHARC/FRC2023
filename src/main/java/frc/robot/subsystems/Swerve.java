@@ -59,36 +59,36 @@ public class Swerve extends SubsystemBase {
 
     new SwerveModule(
       "FL", 
+      new TalonFX(18),
       new TalonFX(17),
-      new TalonFX(13),
-      new CANCoder(4),
+      new CANCoder(2),
       false,
       true,
       -298), //! Front Left
 
     new SwerveModule(
       "FR",
-      new TalonFX(14),
-      new TalonFX(18),
-      new CANCoder(3),
+      new TalonFX(16),
+      new TalonFX(10),
+      new CANCoder(4),
       false,
       true,
       -40), //! Front Right
 
     new SwerveModule(
       "RL",
+      new TalonFX(14),
       new TalonFX(11),
-      new TalonFX(16),
-      new CANCoder(2), 
+      new CANCoder(1), 
       false,
       true,
       -35), //! Back Left
 
     new SwerveModule(
       "RR",
-      new TalonFX(10),
+      new TalonFX(13),
       new TalonFX(12),
-      new CANCoder(1),
+      new CANCoder(3),
       false,
       true,
       -11)  //! Back Right
