@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.RobotController;
@@ -23,7 +24,7 @@ public class SwerveModule {
   private CANCoder rotEncoder;
   Gearbox driveRatio = new Gearbox(6.75, 1);
   
-  public PIDController rotPID = new PIDController(0.0005, 0, 0);
+  public PIDController rotPID = new PIDController(0.0009, 0, 0);
   //0084888
 
 
@@ -50,6 +51,7 @@ public class SwerveModule {
     driveMotor.setInverted(isDriveMotorInverted);
     rotPID.disableContinuousInput();
     rotEncoder.configMagnetOffset(offset);
+    rotEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
   }
 
   public double getDegrees(){
@@ -170,6 +172,7 @@ public class SwerveModule {
     SmartDashboard.putNumber("1- Current Rotation: ", currentRotation.getDegrees());
     SmartDashboard.putNumber("2- Desired Rotation", desiredRotation); 
     SmartDashboard.putNumber("PID OUT", outputP);     
+    SmartDashboard.putNumber("PID Error", rotPID.getPositionError()); 
 
     driveMotor.set(TalonFXControlMode.PercentOutput, state.speedMetersPerSecond / Constants.Swerve.kMaxSpeed);
   }
