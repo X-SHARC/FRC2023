@@ -24,7 +24,7 @@ public class SwerveModule {
   private CANCoder rotEncoder;
   Gearbox driveRatio = new Gearbox(6.75, 1);
   
-  public PIDController rotPID = new PIDController(0.0009, 0, 0);
+  public PIDController rotPID = new PIDController(0.006, 0, 0);
   //0084888
 
 
@@ -50,8 +50,10 @@ public class SwerveModule {
 
     driveMotor.setInverted(isDriveMotorInverted);
     rotPID.disableContinuousInput();
-    rotEncoder.configMagnetOffset(offset);
+    rotEncoder.configMagnetOffset(offset*-1);
     rotEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
+
+    angleMotor.setInverted(true);
   }
 
   public double getDegrees(){
@@ -65,7 +67,7 @@ public class SwerveModule {
 
   public double getPosition(){
     return 
-      driveMotor.getSelectedSensorPosition() * (Constants.Swerve.wheelCircumference / (6.86 * 2048.0));
+      driveMotor.getSelectedSensorPosition() * (Constants.Swerve.wheelCircumference / (6.75 * 2048.0));
   }
 
   public double getDriveMotorRate(){

@@ -21,7 +21,7 @@ public class SwerveDriveCommand extends CommandBase {
   private final SlewRateLimiter rotLimiter = new SlewRateLimiter(10);
 
 
-  double scale = 1;
+  double scale = 0.5;
 
     public SwerveDriveCommand(Swerve sw, XboxController driver){
       this.swerveSubsystem = sw;
@@ -44,7 +44,7 @@ public class SwerveDriveCommand extends CommandBase {
       (Math.abs(joystick.getLeftX()) <  0.1) ? 0 : joystick.getLeftX())
       * Constants.Swerve.kMaxSpeed * scale;
      
-    double rot = -rotLimiter.calculate(
+    double rot = rotLimiter.calculate(
       (Math.abs(joystick.getRightX()) < 0.1) ? 0 : joystick.getRightX())
       * Constants.Swerve.kMaxAngularSpeed * scale;
 

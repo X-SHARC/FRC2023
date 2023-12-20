@@ -45,7 +45,7 @@ public class Swerve extends SubsystemBase {
    * https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/swerve-drive-kinematics.html#constructing-the-kinematics-object
    */
 
-  //public WPI_Pigeon2 pigeon = new WPI_Pigeon2(23);
+  public WPI_Pigeon2 pigeon = new WPI_Pigeon2(23);
 
   final boolean invertAllModules = true;
   private double kP = 0.00156;
@@ -58,7 +58,7 @@ public class Swerve extends SubsystemBase {
       new CANCoder(2),
       false,
       true,
-      0), //! Front Left
+      -160), //! Front Left
 
     new SwerveModule(
       "FR",
@@ -67,7 +67,7 @@ public class Swerve extends SubsystemBase {
       new CANCoder(4),
       false,
       true,
-      0), //! Front Right
+      128), //! Front Right
 
     new SwerveModule(
       "RL",
@@ -76,7 +76,7 @@ public class Swerve extends SubsystemBase {
       new CANCoder(1), 
       false,
       true,
-      0), //! Back Left
+      56), //! Back Left
 
     new SwerveModule(
       "RR",
@@ -85,7 +85,7 @@ public class Swerve extends SubsystemBase {
       new CANCoder(3),
       false,
       true,
-      0)  //! Back Right
+      -38)  //! Back Right
   };
 
   SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[] {
@@ -231,20 +231,7 @@ public class Swerve extends SubsystemBase {
 
     //SmartDashboard.putNumber("Pigeon Pitch value:", pigeon.getPitch());
 
-    SmartDashboard.putNumber("FL Angle", modules[0].getDegrees());
-    SmartDashboard.putNumber("FR Angle", modules[1].getDegrees());
-    SmartDashboard.putNumber("BL Angle", modules[2].getDegrees());
-    SmartDashboard.putNumber("BR Angle", modules[3].getDegrees());
 
-    SmartDashboard.putNumber("FL Setpoint", modules[0].getSet());
-    SmartDashboard.putNumber("FR Setpoint", modules[1].getSet());
-    SmartDashboard.putNumber("BL Setpoint", modules[2].getSet());
-    SmartDashboard.putNumber("BR Setpoint", modules[3].getSet());
-
-    SmartDashboard.putNumber("FL Setpoint", modules[0].rotPID.getPositionError());
-    SmartDashboard.putNumber("FR Setpoint", modules[1].rotPID.getPositionError());
-    SmartDashboard.putNumber("BL Setpoint", modules[2].rotPID.getPositionError());
-    SmartDashboard.putNumber("BR Setpoint", modules[3].rotPID.getPositionError());
 
 
 
