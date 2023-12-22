@@ -30,9 +30,6 @@ public class SwerveDriveCommand extends CommandBase {
       addRequirements(swerveSubsystem);
     }
 
-  @Override
-  public void initialize() {
-  }
 
   @Override
   public void execute() {
@@ -48,7 +45,7 @@ public class SwerveDriveCommand extends CommandBase {
       (Math.abs(joystick.getRightX()) < 0.1) ? 0 : joystick.getRightX())
       * Constants.Swerve.kMaxAngularSpeed * scale;
 
-    swerveSubsystem.drive(xSpeed, ySpeed, rot, false, true);
+    swerveSubsystem.drive(xSpeed, ySpeed, rot, true, true);
   }
 
 }

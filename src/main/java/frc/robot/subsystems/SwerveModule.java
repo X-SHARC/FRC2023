@@ -171,11 +171,6 @@ public class SwerveModule {
             1.0)
     );
 
-    SmartDashboard.putNumber("1- Current Rotation: ", currentRotation.getDegrees());
-    SmartDashboard.putNumber("2- Desired Rotation", desiredRotation); 
-    SmartDashboard.putNumber("PID OUT", outputP);     
-    SmartDashboard.putNumber("PID Error", rotPID.getPositionError()); 
-
     driveMotor.set(TalonFXControlMode.PercentOutput, state.speedMetersPerSecond / Constants.Swerve.kMaxSpeed);
   }
 

@@ -95,11 +95,11 @@ public class Swerve extends SubsystemBase {
     modules[3].getModulePosition()
   };
 
-  /*private SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
+  private SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
     Constants.Swerve.kinematics,
     getGyro(),
     swerveModulePositions,
-    new Pose2d());*/
+    new Pose2d());
 
   public Swerve(boolean isCalibrating) {
     this.isCalibrating = isCalibrating;
@@ -108,16 +108,12 @@ public class Swerve extends SubsystemBase {
     //SmartDashboard.putData("Field", field2D);
   }
   
-  /*public Rotation2d getGyro(){
+  public Rotation2d getGyro(){
     return Rotation2d.fromDegrees(
         getGyroDouble()
         );
-  }*/
-  /*public Rotation2d getGyro(){
-    return Rotation2d.fromDegrees(pigeon.getAngle());
   }
-
-
+  
   public double getGyroDouble(){
     return Math.IEEEremainder(pigeon.getAngle(), 360) * (Constants.kGyroReversed ? -1.0 : 1.0); 
   }
@@ -129,7 +125,7 @@ public class Swerve extends SubsystemBase {
     Constants.Swerve.kinematics,
     getGyro(),
     swerveModulePositions
-    );*/
+    );
 
   public void stopModules(){
     modules[0].stopMotors();
@@ -163,24 +159,26 @@ public class Swerve extends SubsystemBase {
     return sum / modules.length;
   }
 
-  /*public Pose2d getPose(){
+  public Pose2d getPose(){
     return poseEstimator.getEstimatedPosition();
-  }*/
+  }
 
-  /*public void resetPoseEstimator(Pose2d pose) {
+  public void resetPoseEstimator(Pose2d pose) {
     poseEstimator.resetPosition(
       getGyro(),
       swerveModulePositions,
       pose
     );
-  }*/
+  }
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean openLoop) {
     SwerveModuleState[] states =
-    Constants.Swerve.kinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot));
-    
+    Constants.Swerve.kinematics.toSwerveModuleStates(
+        fieldRelative
+          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyro())
+          : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.desaturateWheelSpeeds(states, Constants.Swerve.kMaxSpeed);
-    
+        
     for (int i = 0; i < states.length; i++) {
       SwerveModule module = modules[i];
       SwerveModuleState state = states[i];
