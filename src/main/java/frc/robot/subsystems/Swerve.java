@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -29,6 +30,7 @@ public class Swerve extends SubsystemBase {
 
   
 
+
   private Rotation2d fieldAngle = new Rotation2d();
 
   private final Field2d field2D = new Field2d();
@@ -45,7 +47,7 @@ public class Swerve extends SubsystemBase {
    * https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/swerve-drive-kinematics.html#constructing-the-kinematics-object
    */
 
-  public WPI_Pigeon2 pigeon = new WPI_Pigeon2(23);
+  public WPI_Pigeon2 pigeon = new WPI_Pigeon2(23,"rio");
 
   final boolean invertAllModules = true;
   private double kP = 0.00156;
@@ -104,6 +106,8 @@ public class Swerve extends SubsystemBase {
   public Swerve(boolean isCalibrating) {
     this.isCalibrating = isCalibrating;
     resetAllEncoders();
+
+    pigeon.configFactoryDefault(150);
     
     //SmartDashboard.putData("Field", field2D);
   }
@@ -115,7 +119,7 @@ public class Swerve extends SubsystemBase {
   }
   
   public double getGyroDouble(){
-    return Math.IEEEremainder(pigeon.getAngle(), 360) * (Constants.kGyroReversed ? -1.0 : 1.0); 
+    return Math.IEEEremainder(pigeon.getYaw(), 360) * (Constants.kGyroReversed ? -1.0 : 1.0); 
   }
 
   public void resetPigeon(){
@@ -213,12 +217,12 @@ public class Swerve extends SubsystemBase {
       modules[2].getModulePosition(),
       modules[3].getModulePosition()
     };
-    /*poseEstimator.update(
+    poseEstimator.update(
       getGyro(),
       swerveModulePositions
-      );*/
+      );
 
-    //field2D.setRobotPose(getPose());
+    field2D.setRobotPose(getPose());
 
     /*SmartDashboard.putNumber("Swerve Gyro Angle", getGyroDouble());
     SmartDashboard.putNumber("Swerve Field Offset", fieldAngle.getDegrees());
@@ -227,24 +231,7 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Pose Estimator Y", getPose().getY());
     SmartDashboard.putNumber("Pose Estimator Rot", getPose().getRotation().getDegrees());*/
 
-    //SmartDashboard.putNumber("Pigeon Pitch value:", pigeon.getPitch());
-
-
-
-
-
-    if(isCalibrating){
-      modules[0].outputDistance();
-      modules[1].outputDistance();
-      modules[2].outputDistance();
-      modules[3].outputDistance();
-
-      modules[0].calibrate("Front Left", offsetCalibration, driveCalibration);
-      modules[1].calibrate("Front Right", offsetCalibration, driveCalibration);
-      modules[2].calibrate("Back Left", offsetCalibration, driveCalibration);
-      modules[3].calibrate("Back Right", offsetCalibration, driveCalibration);
-    }
-
+    SmartDashboard.putNumber("Pigeon Pitch value:", pigeon.getPitch());
   }
 
 }

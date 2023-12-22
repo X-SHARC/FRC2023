@@ -24,7 +24,7 @@ public class SwerveModule {
   private CANCoder rotEncoder;
   Gearbox driveRatio = new Gearbox(6.75, 1);
   
-  public PIDController rotPID = new PIDController(0.006, 0, 0);
+  public PIDController rotPID = new PIDController(0.008, 0, 0);
   //0084888
 
 
@@ -174,8 +174,5 @@ public class SwerveModule {
     driveMotor.set(TalonFXControlMode.PercentOutput, state.speedMetersPerSecond / Constants.Swerve.kMaxSpeed);
   }
 
-  public double getSet(){
-    return rotPID.getSetpoint();
-  }
 
 }
